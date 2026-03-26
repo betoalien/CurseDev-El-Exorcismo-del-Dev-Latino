@@ -1,0 +1,53 @@
+---
+title: "¿Por qué son importantes los JOINs en análisis de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Para unir tablas"—respuesta circular que no explica el valor de negocio ni la alternativa (denormalización).
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"JOINs are fundamental to relational databases. Would you like me to explain from a data modeling perspective, or focus on practical analysis use cases?"*
+
+## 💻 La Respuesta Técnica
+
+Los **JOINs** permiten combinar información de tablas relacionadas, lo cual es esencial porque:
+
+1. **Normalización**: Los datos se almacenan en tablas separadas para evitar redundancia
+2. **Contexto de negocio**: Unir transacciones con dimensiones (clientes, productos, regiones)
+3. **Análisis enriquecido**: Responder preguntas que requieren múltiples fuentes de datos
+
+**Sin JOINs**, necesitarías tablas denormalizadas o múltiples queries manuales.
+
+**Ejemplo práctico:**
+```sql
+-- Pregunta: ¿Cuánto vendió cada cliente?
+-- Datos en tablas separadas:
+-- customers (id, name, email)
+-- orders (id, customer_id, amount, date)
+
+SELECT c.name, SUM(o.amount) as total_spent
+FROM customers c
+JOIN orders o ON c.id = o.customer_id
+GROUP BY c.name;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"JOINs are the backbone of relational data analysis. In a normalized database—which is the standard design for transactional systems—data is intentionally split across tables to reduce redundancy and maintain integrity. Customers live in one table, orders in another, products in yet another. JOINs let me reconstruct the complete picture by connecting these related entities. Without them, I'd either need denormalized tables, which introduce data quality risks, or I'd have to run separate queries and manually stitch results together, which is error-prone and inefficient. In my day-to-day work as an analyst, almost every meaningful question spans multiple tables: revenue by customer segment requires joining orders with customer demographics; product performance needs orders joined with product categories. JOINs make that possible in a single, efficient query."*
+
+## 🔑 Vocabulario Clave
+
+* **Relational data analysis:** Análisis de datos relacionales
+* **Normalized database:** Base de datos normalizada
+* **Redundancy:** Redundancia
+* **Denormalized tables:** Tablas denormalizadas
+* **Error-prone:** Propenso a errores
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

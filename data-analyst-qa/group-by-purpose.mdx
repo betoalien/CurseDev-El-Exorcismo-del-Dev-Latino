@@ -1,0 +1,52 @@
+---
+title: "¿Para qué sirve GROUP BY en SQL?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+Dice "sirve para agrupar datos" y se queda ahí. No explica el vínculo con las funciones de agregación ni da un ejemplo de negocio real.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"I could give you the textbook definition, but would you prefer I walk through a real business scenario where GROUP BY becomes essential? I think it'll make the concept stick better."*
+
+## 💻 La Respuesta Técnica
+
+**GROUP BY** transforma datos de nivel transaccional (filas individuales) en **resúmenes agregados por categoría**. Su propósito es:
+
+1. **Agrupar filas** que comparten el mismo valor en una o más columnas
+2. **Aplicar funciones de agregación** (COUNT, SUM, AVG, MIN, MAX) a cada grupo
+3. **Reducir la granularidad** de los datos para análisis de alto nivel
+
+**Ejemplo práctico:**
+```sql
+-- Sin GROUP BY: Datos transaccionales (cada venta es una fila)
+SELECT product_id, amount FROM sales;
+
+-- Con GROUP BY: Resumen por producto
+SELECT product_id,
+       SUM(amount) as total_sales,
+       COUNT(*) as transaction_count,
+       AVG(amount) as avg_ticket
+FROM sales
+GROUP BY product_id;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"GROUP BY is fundamentally about changing the grain of your analysis. It takes transactional-level data—where each row represents an individual event—and collapses it into summary groups based on one or more dimensions. Once you've grouped the data, you can apply aggregate functions to calculate metrics like totals, counts, or averages for each group. For example, if I have a sales table with thousands of individual transactions, I can use GROUP BY on product_id to see total revenue per product, or group by date to analyze daily trends. The key insight is that GROUP BY shifts your perspective from individual records to categorical summaries, which is where most business insights actually live."*
+
+## 🔑 Vocabulario Clave
+
+* **Grain:** Granularidad
+* **Transactional-level data:** Datos de nivel transaccional
+* **Summary groups:** Grupos de resumen
+* **Aggregate functions:** Funciones de agregación
+* **Dimensions:** Dimensiones
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

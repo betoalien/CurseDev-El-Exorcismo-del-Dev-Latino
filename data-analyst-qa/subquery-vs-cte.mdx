@@ -1,0 +1,63 @@
+---
+title: "¿Cuál es la diferencia entre una subquery y una CTE?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Intermediate"
+---
+
+## 🛑 El Error del Junior
+
+"Una va con WITH y la otra va dentro"—demasiado superficial. No menciona reutilización, legibilidad o casos de uso.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Both can solve similar problems, but there are practical differences that matter in real-world analysis. Would you like me to walk through when I choose one over the other?"*
+
+## 💻 La Respuesta Técnica
+
+Ambas permiten definir resultados intermedios, pero difieren en **estructura y capacidades**:
+
+| Aspecto | Subquery | CTE |
+|---------|----------|-----|
+| **Ubicación** | Dentro de SELECT/WHERE/JOIN | Al inicio con WITH |
+| **Reutilización** | No (se repite el código) | Sí (se referencia por nombre) |
+| **Legibilidad** | Baja cuando está anidada | Alta (nombre descriptivo) |
+| **Recursividad** | No soporta | Sí (WITH RECURSIVE) |
+
+**Ejemplo práctico:**
+```sql
+-- Subquery (se repite si la necesitas 2 veces)
+SELECT * FROM (
+    SELECT customer_id, SUM(amount) as total FROM orders GROUP BY customer_id
+) WHERE total > 1000;
+
+-- CTE (reutilizable, más clara)
+WITH customer_totals AS (
+    SELECT customer_id, SUM(amount) as total FROM orders GROUP BY customer_id
+)
+SELECT * FROM customer_totals WHERE total > 1000;
+
+-- CTE usada dos veces (imposible con subquery sin repetir)
+WITH customer_totals AS (
+    SELECT customer_id, SUM(amount) as total FROM orders GROUP BY customer_id
+)
+SELECT AVG(total) FROM customer_totals
+UNION ALL
+SELECT MAX(total) FROM customer_totals;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Functionally, subqueries and CTEs can often achieve the same result, but I have a clear preference for CTEs in most analytical work. A subquery lives inline—it's embedded directly in the SELECT, WHERE, or JOIN clause. This works fine for simple, one-off filters. But when the logic gets complex or I need to reference the same intermediate result multiple times, CTEs are superior. With a CTE, I define the logic once at the top using WITH, give it a meaningful name, and then reference it like a regular table. This eliminates code duplication and makes the query much easier to read and maintain. There's also the recursion factor: only CTEs support recursive queries for hierarchical data. My personal rule: if the subquery is more than three lines, or if I find myself copying and pasting it, I convert it to a CTE without hesitation."*
+
+## 🔑 Vocabulario Clave
+
+* **Inline:** En línea / incrustado
+* **Intermediate result:** Resultado intermedio
+* **Code duplication:** Duplicación de código
+* **Recursive queries:** Queries recursivos
+* **Hierarchical data:** Datos jerárquicos
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

@@ -1,0 +1,80 @@
+---
+title: "¿Qué validaciones básicas harías antes de empezar un análisis?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / Data Cleaning & Validation"
+---
+
+## 🛑 El Error del Junior
+
+"Reviso que los datos estén bien"—vago. No tiene un checklist sistemático ni entiende los puntos de falla comunes.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"I have a standard data quality checklist I run before any analysis. Would it help if I walked through each validation and why it matters?"*
+
+## 💻 La Respuesta Técnica
+
+**Checklist de validación pre-análisis:**
+
+**1. Volumen y completitud:**
+```sql
+-- Conteo total de filas
+SELECT COUNT(*) FROM table;
+
+-- Valores nulos por columna
+SELECT
+    SUM(CASE WHEN col1 IS NULL THEN 1 ELSE 0 END) as nulls_col1,
+    SUM(CASE WHEN col2 IS NULL THEN 1 ELSE 0 END) as nulls_col2
+FROM table;
+```
+
+**2. Duplicados:**
+```sql
+-- Verificar unicidad de clave primaria
+SELECT id, COUNT(*) as cnt FROM table GROUP BY id HAVING COUNT(*) > 1;
+```
+
+**3. Tipos de datos:**
+- ¿Fechas en formato correcto?
+- ¿Números almacenados como texto?
+- ¿Booleanos consistentes (0/1, true/false)?
+
+**4. Rangos válidos:**
+```sql
+-- Valores fuera de rango esperado
+SELECT * FROM employees WHERE salary < 0 OR salary > 10000000;
+SELECT * FROM users WHERE age < 0 OR age > 120;
+```
+
+**5. Consistencia de fechas:**
+```sql
+-- Fechas de fin anteriores a inicio
+SELECT * FROM projects WHERE end_date < start_date;
+```
+
+**6. Integridad de JOINs:**
+```sql
+-- Foreign keys huérfanas
+SELECT * FROM orders WHERE customer_id NOT IN (SELECT id FROM customers);
+```
+
+**7. Validación de negocio:**
+- ¿Las métricas clave coinciden con reportes anteriores?
+- ¿Los totales reconcilian con la fuente original?
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Before I write a single analytical query, I run a standardized data quality checklist. This has saved me from embarrassing mistakes more times than I can count. First, I check row counts—does the volume match what I expect based on the time period? A sudden 90% drop usually means a pipeline failure. Second, I scan for NULLs in critical columns—if 50% of the revenue column is null, my analysis is dead on arrival. Third, I verify uniqueness on key columns; duplicate primary keys indicate data corruption. Fourth, I validate ranges: no negative ages, no future birth dates, no salaries in the billions. Fifth, I check date logic—end dates shouldn't precede start dates, and event timestamps should be in sequence. Sixth, I test referential integrity—every foreign key should point to an existing record. Finally, I reconcile key metrics against known benchmarks. If last month's revenue was $10M and my dataset shows $2M, I stop and investigate before proceeding. This might sound tedious, but it's faster than debugging a wrong conclusion after hours of analysis. I've even automated parts of this into data tests that run on every pipeline update."*
+
+## 🔑 Vocabulario Clave
+
+* **Standardized checklist:** Checklist estandarizado
+* **Pipeline failure:** Fallo de pipeline
+* **Dead on arrival:** Muerto en la llegada (inviable desde el inicio)
+* **Data corruption:** Corrupción de datos
+* **Referential integrity:** Integridad referencial
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

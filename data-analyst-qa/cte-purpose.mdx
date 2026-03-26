@@ -1,0 +1,64 @@
+---
+title: "¿Qué es una CTE y por qué puede ser útil en una consulta?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Intermediate"
+---
+
+## 🛑 El Error del Junior
+
+"Es una subconsulta con WITH"—técnicamente correcto pero no explica por qué usarla ni cuándo es mejor que una subquery tradicional.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"CTEs are one of those features that really improve query quality. Would it help if I compared them to subqueries and showed when I prefer one over the other?"*
+
+## 💻 La Respuesta Técnica
+
+Una **CTE (Common Table Expression)** es una subconsulta nombrada definida con `WITH`. Ventajas clave:
+
+1. **Legibilidad**: Das nombre a pasos intermedios, haciendo el query self-documenting
+2. **Reutilización**: Puedes referenciar la misma CTE múltiples veces en el query principal
+3. **Mantenimiento**: Más fácil de modificar que subqueries anidadas
+4. **Recursividad**: Solo las CTEs permiten queries recursivos (árboles, jerarquías)
+
+**Ejemplo práctico:**
+```sql
+-- Sin CTE (subquery anidada, difícil de leer)
+SELECT department, AVG(salary)
+FROM (SELECT * FROM employees WHERE hire_date > '2020-01-01')
+GROUP BY department;
+
+-- Con CTE (legibilidad clara)
+WITH recent_hires AS (
+    SELECT * FROM employees WHERE hire_date > '2020-01-01'
+)
+SELECT department, AVG(salary)
+FROM recent_hires
+GROUP BY department;
+
+-- Múltiples CTEs
+WITH
+    sales_data AS (SELECT * FROM orders WHERE year = 2025),
+    customer_totals AS (
+        SELECT customer_id, SUM(amount) as total
+        FROM sales_data GROUP BY customer_id
+    )
+SELECT * FROM customer_totals WHERE total > 10000;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A CTE, or Common Table Expression, is essentially a named subquery that you define at the beginning of your statement using WITH. Think of it as creating a temporary result set that exists only for the duration of that query. The real value isn't technical—it's about code quality. When I write complex analytical queries, I break them into logical steps using CTEs, giving each step a descriptive name. This makes the query self-documenting: someone reading it can understand the transformation pipeline without decoding nested subqueries. CTEs also let you reference the same intermediate result multiple times without duplicating code, which reduces errors. And for hierarchical data—like org charts or product categories—recursive CTEs are the only way to traverse tree structures in pure SQL. My rule of thumb: if a subquery is more than a few lines, or if I'm using it twice, it becomes a CTE."*
+
+## 🔑 Vocabulario Clave
+
+* **Named subquery:** Subconsulta con nombre
+* **Temporary result set:** Conjunto de resultados temporal
+* **Self-documenting:** Auto-documentado
+* **Nested subqueries:** Subqueries anidadas
+* **Recursive CTEs:** CTEs recursivas
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

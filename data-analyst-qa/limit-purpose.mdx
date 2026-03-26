@@ -1,0 +1,53 @@
+---
+title: "¿Para qué sirve LIMIT en SQL?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Para limitar resultados"—correcto pero superficial. No menciona paginación, exploración de datos o el patrón con ORDER BY para rankings.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"The basic answer is straightforward, but there are some interesting patterns I've used in production—like pagination and top-N analysis. Would those be relevant here?"*
+
+## 💻 La Respuesta Técnica
+
+**LIMIT** restringe la cantidad de filas devueltas por una consulta. Sus usos principales:
+
+1. **Exploración**: Muestreo rápido de datos sin cargar todo el dataset
+2. **Paginación**: Combinado con OFFSET para interfaces de usuario
+3. **Top-N analysis**: Con ORDER BY, obtener los primeros N registros
+4. **Performance**: Reducir carga en queries costosos o tablas grandes
+
+**Ejemplo práctico:**
+```sql
+-- Exploración rápida
+SELECT * FROM large_table LIMIT 100;
+
+-- Top 5 productos más vendidos
+SELECT product_id, SUM(amount) as total
+FROM sales GROUP BY product_id
+ORDER BY total DESC LIMIT 5;
+
+-- Paginación (página 2, 20 por página)
+SELECT * FROM products ORDER BY name LIMIT 20 OFFSET 20;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"LIMIT is one of those deceptively simple clauses that I use constantly in different contexts. At its most basic, it caps the number of rows returned, which is great for exploring large tables without pulling millions of rows. But where I really leverage it is in two patterns: First, top-N analysis—combining LIMIT with ORDER BY to get, say, the top 10 customers by revenue. Second, pagination—using LIMIT with OFFSET to serve data in chunks for dashboards or reports. One caveat I've learned: OFFSET can get expensive on very large datasets because the database still has to scan through the offset rows. For production pagination at scale, I've moved toward keyset pagination instead, but that's a more advanced pattern."*
+
+## 🔑 Vocabulario Clave
+
+* **Cap:** Limitar/restringir
+* **Top-N analysis:** Análisis de los primeros N
+* **Pagination:** Paginación
+* **Offset:** Desplazamiento
+* **Keyset pagination:** Paginación por clave
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

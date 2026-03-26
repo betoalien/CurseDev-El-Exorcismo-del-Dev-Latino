@@ -1,0 +1,56 @@
+---
+title: "¿Qué impacto tiene una relación uno a muchos al hacer un JOIN?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Intermediate"
+---
+
+## 🛑 El Error del Junior
+
+"Se duplican las filas"—correcto pero incompleto. No explica cómo esto afecta agregaciones y métricas de negocio.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"One-to-many relationships have a direct impact on query results, especially aggregations. Would you like me to show how this can lead to incorrect metrics if not handled properly?"*
+
+## 💻 La Respuesta Técnica
+
+En una relación **uno a muchos**, una fila de la tabla principal coincide con múltiples filas de la tabla secundaria, lo que **multiplica los resultados**:
+
+**Impactos clave:**
+1. **Filas duplicadas**: La tabla izquierda aparece múltiples veces
+2. **Agregaciones infladas**: COUNT, SUM pueden dar resultados incorrectos
+3. **Métricas distorsionadas**: Promedios, tasas, conversiones se calculan mal
+
+**Ejemplo práctico:**
+```sql
+-- Un cliente tiene 5 pedidos → 5 filas en el JOIN
+SELECT c.name, c.email, o.order_id
+FROM customers c
+JOIN orders o ON c.id = o.customer_id;
+-- Resultado: 5 filas para el mismo cliente
+
+-- ERROR COMÚN: Contar clientes después del JOIN
+SELECT COUNT(c.id) as customer_count  -- ¡Devuelve 5, no 1!
+FROM customers c JOIN orders o ON c.id = o.customer_id;
+
+-- SOLUCIÓN: COUNT DISTINCT o agregar antes de hacer JOIN
+SELECT COUNT(DISTINCT c.id) as customer_count  -- Correcto: 1
+FROM customers c JOIN orders o ON c.id = o.customer_id;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"One-to-many relationships are fundamental to relational databases, but they introduce a critical pitfall that I've seen trip up many analysts: row multiplication. When you join a 'one' table to a 'many' table—like customers to orders—each customer row gets repeated for every matching order. If a customer has five orders, you get five rows for that customer in the result. This is correct behavior for detail queries, but it breaks aggregations if you're not careful. A COUNT of customers becomes a COUNT of customer-order combinations. A SUM of customer attributes gets multiplied. My approach is to always be aware of the cardinality of my joins. If I'm joining to a 'many' side, I either use COUNT(DISTINCT ...) to avoid double-counting, or I aggregate the 'many' table first in a subquery or CTE before joining. This ensures my metrics reflect the true cardinality of the business entities I'm measuring."*
+
+## 🔑 Vocabulario Clave
+
+* **Row multiplication:** Multiplicación de filas
+* **Pitfall:** Trampa / error común
+* **Cardinality:** Cardinalidad
+* **Double-counting:** Conteo doble
+* **Business entities:** Entidades de negocio
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

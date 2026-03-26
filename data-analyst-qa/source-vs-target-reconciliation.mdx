@@ -1,0 +1,65 @@
+---
+title: "¿Qué significa reconciliar datos entre una fuente y un reporte final?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / Data Cleaning & Validation"
+---
+
+## 🛑 El Error del Junior
+
+"Que los números cuadren"—demasiado vago. No explica el proceso ni qué hacer cuando NO cuadran.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Reconciliation is the final checkpoint before trusting any analysis. Would it help if I showed my framework for validating that numbers flow correctly from source to report?"*
+
+## 💻 La Respuesta Técnica
+
+**Reconciliar** significa validar que los datos **no se alteraron, perdieron o duplicaron** durante el proceso de transformación:
+
+**Objetivo:** Comparar métricas clave entre:
+- **Fuente original**: Sistema transaccional, API, archivo crudo
+- **Reporte final**: Dashboard, tabla agregada, resultado de análisis
+
+**Proceso de reconciliación:**
+
+**1. Definir métricas de control:**
+- Conteo total de registros
+- Sumas de columnas críticas (revenue, cantidad)
+- Conteos por categorías principales
+
+**2. Comparar fuente vs destino:**
+```sql
+-- Fuente (tabla raw)
+SELECT COUNT(*) as raw_count, SUM(amount) as raw_total FROM raw_orders;
+
+-- Destino (tabla procesada)
+SELECT COUNT(*) as processed_count, SUM(amount) as processed_total FROM processed_orders;
+
+-- Deben coincidir (o tener diferencia explicada)
+```
+
+**3. Investigar diferencias:**
+- ¿Filas filtradas intencionalmente? (ej. test accounts, refunds)
+- ¿Diferencias de timezone?
+- ¿Transformaciones que alteran valores? (ej. conversión de moneda)
+
+**4. Documentar y aceptar:**
+- Si las diferencias son esperadas, documentarlas
+- Si son inesperadas, investigar hasta encontrar la causa raíz
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Reconciliation is the process of validating that data integrity is preserved from source to final report. Think of it as a checksum for your data pipeline. Before I trust any analysis, I verify that key metrics match between the raw source and the transformed dataset. I start with high-level controls: total row counts, sums of critical columns like revenue or quantity, and breakdowns by major categories. If the source system shows 10,000 orders totaling $500K, my processed table should show the same—unless there's a documented filter, like excluding test orders or cancelled transactions. When numbers don't match, I investigate systematically: Are rows being dropped by a JOIN? Is a timezone conversion shifting dates across boundaries? Is currency conversion introducing rounding differences? I've caught critical bugs this way—like a JOIN that was multiplying rows and inflating revenue by 3x, or a filter that accidentally excluded an entire region. The key is to reconcile at multiple levels: overall totals, then by logical partitions like date or region, until you either confirm alignment or isolate the discrepancy. I document all known differences—like 'processed data excludes cancelled orders, which account for 2% of raw volume'—so stakeholders understand what they're seeing. Unreconciled data is untrusted data, and I won't build analysis on it."*
+
+## 🔑 Vocabulario Clave
+
+* **Checksum:** Suma de verificación
+* **Data integrity:** Integridad de datos
+* **Transformed dataset:** Conjunto de datos transformado
+* **Discrepancy:** Discrepancia / diferencia
+* **Untrusted data:** Datos no confiables
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

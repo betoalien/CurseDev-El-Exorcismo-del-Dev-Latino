@@ -1,0 +1,58 @@
+---
+title: "¿Para qué sirve ORDER BY en una consulta SQL?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Sirve para ordenar"—respuesta obvia que no aporta valor. No menciona el impacto en performance ni casos de uso analítico.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"On the surface it seems straightforward, but there are some nuances around performance and determinism. Would you like me to cover those as well?"*
+
+## 💻 La Respuesta Técnica
+
+**ORDER BY** organiza el resultado final de una consulta según una o más columnas:
+
+- **ASC (ascendente)**: Por defecto, de menor a mayor (A-Z, 0-9)
+- **DESC (descendente)**: De mayor a menor (Z-A, 9-0)
+
+**Casos de uso clave:**
+1. **Presentación**: Resultados legibles para stakeholders
+2. **Ranking**: Top N productos, empleados, regiones
+3. **Determinismo**: Garantizar orden consistente en pruebas
+4. **Análisis de tendencias**: Datos cronológicos ordenados
+
+**Ejemplo práctico:**
+```sql
+-- Orden simple
+SELECT * FROM employees ORDER BY salary DESC;
+
+-- Múltiples columnas
+SELECT * FROM employees
+ORDER BY department ASC, salary DESC;
+
+-- Con LIMIT para Top N
+SELECT product_id, SUM(amount) as total
+FROM sales GROUP BY product_id
+ORDER BY total DESC LIMIT 10;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"ORDER BY serves multiple purposes beyond just making results look presentable. At its core, it sorts the final result set based on one or more columns, either ascending or descending. But from an analyst's perspective, its real value is in enabling deterministic output and supporting specific analytical patterns. For instance, when I need to identify top performers—say, the top 10 products by revenue—I combine ORDER BY with LIMIT. It's also critical for time-series analysis, where chronological ordering is essential for spotting trends. One thing I always keep in mind: ORDER BY has a performance cost, especially on large datasets without proper indexing. So I use it deliberately, particularly in production queries where performance matters."*
+
+## 🔑 Vocabulario Clave
+
+* **Sort:** Ordenar
+* **Deterministic output:** Salida determinista
+* **Top performers:** Mejores performers
+* **Time-series analysis:** Análisis de series temporales
+* **Performance cost:** Costo de rendimiento
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

@@ -1,0 +1,58 @@
+---
+title: "¿Para qué sirve PARTITION BY en una window function?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Intermediate"
+---
+
+## 🛑 El Error del Junior
+
+"Para dividir datos"—demasiado vago. No explica que crea "grupos de ventana" independientes para el cálculo.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"PARTITION BY is fundamental to using window functions effectively. Would it help if I showed how it changes the scope of calculations compared to not using it?"*
+
+## 💻 La Respuesta Técnica
+
+**PARTITION BY** divide el conjunto de datos en **grupos lógicos independientes** donde la window function se calcula por separado:
+
+- Sin PARTITION BY: La función opera sobre **todas las filas** del resultado
+- Con PARTITION BY: La función opera dentro de **cada partición** por separado
+
+**Analogía:** Es como GROUP BY, pero **no colapsa** las filas.
+
+**Ejemplo práctico:**
+```sql
+-- Sin PARTITION BY: ranking global
+SELECT name, department, salary,
+       RANK() OVER (ORDER BY salary DESC) as global_rank
+FROM employees;
+
+-- Con PARTITION BY: ranking por departamento
+SELECT name, department, salary,
+       RANK() OVER (PARTITION BY department ORDER BY salary DESC) as dept_rank
+FROM employees;
+
+-- Múltiples cálculos por partición
+SELECT name, department, salary,
+       AVG(salary) OVER (PARTITION BY department) as dept_avg,
+       salary - AVG(salary) OVER (PARTITION BY department) as diff_from_avg
+FROM employees;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"PARTITION BY is what makes window functions truly flexible for analytical work. It defines the boundaries within which the window function operates—essentially creating independent calculation groups. Without PARTITION BY, a function like SUM() OVER() would calculate a grand total across all rows. With PARTITION BY department, it calculates a separate total for each department. The key insight is that unlike GROUP BY, PARTITION BY doesn't collapse rows—you still see every individual record, but now with contextual metrics attached. I use this pattern constantly: comparing each employee's salary to their department average, calculating running totals within each region, or ranking products within their category. Think of PARTITION BY as creating a 'group by' that preserves detail rather than summarizing it away."*
+
+## 🔑 Vocabulario Clave
+
+* **Boundaries:** Límites / fronteras
+* **Independent calculation groups:** Grupos de cálculo independientes
+* **Grand total:** Total general
+* **Contextual metrics:** Métricas contextuales
+* **Preserve detail:** Preservar detalle
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

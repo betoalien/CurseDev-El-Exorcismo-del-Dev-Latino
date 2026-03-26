@@ -1,0 +1,68 @@
+---
+title: "¿Qué harías si descubres un problema de calidad de datos que afecta una métrica importante?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / Data Cleaning & Validation"
+---
+
+## 🛑 El Error del Junior
+
+"Lo arreglo y ya"—ingenuo. No comunica el problema, no mide impacto, no previene que vuelva a pasar.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Data quality issues require both immediate triage and long-term prevention. Would it help if I walked through my incident response framework?"*
+
+## 💻 La Respuesta Técnica
+
+**Proceso de respuesta a problemas de calidad:**
+
+**1. Documentar el hallazgo:**
+- ¿Qué métrica está afectada?
+- ¿Cuál es el impacto cuantitativo? (ej. "revenue subreportado en 15%")
+- ¿Desde cuándo existe el problema?
+- ¿Qué segmentos o regiones afecta?
+
+**2. Medir el impacto:**
+```sql
+-- Cuantificar diferencia
+SELECT
+    'Before' as period, COUNT(*) as cnt, SUM(amount) as total
+FROM orders WHERE order_date < '2025-03-01'
+UNION ALL
+SELECT
+    'After' as period, COUNT(*) as cnt, SUM(amount) as total
+FROM orders WHERE order_date >= '2025-03-01';
+-- ¿Hay drop inexplicable?
+```
+
+**3. Comunicar a stakeholders:**
+- Notificar inmediatamente a afectados (ej. equipo de reporting, leadership)
+- Proveer contexto: qué pasó, qué se está haciendo, timeline estimado
+- Recomendar acciones: ¿posponer decisiones basadas en la métrica?
+
+**4. Proponer solución temporal:**
+- ¿Se puede calcular la métrica de forma alternativa?
+- ¿Hay datos históricos para estimar lo faltante?
+- ¿Se puede excluir el periodo afectado del reporte?
+
+**5. Corregir de fondo:**
+- Identificar causa raíz (bug de ETL, cambio de schema, error humano)
+- Trabajar con ingeniería para fix permanente
+- Agregar tests de calidad para prevenir recurrencia
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"When I discover a data quality issue affecting a key metric, I treat it like a production incident—because it is. My response follows a structured process. First, I document the finding: which metric is impacted, what's the quantitative impact (like 'revenue is underreported by 20%'), when did it start, and what segments are affected. This gives me scope. Second, I quantify the impact with SQL—comparing affected periods to baselines, isolating which partitions are corrupted. Third, I communicate immediately to stakeholders who rely on that metric. I've learned that bad news delivered early is better than surprises later. I tell them what I know, what I'm doing, and when I expect to have answers. Fourth, if possible, I propose a workaround—can we calculate the metric from a different source? Can we exclude the corrupted period and show a partial report? Fifth, I work with engineering to identify and fix the root cause—whether it's a broken ETL job, a schema change, or a bug in transformation logic. Finally, I advocate for preventive measures: adding data quality tests to the pipeline, setting up alerts for anomalies, or improving documentation. I once found that a 'simple' filter change was excluding an entire region's revenue. By catching it early, quantifying the $2M impact, and escalating quickly, we fixed the pipeline within hours and avoided a misleading board report. The key is to be proactive, not reactive."*
+
+## 🔑 Vocabulario Clave
+
+* **Production incident:** Incidente de producción
+* **Quantitative impact:** Impacto cuantitativo
+* **Stakeholders:** Partes interesadas
+* **Workaround:** Solución temporal / alternativa
+* **Root cause:** Causa raíz
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

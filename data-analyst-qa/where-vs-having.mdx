@@ -1,0 +1,52 @@
+---
+title: "¿Cuál es la diferencia entre WHERE y HAVING en SQL?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+El novato responde de memoria: "WHERE filtra antes y HAVING después", sin explicar el porqué ni dar un ejemplo práctico que demuestre comprensión real.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Before I answer, could I ask if you're looking for a conceptual explanation or a practical example? I find this is easier to understand with a real use case."*
+
+## 💻 La Respuesta Técnica
+
+La diferencia fundamental radica en **cuándo se aplica el filtro** en el ciclo de ejecución de SQL:
+
+- **WHERE**: Filtra filas **antes** de la agrupación. Opera sobre datos crudos y no puede usar funciones de agregación.
+- **HAVING**: Filtra resultados **después** de aplicar GROUP BY. Su propósito principal es filtrar basándose en agregados (COUNT, SUM, AVG, etc.)
+
+**Ejemplo práctico:**
+```sql
+-- WHERE: Filtrar empleados antes de agrupar
+SELECT department, COUNT(*)
+FROM employees
+WHERE salary > 50000  -- Filtro individual
+GROUP BY department;
+
+-- HAVING: Filtrar departamentos después de agrupar
+SELECT department, COUNT(*)
+FROM employees
+GROUP BY department
+HAVING COUNT(*) > 5;  -- Filtro sobre el agregado
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"The key difference between WHERE and HAVING is the timing of when the filter is applied in the query execution pipeline. WHERE filters individual rows before any grouping occurs, so it works with raw data and can't reference aggregate functions. HAVING, on the other hand, is specifically designed to filter results after GROUP BY has been applied, which means it can evaluate conditions on aggregated values like COUNT, SUM, or AVG. In practice, I use WHERE to narrow down my dataset early for performance, and HAVING when I need to filter based on summary statistics—for example, showing only departments with more than 5 employees."*
+
+## 🔑 Vocabulario Clave
+
+* **Filter:** Filtrar
+* **Grouping:** Agrupación
+* **Aggregate functions:** Funciones de agregación
+* **Query execution pipeline:** Ciclo de ejecución de consulta
+* **Raw data:** Datos crudos
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

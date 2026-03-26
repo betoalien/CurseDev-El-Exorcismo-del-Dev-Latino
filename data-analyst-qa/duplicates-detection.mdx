@@ -1,0 +1,72 @@
+---
+title: "¿Cómo detectarías registros duplicados en un dataset?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / Data Cleaning & Validation"
+---
+
+## 🛑 El Error del Junior
+
+"Uso DISTINCT"—eso solo oculta el problema. No explica cómo identificar la causa raíz ni validar si son duplicados reales.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"There are quick checks and thorough investigations. Would you like me to show both the detection methods and how to determine if they're actual duplicates or just look-alikes?"*
+
+## 💻 La Respuesta Técnica
+
+**Detección de duplicados requiere múltiples enfoques:**
+
+**1. Comparación de conteos:**
+```sql
+-- Si hay duplicados, COUNT(*) > COUNT(DISTINCT ...)
+SELECT
+    COUNT(*) as total_rows,
+    COUNT(DISTINCT id) as unique_ids
+FROM table;
+-- Si total_rows > unique_ids, hay duplicados de id
+```
+
+**2. Identificar duplicados explícitos:**
+```sql
+-- Grupos con más de una fila
+SELECT id, COUNT(*) as occurrences
+FROM table
+GROUP BY id
+HAVING COUNT(*) > 1;
+
+-- Ver los duplicados completos
+SELECT id, name, email, COUNT(*) as cnt
+FROM customers
+GROUP BY id, name, email
+HAVING COUNT(*) > 1;
+```
+
+**3. Duplicados por combinación de columnas:**
+```sql
+-- Duplicados en columnas clave (ej. mismo email, mismo nombre)
+SELECT email, COUNT(*) as cnt
+FROM customers
+GROUP BY email
+HAVING COUNT(*) > 1;
+```
+
+**4. Validar si son falsos positivos:**
+- Mismos datos en diferentes timestamps → ¿versiones o error?
+- Mismo ID con diferentes datos → ¿actualización o corrupción?
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Detecting duplicates is step one; understanding whether they're legitimate or erroneous is where the real analysis happens. I start with a quick sanity check: compare total row count to distinct count on the primary key or natural key columns. If they differ, I know duplicates exist. Then I drill down: I'll group by the suspected key columns and use HAVING COUNT(*) > 1 to surface the actual duplicate groups. But here's the critical part—not all duplicates are bugs. In event data, multiple rows with the same user_id might be perfectly valid if they represent different events. So I always examine the duplicate records closely: are all columns identical, suggesting a true duplicate? Or do timestamps or other fields differ, indicating legitimate multiple occurrences? I've also found duplicates caused by JOIN explosions, data pipeline retries, or schema changes. Once I confirm they're problematic, I work with engineering to fix the source—and only then deduplicate the dataset, usually by keeping the most recent or most complete record. My go-to deduplication pattern uses ROW_NUMBER() to rank duplicates and filter to rn = 1."*
+
+## 🔑 Vocabulario Clave
+
+* **Sanity check:** Verificación rápida
+* **Natural key:** Clave natural
+* **Drill down:** Profundizar / desglosar
+* **Legitimate:** Legítimo / válido
+* **Deduplication:** Deduplicación
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

@@ -1,0 +1,62 @@
+---
+title: "¿Por qué es importante validar reglas de negocio y no solo revisar si los datos existen?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / Data Cleaning & Validation"
+---
+
+## 🛑 El Error del Junior
+
+"Para que los datos estén correctos"—circular. No da ejemplos de reglas de negocio ni explica consecuencias de no validar.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Data can exist and still be logically wrong. Would it help if I showed examples of business rule violations that would pass a simple 'data exists' check?"*
+
+## 💻 La Respuesta Técnica
+
+**Validar existencia** ≠ **Validar corrección lógica**
+
+Los datos pueden estar presentes pero violar **reglas de negocio** que reflejan la realidad operativa:
+
+**Ejemplos de reglas de negocio:**
+
+| Regla | Violación posible | Por qué importa |
+|-------|-------------------|-----------------|
+| `end_date >= start_date` | Proyecto termina antes de iniciar | Datos corruptos o error de entrada |
+| `amount >= 0` | Montos negativos en ventas | Sistema permite errores o refunds mal marcados |
+| `age BETWEEN 18 AND 120` | Usuarios de 5 años o 150 años | Datos inválidos afectan análisis demográfico |
+| `status IN ('active', 'inactive', 'pending')` | Status "ACTIVO" o "deleted" | Inconsistencia rompe segmentación |
+
+**Validación de negocio vs validación técnica:**
+```sql
+-- Técnica: ¿El dato existe?
+SELECT * FROM orders WHERE amount IS NULL;
+
+-- Negocio: ¿El dato tiene sentido?
+SELECT * FROM orders
+WHERE amount < 0  -- Ventas negativas no deberían existir
+   OR order_date > ship_date  -- No puede enviarse antes de ordenarse
+   OR customer_id NOT IN (SELECT id FROM customers);  -- Cliente fantasma
+```
+
+**Consecuencias de no validar:**
+- Reportes con números incorrectos
+- Decisiones basadas en datos inválidos
+- Pérdida de confianza en el equipo de datos
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"This is a critical distinction: data quality isn't just about completeness—it's about logical validity. A column can have zero NULLs and still be completely wrong from a business perspective. I always validate business rules, which are constraints derived from how the business actually operates. For example: a subscription's end date should never be before its start date. A sales amount should rarely be negative unless it's explicitly a refund. A user's age should be between, say, 13 and 120—anything outside that range is almost certainly a data entry error. These aren't technical constraints; the database will happily store a negative price or a future birth date. But they're business constraints, and violating them indicates a problem. I've found issues like orders shipped before they were placed (timestamp bug), employees with termination dates before hire dates (HR system glitch), and products with zero cost (missing data from supplier). Each of these would pass a 'data exists' check but fails a 'does this make sense' check. My approach is to codify business rules into SQL validation queries that run regularly. If any rule is violated, I'm alerted before the bad data pollutes downstream analysis. This is the difference between being a data puller and a data analyst—analysts validate that the data reflects reality."*
+
+## 🔑 Vocabulario Clave
+
+* **Logical validity:** Validez lógica
+* **Constraints:** Restricciones
+* **Derived from:** Derivado de / basado en
+* **Codify:** Codificar / formalizar
+* **Downstream analysis:** Análisis aguas abajo
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

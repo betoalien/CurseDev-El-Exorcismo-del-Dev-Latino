@@ -1,0 +1,59 @@
+---
+title: "¿Para qué sirve agrupar fechas por mes o por semana en un análisis SQL?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Intermediate"
+---
+
+## 🛑 El Error del Junior
+
+"Para ver tendencias"—vago. No menciona la reducción de ruido, comparabilidad o patrones estacionales.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Time grouping is essential for meaningful trend analysis. Would it help if I explained the trade-offs between different granularities—daily, weekly, monthly?"*
+
+## 💻 La Respuesta Técnica
+
+Agrupar fechas por periodos (mes, semana) sirve para:
+
+1. **Reducir ruido**: El detalle diario puede ocultar tendencias por volatilidad
+2. **Detectar patrones**: Estacionalidad, ciclos de negocio, tendencias de largo plazo
+3. **Comparar periodos**: Mes vs mes, semana vs semana, año vs año
+4. **Alinear con negocio**: Los reportes ejecutivos suelen ser mensuales/semanales
+
+**Ejemplo práctico:**
+```sql
+-- Agrupar por mes (DATE_TRUNC en PostgreSQL, DATE_FORMAT en MySQL)
+SELECT
+    DATE_TRUNC('month', order_date) as month,
+    COUNT(*) as orders,
+    SUM(amount) as revenue
+FROM orders
+GROUP BY DATE_TRUNC('month', order_date)
+ORDER BY month;
+
+-- Agrupar por semana
+SELECT
+    DATE_TRUNC('week', order_date) as week,
+    COUNT(*) as orders
+FROM orders
+GROUP BY DATE_TRUNC('week', order_date)
+ORDER BY week;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Grouping dates by month or week is about finding the right level of granularity for meaningful analysis. Daily data can be noisy—there's natural volatility from day to day that might obscure the underlying trend. By aggregating to weekly or monthly buckets, you smooth out that noise and make patterns more visible: seasonal cycles, growth trends, or the impact of business initiatives. It also aligns with how most organizations operate. Executive reviews happen monthly, marketing campaigns run weekly, financial reporting is monthly. I routinely use DATE_TRUNC or equivalent functions to bucket transactions into these periods, then build metrics like month-over-month growth or week-over-week retention. The key judgment is choosing the right granularity: weekly is good for operational metrics with fast cycles, monthly is better for strategic KPIs. And sometimes I analyze both—if a metric dropped this month, I'll drill down to weekly or even daily to pinpoint when and where it happened."*
+
+## 🔑 Vocabulario Clave
+
+* **Granularity:** Granularidad
+* **Volatility:** Volatilidad
+* **Underlying trend:** Tendencia subyacente
+* **Seasonal cycles:** Ciclos estacionales
+* **Month-over-month growth:** Crecimiento mes a mes
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

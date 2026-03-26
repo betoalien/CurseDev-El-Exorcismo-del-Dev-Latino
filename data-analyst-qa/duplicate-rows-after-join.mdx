@@ -1,0 +1,58 @@
+---
+title: "¿Por qué a veces aparecen filas duplicadas después de hacer un JOIN?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Porque hay duplicados en los datos"—vago y generalmente incorrecto. No identifica la causa raíz: relaciones uno a muchos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"That's a great observation, and it catches a lot of analysts off guard. Would it help if I walked through the mechanics of why this happens and how to debug it?"*
+
+## 💻 La Respuesta Técnica
+
+Las filas duplicadas después de un JOIN **casi siempre indican una relación uno a muchos** (o muchos a muchos):
+
+- Una fila de la tabla izquierda coincide con **múltiples filas** de la derecha
+- El resultado **multiplica** la fila original por cada coincidencia
+
+**Causas comunes:**
+1. **Relación 1:N esperada**: Un cliente tiene múltiples pedidos (diseño correcto)
+2. **Clave de JOIN incorrecta**: Unir con columna que no es única cuando debería serlo
+3. **Datos duplicados en origen**: La tabla derecha ya tiene duplicados no esperados
+
+**Ejemplo práctico:**
+```sql
+-- Un cliente (id=1) tiene 3 pedidos → 3 filas en el resultado
+SELECT c.name, o.order_id
+FROM customers c
+JOIN orders o ON c.id = o.customer_id
+WHERE c.id = 1;
+-- Resultado: 3 filas con el mismo nombre de cliente
+
+-- Solución: Agregar antes de hacer JOIN o usar DISTINCT
+SELECT c.name, COUNT(o.order_id) as order_count
+FROM customers c
+LEFT JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id, c.name;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Duplicate rows after a JOIN are almost always a symptom of a one-to-many or many-to-many relationship. Here's what happens: when a single row from the left table matches multiple rows in the right table, the database creates one output row for each match. So if one customer has five orders, joining customers to orders naturally produces five rows for that customer. This isn't necessarily a bug—it's often the correct behavior. The problem arises when analysts expect one-to-one results and don't account for the multiplication. My debugging approach is: first, verify the relationship type by checking the cardinality of the join key on both sides. Second, if I need aggregated metrics, I aggregate before joining or use GROUP BY after the join. And third, I'm careful with COUNT(*)—it will count the multiplied rows, not the original entities. Understanding this has saved me from countless incorrect metrics in production reports."*
+
+## 🔑 Vocabulario Clave
+
+* **One-to-many relationship:** Relación uno a muchos
+* **Cardinality:** Cardinalidad
+* **Join key:** Clave de unión
+* **Aggregated metrics:** Métricas agregadas
+* **Multiplied rows:** Filas multiplicadas
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

@@ -1,0 +1,58 @@
+---
+title: "¿Cuál es la diferencia entre ROW_NUMBER() y RANK()?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Intermediate"
+---
+
+## 🛑 El Error del Junior
+
+"Uno numera y el otro rankea"—vago. No explica el manejo de empates ni las implicaciones para análisis.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Both are ranking functions, but they handle ties differently, which can significantly impact your analysis. Would you like me to show a concrete example?"*
+
+## 💻 La Respuesta Técnica
+
+Ambas asignan posiciones, pero difieren en **cómo manejan empates**:
+
+- **ROW_NUMBER()**: Asigna números únicos y consecutivos (1, 2, 3, 4...) sin importar empates
+- **RANK()**: Asigna la misma posición a valores empatados, luego **salta números** (1, 2, 2, 4...)
+
+**Ejemplo práctico:**
+```sql
+-- Salarios: 9000, 7000, 7000, 5000
+
+SELECT name, salary,
+       ROW_NUMBER() OVER (ORDER BY salary DESC) as row_num,
+       RANK() OVER (ORDER BY salary DESC) as rank_num
+FROM employees;
+
+-- Resultado:
+-- Name  | Salary | row_num | rank_num
+-- Ana   | 9000   | 1       | 1
+-- Bob   | 7000   | 2       | 2  (empate)
+-- Carol | 7000   | 3       | 2  (empate)
+-- Dave  | 5000   | 4       | 4  (salta el 3)
+```
+
+**Cuándo usar cada uno:**
+- **ROW_NUMBER()**: Cuando necesitas unicidad (top N estricto, deduplicación)
+- **RANK()**: Cuando los empates importan (podios, clasificaciones justas)
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Both ROW_NUMBER and RANK are window functions that assign positions to rows based on an ordering, but they diverge in how they handle ties. ROW_NUMBER is mechanical: it gives every row a unique sequential number—one, two, three, four—regardless of whether values are equal. This is useful when you need exactly one row per position, like selecting the top 10 customers with no ambiguity. RANK, on the other hand, respects ties: if two rows have the same value, they get the same rank. But here's the catch: after a tie, it skips numbers. So if two people tie for second place, the next rank is four, not three. This matters for reporting—if you're building a leaderboard and want to reflect that two people are tied, RANK is the right choice. I also use DENSE_RANK occasionally, which is like RANK but doesn't skip numbers after ties. My decision framework: if uniqueness matters, ROW_NUMBER. If fair ranking with ties matters, RANK. If I want ranking without gaps, DENSE_RANK."*
+
+## 🔑 Vocabulario Clave
+
+* **Ties:** Empates
+* **Sequential number:** Número secuencial
+* **Skip numbers:** Saltar números
+* **Leaderboard:** Tabla de posiciones
+* **Ambiguity:** Ambigüedad
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

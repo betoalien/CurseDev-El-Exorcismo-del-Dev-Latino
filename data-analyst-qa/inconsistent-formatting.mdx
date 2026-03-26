@@ -1,0 +1,70 @@
+---
+title: "¿Por qué los formatos inconsistentes pueden afectar un análisis?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / Data Cleaning & Validation"
+---
+
+## 🛑 El Error del Junior
+
+"Porque da resultados diferentes"—obvio. No explica ejemplos concretos de cómo se rompe un JOIN o un GROUP BY.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"This is one of those unglamorous issues that causes massive problems. Would it help if I showed specific examples of how inconsistency breaks common operations?"*
+
+## 💻 La Respuesta Técnica
+
+Los **formatos inconsistentes** rompen operaciones fundamentales de análisis:
+
+**Problemas comunes:**
+
+| Tipo de inconsistencia | Impacto |
+|------------------------|---------|
+| "México" vs "México " (espacio) | GROUP BY crea dos grupos separados |
+| "2025-01-15" vs "15/01/2025" | ORDER BY y comparaciones fallan |
+| "MX" vs "México" vs "MEX" | JOINs no encuentran coincidencias |
+| "Active" vs "active" vs "ACTIVE" | Filtros WHERE excluyen datos |
+
+**Ejemplo de impacto:**
+```sql
+-- "USA" y "usa" son diferentes para SQL
+SELECT country, COUNT(*) FROM sales GROUP BY country;
+-- Resultado: USA=500, usa=300 (debería ser 800)
+
+-- JOIN falla por formato
+SELECT * FROM orders o
+JOIN countries c ON o.country = c.name;
+-- "United States" ≠ "USA" → filas perdidas
+```
+
+**Solución: Estandarizar antes de analizar**
+```sql
+-- Normalizar texto
+SELECT LOWER(TRIM(country)) as country_clean FROM table;
+
+-- Mapear valores
+SELECT
+    CASE
+        WHEN country IN ('USA', 'US', 'United States') THEN 'United States'
+        WHEN country IN ('MX', 'México', 'Mexico') THEN 'Mexico'
+        ELSE country
+    END as country_standard
+FROM table;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Inconsistent formatting is like a silent killer in data analysis—it doesn't crash your query, but it produces wrong results that you might not catch. I've seen this cause major issues in production reports. The problem manifests in three ways: First, GROUP BY creates separate buckets for what should be the same category—'USA' and 'usa' become two countries. Second, JOINs fail silently because 'United States' doesn't match 'USA,' so you lose rows without any error message. Third, filters and comparisons break—WHERE country = 'Mexico' won't catch 'México' or 'MEX.' The fix is always data standardization at ingestion or in a preprocessing layer. I create cleaned columns with consistent casing, trimmed whitespace, and mapped synonyms. For dates, I ensure everything is in ISO format before any analysis. For categorical data, I maintain a mapping table that translates variations into canonical values. The key insight is that this isn't a one-time cleanup—it's an ongoing data quality requirement. I've built validation checks that flag new inconsistent values before they pollute the dataset. It's not glamorous work, but it's the difference between trustworthy analytics and garbage in, garbage out."*
+
+## 🔑 Vocabulario Clave
+
+* **Silent killer:** Asesino silencioso
+* **Fail silently:** Fallar sin error visible
+* **Standardization:** Estandarización
+* **Preprocessing layer:** Capa de preprocesamiento
+* **Canonical values:** Valores canónicos / estándar
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

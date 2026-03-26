@@ -1,0 +1,55 @@
+---
+title: "Si una métrica importante cae de un periodo a otro, ¿qué deberías revisar antes de sacar conclusiones?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / Business Metrics"
+---
+
+## 🛑 El Error del Junior
+
+"Hubo un problema"—asume conclusión sin investigar. No menciona validación de datos, estacionalidad o cambios de definición.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"A metric drop is a signal, not a conclusion. Would it help if I walked through my diagnostic framework for investigating these situations?"*
+
+## 💻 La Respuesta Técnica
+
+Antes de concluir, valida sistemáticamente:
+
+**1. Calidad de datos**
+- ¿Hay datos completos del periodo?
+- ¿Problemas de tracking o ETL?
+- ¿Cambios en schema o fuentes?
+
+**2. Definición de la métrica**
+- ¿Cambiaron criterios de cálculo?
+- ¿Se modificó el código de tracking?
+
+**3. Contexto temporal**
+- ¿Estacionalidad esperada? (fin de semana, festivos, vacaciones)
+- ¿Comparación vs periodo correcto? (YoY vs MoM)
+
+**4. Segmentación**
+- ¿La caída es general o de un segmento específico?
+- ¿Cambio en mix de usuarios/canales?
+
+**5. Contexto de negocio**
+- ¿Cambios operativos? (lanzamientos, bugs, campañas)
+- ¿Factores externos? (competencia, economía, noticias)
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"When I see a significant metric drop, my first rule is: don't panic, diagnose. A number going down is a signal to investigate, not a conclusion about business performance. I follow a systematic checklist. First, I validate data integrity: is the data complete, or did we have an ETL failure? Is the tracking code still firing correctly? I've seen 'drops' that were just delayed pipelines. Second, I check for definition changes: did someone modify how the metric is calculated? Third, I consider seasonality: is this a normal fluctuation for this day of week, time of month, or holiday period? I always compare year-over-year to control for this. Fourth, I segment: is the drop across the board, or isolated to one region, device, or channel? Often the overall number hides that one segment crashed while others were fine. Fifth, I talk to the business: did Marketing launch a campaign that drove low-quality traffic? Did Engineering deploy a checkout change? Were there external events like a competitor promotion or negative press? Only after ruling out data issues and understanding context do I conclude there's a real performance problem—and even then, I can usually point to the specific driver. This approach has saved me from countless false alarms and helped me focus on issues that actually mattered."*
+
+## 🔑 Vocabulario Clave
+
+* **Data integrity:** Integridad de datos
+* **ETL failure:** Fallo de ETL
+* **Tracking code:** Código de tracking
+* **Seasonality:** Estacionalidad
+* **Year-over-year:** Año contra año
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

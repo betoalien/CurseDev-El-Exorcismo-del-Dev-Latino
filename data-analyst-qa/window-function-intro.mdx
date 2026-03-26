@@ -1,0 +1,60 @@
+---
+title: "¿Qué es una window function en SQL?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Intermediate"
+---
+
+## 🛑 El Error del Junior
+
+"Son funciones para hacer cálculos en ventanas"—definición circular que no explica la ventaja sobre GROUP BY.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Window functions are a bit advanced but incredibly powerful. Would it help if I contrasted them with GROUP BY first, then showed specific use cases?"*
+
+## 💻 La Respuesta Técnica
+
+Una **window function** calcula valores sobre un conjunto de filas relacionadas **sin colapsar el resultado**. A diferencia de GROUP BY:
+
+- **GROUP BY**: Colapsa filas → una fila por grupo (pierdes detalle)
+- **Window function**: Mantiene todas las filas + agrega cálculo de ventana
+
+**Sintaxis:** `FUNCTION() OVER (PARTITION BY ... ORDER BY ...)`
+
+**Tipos principales:**
+1. **Ranking**: ROW_NUMBER(), RANK(), DENSE_RANK()
+2. **Agregación**: SUM(), AVG(), COUNT() con OVER()
+3. **Analíticas**: LAG(), LEAD(), FIRST_VALUE(), LAST_VALUE()
+
+**Ejemplo práctico:**
+```sql
+-- GROUP BY colapsa (pierdes filas individuales)
+SELECT department, AVG(salary) FROM employees GROUP BY department;
+
+-- Window function mantiene detalle + agrega promedio
+SELECT name, department, salary,
+       AVG(salary) OVER (PARTITION BY department) as dept_avg_salary
+FROM employees;
+
+-- Ranking dentro de cada departamento
+SELECT name, department, salary,
+       RANK() OVER (PARTITION BY department ORDER BY salary DESC) as rank_in_dept
+FROM employees;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Window functions are one of the most powerful tools in SQL for analytical queries. The key distinction from GROUP BY is that window functions don't collapse rows—they preserve the original grain of your data while adding computed values across a related set of rows. Think of it as getting the best of both worlds: you keep individual records and also get aggregate or comparative metrics alongside them. The syntax uses an OVER clause, where you define the 'window' of rows to operate on, optionally partitioned by categories and ordered within each partition. I use them constantly for three patterns: ranking (like finding top performers within each region), running totals (cumulative sales over time), and comparisons to group averages (how each employee's salary compares to their department mean). Once you start thinking in windows, you realize how many problems that used to require self-joins or subqueries can be solved elegantly with a single window function."*
+
+## 🔑 Vocabulario Clave
+
+* **Collapse rows:** Colapsar filas
+* **Original grain:** Granularidad original
+* **Computed values:** Valores calculados
+* **Running totals:** Totales acumulados
+* **Self-joins:** Auto-uniones
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

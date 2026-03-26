@@ -1,0 +1,65 @@
+---
+title: "¿Por qué es importante estandarizar columnas de texto como nombres de ciudad, país o categoría?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / Data Cleaning & Validation"
+---
+
+## 🛑 El Error del Junior
+
+"Para que se vea bonito"—superficial. No entiende que la estandarización afecta directamente la precisión del análisis.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"This goes way beyond aesthetics. Would it help if I showed how inconsistent text directly breaks aggregations and joins?"*
+
+## 💻 La Respuesta Técnica
+
+La **estandarización de texto** es crítica para la **integridad analítica**:
+
+**Problemas sin estandarizar:**
+
+| Columna | Variaciones | Impacto |
+|---------|-------------|---------|
+| Ciudad | "Monterrey", "monterrey", "MTY", "Monterrey " | 4 grupos separados en GROUP BY |
+| País | "USA", "U.S.A.", "United States", "Estados Unidos" | JOINs fallan, métricas fragmentadas |
+| Categoría | "Electronics", "electronics ", "ELECTRONICS" | Reportes de ventas incorrectos |
+
+**Consecuencias:**
+1. **Agregaciones incorrectas**: Ventas de "México" y "Mexico" no se suman
+2. **JOINs incompletos**: "CA" no hace match con "California"
+3. **Filtros que excluyen**: WHERE country = 'Germany' pierde "DEUTSCHLAND"
+4. **Dashboards fragmentados**: Mismo país aparece como 5 líneas diferentes
+
+**Técnicas de estandarización:**
+```sql
+-- Normalización básica
+SELECT
+    TRIM(UPPER(city)) as city_clean
+FROM raw_data;
+
+-- Mapeo de valores
+SELECT
+    CASE
+        WHEN country IN ('USA', 'US', 'United States', 'EE.UU.') THEN 'United States'
+        WHEN country IN ('MX', 'México', 'Mexico') THEN 'Mexico'
+        ELSE country
+    END as country_standard
+FROM raw_data;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Text standardization is one of those unglamorous tasks that separates reliable analytics from broken reports. The issue is that SQL is case-sensitive and character-exact in most databases—'Mexico' and 'México' and 'MX' are completely different strings. When you GROUP BY a non-standardized column, you get separate buckets for each variation, fragmenting your metrics. When you JOIN on inconsistent values, rows silently fail to match, giving you incomplete results. I learned this the hard way when a country-level revenue report showed 'United States' at $5M and 'USA' at $2M—the same country, split by data entry variation. Now, I build standardization into my data pipeline. I create cleaned columns with consistent casing (usually UPPER or INITCAP), trimmed whitespace, and mapped synonyms for known variations. For countries, I use ISO codes as the canonical standard. For categories, I maintain a lookup table that maps all variations to canonical values. This upfront work pays dividends: my GROUP BYs produce accurate aggregations, my JOINs don't lose rows, and my dashboards don't show five variations of the same category. It's data hygiene, and it's non-negotiable for trustworthy analysis."*
+
+## 🔑 Vocabulario Clave
+
+* **Case-sensitive:** Sensible a mayúsculas/minúsculas
+* **Character-exact:** Exacto por carácter
+* **Fragmenting metrics:** Fragmentar métricas
+* **Data hygiene:** Higiene de datos
+* **Non-negotiable:** No negociable
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

@@ -1,0 +1,54 @@
+---
+title: "¿Qué es un análisis de cohortes?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / Business Metrics"
+---
+
+## 🛑 El Error del Junior
+
+"Es agrupar usuarios por fecha"—demasiado superficial. No explica por qué es mejor que métricas agregadas ni da ejemplos de insights.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Cohort analysis is a step up from basic metrics. Would it help if I showed how it reveals patterns that aggregate data hides?"*
+
+## 💻 La Respuesta Técnica
+
+El **análisis de cohortes** agrupa usuarios por una **característica compartida** (típicamente fecha de registro) y analiza su comportamiento a lo largo del tiempo:
+
+**¿Por qué usar cohortes?**
+1. **Controla cambios temporales**: Compara peras con peras, no manzanas con naranjas
+2. **Revela tendencias ocultas**: Métricas agregadas pueden ocultar mejora o deterioro
+3. **Mide impacto de cambios**: ¿Los usuarios que llegaron después de un feature change se comportan mejor?
+
+**Tipos de cohortes:**
+- **Time-based**: Fecha de registro (semana, mes)
+- **Behavioral**: Acción inicial (compró vs no compró)
+- **Demográfica**: Región, canal de adquisición, segmento
+
+**Ejemplo:**
+```
+Cohorte | Mes 1 | Mes 2 | Mes 3 | Mes 4
+--------|-------|-------|-------|-------
+Ene-25  | 100%  | 60%   | 45%   | 35%
+Feb-25  | 100%  | 65%   | 50%   | -
+Mar-25  | 100%  | 70%   | -     | -
+```
+*¿Mejora la retención en cohortes recientes?*
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Cohort analysis is a technique that I consider essential for any analyst working with user behavior data. Instead of looking at all users in aggregate—which can mask important trends—you group them into cohorts based on a shared characteristic, most commonly when they first signed up. Then you track each cohort's behavior over time independently. This approach controls for the fact that older cohorts have had more time to accumulate events, and it lets you see whether product changes are actually improving outcomes. For example, if your overall retention rate is flat at 40%, you might conclude nothing is changing. But cohort analysis could reveal that users who joined after a product redesign retain at 55%, while older cohorts are at 30%—meaning your changes are working, but the aggregate average hasn't caught up yet. I've used cohort analysis to evaluate onboarding flows, pricing changes, and marketing campaign quality. The key insight is always the same: aggregate metrics tell you what's happening; cohort analysis tells you why and whether you're moving in the right direction."*
+
+## 🔑 Vocabulario Clave
+
+* **Shared characteristic:** Característica compartida
+* **Controls for:** Controla por
+* **Mask important trends:** Ocultar tendencias importantes
+* **Product redesign:** Rediseño de producto
+* **Onboarding flows:** Flujos de onboarding
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

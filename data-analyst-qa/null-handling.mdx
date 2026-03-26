@@ -1,0 +1,55 @@
+---
+title: "¿Cómo se manejan los valores NULL en SQL?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+Dice "NULL es vacío" y propone usar `= NULL` para comparar. Error técnico crítico que demuestra falta de experiencia práctica.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"NULL handling is one of those topics that trips up a lot of people. Would it help if I covered both the common pitfalls and the best practices I've learned from debugging production queries?"*
+
+## 💻 La Respuesta Técnica
+
+**NULL representa ausencia de valor**, no cero ni cadena vacía. Reglas fundamentales:
+
+1. **Comparación**: NULL no se compara con `=` o `!=`. Se usa `IS NULL` o `IS NOT NULL`.
+2. **Lógica trivalor**: NULL en condiciones booleanas produce UNKNOWN (ni TRUE ni FALSE).
+3. **Agregaciones**: La mayoría de funciones (SUM, AVG, COUNT(col)) ignoran NULLs.
+4. **JOINs**: NULL no es igual a NULL—dos NULLs no hacen match en un JOIN.
+5. **Ordenamiento**: NULLs suelen ir al principio (ASC) o final (DESC), según el motor.
+
+**Ejemplo práctico:**
+```sql
+-- INCORRECTO: Nunca devuelve filas
+SELECT * FROM employees WHERE commission = NULL;
+
+-- CORRECTO:
+SELECT * FROM employees WHERE commission IS NULL;
+
+-- NULL en agregaciones (se ignora):
+SELECT AVG(salary) FROM employees; -- Filas con NULL no cuentan
+
+-- COALESCE para manejar NULLs:
+SELECT name, COALESCE(commission, 0) as commission FROM employees;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"NULL in SQL represents the absence of a value, which is fundamentally different from zero or an empty string. The most critical rule—and the one I see people get wrong most often—is that you cannot compare NULL using standard operators like equals or not equals. Instead, you must use IS NULL or IS NOT NULL. This is because NULL isn't a value; it's a marker for 'unknown.' Another key point is that most aggregate functions automatically exclude NULLs—so AVG(salary) only averages rows where salary actually exists. In JOINs, NULLs don't match each other, which can cause unexpected data loss if you're not careful. My go-to pattern for handling NULLs in reports is using COALESCE to substitute a default value, like zero, before doing calculations. This prevents NULLs from propagating through my results and breaking downstream analysis."*
+
+## 🔑 Vocabulario Clave
+
+* **Absence of value:** Ausencia de valor
+* **Three-valued logic:** Lógica trivalor (TRUE, FALSE, UNKNOWN)
+* **Aggregate functions:** Funciones de agregación
+* **Default value:** Valor por defecto
+* **Propagate:** Propagarse
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

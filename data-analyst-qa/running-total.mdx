@@ -1,0 +1,71 @@
+---
+title: "¿Cómo explicarías el concepto de running total en SQL?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Intermediate"
+---
+
+## 🛑 El Error del Junior
+
+"Es una suma acumulada"—correcto pero no explica el patrón de window function ni da un ejemplo de negocio.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Running totals are a classic use case for window functions. Would you like me to show the SQL pattern and explain why it's better than the old self-join approach?"*
+
+## 💻 La Respuesta Técnica
+
+Un **running total** (acumulado progresivo) suma valores fila por fila siguiendo un orden definido, típicamente tiempo:
+
+**Patrón SQL:**
+```sql
+SUM(columna) OVER (ORDER BY fecha ROWS UNBOUNDED PRECEDING)
+```
+
+**Casos de uso:**
+1. **Ventas acumuladas** por día/mes
+2. **Crecimiento de usuarios** a lo largo del tiempo
+3. **Presupuesto consumido** vs. restante
+4. **Progreso hacia metas** (quota, targets)
+
+**Ejemplo práctico:**
+```sql
+-- Ventas diarias con acumulado
+SELECT
+    sale_date,
+    daily_sales,
+    SUM(daily_sales) OVER (
+        ORDER BY sale_date
+        ROWS UNBOUNDED PRECEDING
+    ) as running_total
+FROM daily_sales_report
+ORDER BY sale_date;
+
+-- Acumulado por categoría
+SELECT
+    category,
+    sale_date,
+    daily_sales,
+    SUM(daily_sales) OVER (
+        PARTITION BY category
+        ORDER BY sale_date
+        ROWS UNBOUNDED PRECEDING
+    ) as category_running_total
+FROM daily_sales_report;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A running total, also called a cumulative sum, is a pattern where you add up values progressively as you move through an ordered sequence—usually time. Think of it like a scoreboard that updates after each game: you see not just today's points, but the season total up to that point. In SQL, I implement this using a window function with SUM() and an OVER clause that orders by date. The key phrase is 'ROWS UNBOUNDED PRECEDING,' which tells SQL to include all rows from the start of the partition up to the current row. This pattern is invaluable for tracking metrics like cumulative revenue, user growth over time, or budget consumption. Before window functions, you'd need a clumsy self-join where each row joined to all prior rows—extremely inefficient on large datasets. With window functions, it's a single pass through the data, clean and performant. I've used this extensively in dashboards where stakeholders want to see both daily performance and year-to-date trends in the same view."*
+
+## 🔑 Vocabulario Clave
+
+* **Cumulative sum:** Suma acumulada
+* **Ordered sequence:** Secuencia ordenada
+* **Year-to-date:** Acumulado del año
+* **Self-join:** Auto-unión
+* **Single pass:** Una sola pasada
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

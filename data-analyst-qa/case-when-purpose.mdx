@@ -1,0 +1,64 @@
+---
+title: "¿Para qué sirve CASE WHEN en SQL?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Intermediate"
+---
+
+## 🛑 El Error del Junior
+
+Dice "es como un if/else" y ya. No da un ejemplo de negocio ni muestra cómo CASE WHEN transforma datos cualitativamente.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"CASE WHEN is one of those features that unlocks a lot of analytical power. Would you like me to show you a real example of how I've used it to classify data or create custom metrics?"*
+
+## 💻 La Respuesta Técnica
+
+**CASE WHEN** implementa lógica condicional dentro de una consulta SQL. Permite:
+
+1. **Clasificar filas** en categorías basadas en condiciones
+2. **Transformar valores** según reglas de negocio
+3. **Crear métricas personalizadas** sin procesamiento posterior
+
+**Sintaxis:**
+```sql
+CASE
+    WHEN condición1 THEN resultado1
+    WHEN condición2 THEN resultado2
+    ELSE resultado_por_defecto
+END
+```
+
+**Ejemplo práctico:**
+```sql
+-- Clasificar clientes por valor
+SELECT customer_id, total_spent,
+    CASE
+        WHEN total_spent >= 10000 THEN 'VIP'
+        WHEN total_spent >= 1000 THEN 'Regular'
+        ELSE 'Low'
+    END as customer_segment
+FROM customers;
+
+-- Crear banderas para análisis
+SELECT order_id,
+    CASE WHEN amount > 1000 THEN 1 ELSE 0 END as is_high_value
+FROM orders;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"CASE WHEN is essentially SQL's way of doing conditional logic—it's the equivalent of if-else statements in programming languages. But what makes it powerful for analysts is that it lets you transform data on the fly, without needing to post-process results. I use it constantly for segmentation: classifying customers into tiers based on spend, flagging transactions that meet certain criteria, or creating custom groupings for analysis. For example, I recently built a customer segmentation model entirely in SQL using CASE WHEN to bucket customers into 'VIP,' 'Regular,' and 'Low' tiers based on their lifetime value. This meant my downstream reports could just group by that segment column without any additional transformation. It's also useful for data cleaning—handling inconsistent categories or standardizing values before analysis."*
+
+## 🔑 Vocabulario Clave
+
+* **Conditional logic:** Lógica condicional
+* **On the fly:** Sobre la marcha / en tiempo real
+* **Post-process:** Post-procesar
+* **Segmentation:** Segmentación
+* **Bucket:** Agrupar / clasificar
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

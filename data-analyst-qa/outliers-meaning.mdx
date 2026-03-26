@@ -1,0 +1,65 @@
+---
+title: "¿Qué es un outlier y por qué no siempre debe eliminarse?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / Data Cleaning & Validation"
+---
+
+## 🛑 El Error del Junior
+
+"Es un valor raro que hay que borrar"—peligroso. Un outlier puede ser el insight más importante del dataset.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Outliers are signals, not noise. Would it help if I explained how to distinguish between data errors and genuine extreme values that matter?"*
+
+## 💻 La Respuesta Técnica
+
+Un **outlier** (valor atípico) es una observación que se **aleja significativamente** del resto de los datos:
+
+**¿Por qué NO eliminar automáticamente?**
+
+1. **Puede ser real**: El top 1% de clientes genera el 50% del revenue—eliminarlos oculta la verdad del negocio
+2. **Puede ser el insight**: Una caída abrupta en métricas puede indicar un bug crítico
+3. **Puede ser fraude**: Transacciones anómalas son exactamente lo que quieres detectar
+
+**Enfoque recomendado:**
+
+**1. Investigar primero:**
+- ¿Error de datos? (edad = 200, salario negativo)
+- ¿Caso legítimo? (CEO tiene compensation 100x el promedio)
+- ¿Cambio de comportamiento? (usuario normalmente activo de repente inactivo)
+
+**2. Decidir según contexto:**
+
+| Situación | Acción |
+|-----------|--------|
+| Error de entrada de datos | Corregir o eliminar |
+| Caso extremo legítimo | Mantener, analizar por separado |
+| Punto de inflexión | Investigar causa raíz |
+
+**3. Técnicas de detección:**
+```sql
+-- Z-score (valores > 3 desviaciones estándar)
+SELECT *,
+    (value - AVG(value) OVER ()) / STDDEV(value) OVER () as z_score
+FROM data;
+
+-- IQR method (fuera de Q1 - 1.5*IQR o Q3 + 1.5*IQR)
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Outliers get a bad reputation as 'noise to remove,' but in my experience, they're often the most important data points. An outlier is simply an observation that deviates significantly from the rest—but that deviation can mean very different things. If a salary column shows $10 million for one employee, that could be a data entry error (extra zero), or it could be the CEO's actual compensation. If daily sales spike 500% on a random Tuesday, that's either a tracking bug or the day a viral campaign hit. My rule is: investigate before eliminating. I always ask: is this physically possible? Does it align with business reality? Can I verify it from another source? For legitimate outliers—like whale customers who spend 100x average—I don't remove them. Instead, I analyze them separately or use robust statistics like median that aren't skewed by extremes. For data errors, I document the issue and fix it at the source. The worst practice is blindly applying a Z-score filter without understanding what the data represents. I've found some of my best insights by diving into outliers instead of deleting them—like discovering a bug that was double-charging customers, or identifying a customer segment that deserved VIP treatment."*
+
+## 🔑 Vocabulario Clave
+
+* **Deviate significantly:** Desviarse significativamente
+* **Data entry error:** Error de entrada de datos
+* **Whale customers:** Clientes ballena (de alto valor)
+* **Robust statistics:** Estadísticas robustas
+* **Skewed:** Sesgado
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

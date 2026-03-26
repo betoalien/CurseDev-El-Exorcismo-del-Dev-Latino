@@ -1,0 +1,52 @@
+---
+title: "¿Cuál es la diferencia entre SUM() y AVG() en SQL?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"SUM suma y AVG promedia"—demasiado básico. No explica cuándo usar cada una ni cómo manejan los NULLs.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"I could give you the simple definition, but I think it's more useful to talk about when to use each one in a business context. Would that be helpful?"*
+
+## 💻 La Respuesta Técnica
+
+Ambas son funciones de agregación para columnas numéricas, pero responden **preguntas de negocio diferentes**:
+
+- **SUM()**: Calcula el **total acumulado**. Responde "¿cuánto en total?"
+- **AVG()**: Calcula la **media aritmética**. Responde "¿cuánto en promedio?"
+
+**Ambas ignoran valores NULL** en el cálculo.
+
+**Ejemplo práctico:**
+```sql
+-- Ventas del mes:
+SELECT
+    SUM(amount) as total_revenue,      -- Ingreso total
+    AVG(amount) as avg_transaction,    -- Ticket promedio
+    COUNT(*) as transaction_count      -- Número de transacciones
+FROM sales WHERE sale_date >= '2025-03-01';
+
+-- Relación: SUM = AVG * COUNT
+-- Si AVG = 100 y COUNT = 50, entonces SUM = 5000
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Both SUM and AVG are aggregate functions for numeric columns, but they answer fundamentally different business questions. SUM gives you the total cumulative value—it's your answer to 'how much in total?' For example, total revenue for the quarter. AVG gives you the arithmetic mean, answering 'what's typical?'—like average transaction size or average customer lifetime value. Both functions automatically exclude NULLs from their calculations, which is important to remember when dealing with incomplete data. In my analysis work, I often use them together: SUM tells me the overall scale, AVG tells me about typical behavior, and COUNT bridges them—because mathematically, SUM equals AVG multiplied by COUNT. Understanding all three together gives me a much richer picture of the data than any single metric alone."*
+
+## 🔑 Vocabulario Clave
+
+* **Total cumulative value:** Valor total acumulado
+* **Arithmetic mean:** Media aritmética
+* **Transaction size:** Tamaño de transacción
+* **Customer lifetime value:** Valor de vida del cliente
+* **Incomplete data:** Datos incompletos
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

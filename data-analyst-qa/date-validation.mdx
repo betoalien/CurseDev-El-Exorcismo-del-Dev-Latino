@@ -1,0 +1,66 @@
+---
+title: "¿Qué problemas comunes pueden aparecer en columnas de fecha?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / Data Cleaning & Validation"
+---
+
+## 🛑 El Error del Junior
+
+"Que estén en formato diferente"—correcto pero incompleto. No menciona timezones, valores inválidos o el impacto en análisis temporal.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Date columns are deceptively tricky. Would it help if I walked through the common pitfalls I've encountered in production data?"*
+
+## 💻 La Respuesta Técnica
+
+**Problemas comunes en columnas de fecha:**
+
+| Problema | Ejemplo | Impacto |
+|----------|---------|---------|
+| Formatos mixtos | "2025-01-15" vs "15/01/2025" vs "Jan 15, 2025" | ORDER BY y comparaciones fallan |
+| Timezones inconsistentes | 2025-01-15 00:00:00 UTC vs PST | Eventos del mismo día aparecen en días distintos |
+| Valores inválidos | "2025-02-30", "0000-00-00", NULL | Queries fallan o excluyen datos |
+| Texto en lugar de fecha | "N/A", "TBD", "pending" | Conversión a fecha falla |
+| Fechas futuras imposibles | birth_date = "2030-01-01" | Datos corruptos |
+
+**Ejemplo de impacto:**
+```sql
+-- Agrupar por mes falla con formatos mixtos
+SELECT DATE_FORMAT(order_date, '%Y-%m') as month, COUNT(*)
+FROM orders;
+-- "2025-01-15" → 2025-01 ✓
+-- "15/01/2025" → NULL o error ✗
+```
+
+**Validaciones recomendadas:**
+```sql
+-- Fechas inválidas o fuera de rango
+SELECT * FROM orders
+WHERE order_date < '2000-01-01'
+   OR order_date > '2100-01-01'
+   OR order_date IS NULL;
+
+-- Detectar timezone issues (eventos a horas exactas como 00:00:00)
+SELECT DATE_TRUNC('hour', created_at) as hour, COUNT(*)
+FROM events
+GROUP BY 1
+HAVING COUNT(*) > 1000;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Date columns are one of the most common sources of data quality issues I've encountered. The problems fall into a few patterns. First, format inconsistency—some systems export dates as ISO format (2025-01-15), others as DD/MM/YYYY, and some as text like 'Jan 15, 2025.' When these mix in the same column, date functions fail or produce wrong results. Second, timezone mismatches—if your data comes from multiple systems, one might store everything in UTC, another in local time, another in PST. This means events that happened on the same day can appear on different dates, breaking daily aggregations. Third, invalid values—dates like February 30th, year 0000, or text placeholders like 'N/A' that can't be parsed. Fourth, implicit NULLs—some systems use '1900-01-01' or '9999-12-31' as sentinel values for missing dates. My approach is to validate dates early: check for values outside a reasonable range (I usually flag anything before 1900 or after 2100), ensure consistent timezone handling by converting everything to UTC at ingestion, and create a separate cleaned date column that's guaranteed to be parseable. For analysis, I always use DATE_TRUNC to bucket dates into consistent periods—day, week, month—after validation. This prevents the silent bugs that come from assuming all dates are well-formed."*
+
+## 🔑 Vocabulario Clave
+
+* **Deceptively tricky:** Engañosamente complicado
+* **Timezone mismatches:** Desajustes de zona horaria
+* **Sentinel values:** Valores centinela (marcadores de posición)
+* **Parseable:** Parseable / interpretable
+* **Silent bugs:** Bugs silenciosos
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

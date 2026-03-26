@@ -1,0 +1,49 @@
+---
+title: "¿Cuál es la diferencia entre COUNT(*) y COUNT(DISTINCT columna)?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+Dice "uno cuenta todo y el otro cuenta valores únicos"—confunde COUNT(columna) con COUNT(DISTINCT columna). Error técnico grave.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"This is actually a common point of confusion. Before I dive in, are you asking about COUNT(columna) specifically, or COUNT(DISTINCT columna)? They behave quite differently."*
+
+## 💻 La Respuesta Técnica
+
+La diferencia está en **cómo manejan los valores NULL**:
+
+- **COUNT(*)**: Cuenta **todas las filas** del resultado, incluyendo aquellas con valores NULL en cualquier columna. Es un conteo de filas físicas.
+- **COUNT(DISTINCT columna)**: Cuenta solo los valores **únicos y no nulos** de esa columna específica.
+
+**Ejemplo práctico:**
+```sql
+-- Tabla employees: 10 filas, 3 tienen commission = NULL
+
+SELECT COUNT(*) FROM employees;        -- Resultado: 10
+SELECT COUNT(commission) FROM employees; -- Resultado: 7 (excluye NULLs)
+SELECT COUNT(DISTINCT commission) FROM employees; -- Únicos no nulos
+
+-- COUNT(DISTINCT) para contar valores únicos:
+SELECT COUNT(DISTINCT department) FROM employees;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"The critical distinction here is how each function handles NULL values and duplicates. COUNT(*) is a row counter—it simply tallies every single row in the result set, regardless of what's in the columns. Think of it as counting physical records. COUNT(DISTINCT column_name), on the other hand, counts only unique non-NULL values in that specific column. This matters because in real-world data, duplicates and NULLs are common. So if I'm counting total employees, I use COUNT(*). If I'm counting how many unique departments we have, I use COUNT(DISTINCT department). The key takeaway: COUNT(*) counts rows, COUNT(DISTINCT) counts unique values."*
+
+## 🔑 Vocabulario Clave
+
+* **NULL values:** Valores nulos
+* **Row counter:** Contador de filas
+* **Non-NULL value:** Valor no nulo
+* **Unique values:** Valores únicos
+* **Distinct:** Distintos
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

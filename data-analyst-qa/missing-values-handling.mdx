@@ -1,0 +1,60 @@
+---
+title: "¿Qué harías si una columna importante tiene muchos valores nulos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / Data Cleaning & Validation"
+---
+
+## 🛑 El Error del Junior
+
+"Los relleno con ceros o los elimino"—decisión prematura sin investigar la causa raíz o el impacto en el análisis.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"That depends heavily on context. Before I decide how to handle them, I'd need to understand why they're null and how much data we're talking about. Would you like me to walk through my decision framework?"*
+
+## 💻 La Respuesta Técnica
+
+El manejo de NULLs requiere un **enfoque sistemático**, no una solución genérica:
+
+**1. Diagnosticar primero:**
+- ¿Qué porcentaje representa? (< 5% vs > 50% cambia todo)
+- ¿Es aleatorio (MCAR) o sistemático? (ej. solo en una región)
+- ¿Por qué existen? (no se capturó, no aplica, error de ETL)
+
+**2. Opciones según contexto:**
+
+| Situación | Enfoque recomendado |
+|-----------|---------------------|
+| < 5% aleatorio | Eliminar filas o imputar con media/mediana |
+| 5-20% | Imputar, crear categoría "Unknown", o usar modelo |
+| > 20% | Considerar eliminar columna o crear flag indicador |
+| "No aplica" | Crear categoría explícita "Not Applicable" |
+
+**3. Técnicas comunes:**
+```sql
+-- Imputación con valor fijo
+SELECT COALESCE(column, 0) as column_filled FROM table;
+
+-- Imputación con promedio
+SELECT COALESCE(column, (SELECT AVG(column) FROM table)) as imputed FROM table;
+
+-- Flag para tracking
+SELECT column, CASE WHEN column IS NULL THEN 1 ELSE 0 END as is_null_flag FROM table;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"My first rule with missing data is: don't touch anything until I understand why it's missing. The approach changes completely based on the 'why.' If values are missing at random—like a sensor glitch affecting 2% of readings—I might simply exclude those rows or impute with the mean. But if there's a systematic pattern—say, income is null only for users under 18—that tells me 'not applicable' is the real value, and I should create an explicit category for it. I always start by quantifying: what percentage of the column is null? Is it concentrated in specific segments? Then I consider the analysis goal. For predictive modeling, I might use advanced imputation or let the algorithm handle it. For descriptive analytics, I'll often create a 'NULL' category so stakeholders can see the gap. One technique I use frequently is adding a binary flag alongside the imputed column—this preserves the information that a value was missing, which can itself be predictive. The worst thing you can do is blindly fill with zero or drop rows without documenting the decision. I always log my missing data handling so the analysis is reproducible."*
+
+## 🔑 Vocabulario Clave
+
+* **Missing at random:** Aleatorio / al azar
+* **Systematic pattern:** Patrón sistemático
+* **Imputation:** Imputación
+* **Binary flag:** Bandera binaria
+* **Reproducible:** Reproducible
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

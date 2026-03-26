@@ -1,0 +1,52 @@
+---
+title: "¿Cuál es la diferencia entre INNER JOIN y LEFT JOIN?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+Recita la definición de libro: "INNER JOIN devuelve solo coincidencias y LEFT JOIN todo de la izquierda". Correcto, pero incompleto—no menciona las implicaciones prácticas ni el manejo de NULLs.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"That's a great foundational question. Would it be helpful if I explained this with a concrete example, like customers and orders? I find that makes the trade-offs clearer."*
+
+## 💻 La Respuesta Técnica
+
+La diferencia clave está en **qué filas se preservan** cuando no hay coincidencia:
+
+- **INNER JOIN**: Devuelve únicamente las filas donde existe coincidencia en **ambas** tablas. Si un registro no tiene match, se excluye del resultado.
+- **LEFT JOIN**: Devuelve **todas** las filas de la tabla izquierda (primera tabla), incluso si no hay coincidencia en la derecha. Los campos sin match se llenan con NULL.
+
+**Ejemplo práctico:**
+```sql
+-- INNER JOIN: Solo clientes con pedidos
+SELECT c.name, o.order_id
+FROM customers c
+INNER JOIN orders o ON c.id = o.customer_id;
+-- Resultado: Si un cliente nunca compró, NO aparece
+
+-- LEFT JOIN: Todos los clientes, compren o no
+SELECT c.name, o.order_id
+FROM customers c
+LEFT JOIN orders o ON c.id = o.customer_id;
+-- Resultado: Todos los clientes aparecen; sin pedidos = NULL en order_id
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"The fundamental difference is about data preservation. INNER JOIN is restrictive—it only returns rows where there's a match in both tables, so any unmatched records get excluded entirely. LEFT JOIN is more inclusive: it preserves all rows from the left table regardless of whether there's a match on the right. When there's no match, the right-side columns just come through as NULLs. In my experience as an analyst, I use INNER JOIN when I need to ensure referential integrity—like analyzing only customers who've actually placed orders. I reach for LEFT JOIN when I need to identify gaps—like finding customers who haven't ordered yet, or calculating metrics that require a complete denominator, such as conversion rates."*
+
+## 🔑 Vocabulario Clave
+
+* **Match:** Coincidencia
+* **Unmatched records:** Registros sin coincidencia
+* **Data preservation:** Preservación de datos
+* **Referential integrity:** Integridad referencial
+* **Conversion rates:** Tasas de conversión
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

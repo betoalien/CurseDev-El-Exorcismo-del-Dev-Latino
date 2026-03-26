@@ -1,0 +1,63 @@
+---
+title: "¿Por qué usar DISTINCT no siempre es la mejor solución cuando una consulta devuelve duplicados?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Analyst / SQL Intermediate"
+---
+
+## 🛑 El Error del Junior
+
+"DISTINCT elimina duplicados y ya"—no investiga la causa raíz y puede ocultar problemas de lógica o datos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"DISTINCT can feel like a quick fix, but it often masks the real problem. Would it help if I showed how to diagnose why duplicates appear in the first place?"*
+
+## 💻 La Respuesta Técnica
+
+**DISTINCT** elimina duplicados del resultado, pero **no corrige la causa raíz**:
+
+**Problemas de usar DISTINCT como "solución":**
+1. **Oculta bugs de JOIN**: Relaciones mal planteadas que multiplican filas
+2. **Enmascara problemas de datos**: Duplicados reales en origen que deberían investigarse
+3. **Performance innecesario**: DISTINCT requiere ordenar y comparar todas las filas
+4. **Pérdida de información**: Podrías estar eliminando filas válidas que necesitan análisis
+
+**Mejor enfoque:**
+1. **Diagnosticar**: ¿Por qué hay duplicados? ¿Es el JOIN? ¿Son datos duplicados?
+2. **Validar cardinalidad**: La clave de JOIN debería ser única en un lado
+3. **Corregir la lógica**: Arreglar el JOIN o agregar antes de unir
+
+**Ejemplo práctico:**
+```sql
+-- "Solución" con DISTINCT (oculta el problema)
+SELECT DISTINCT c.name, o.order_id
+FROM customers c JOIN orders o ON c.id = o.customer_id;
+
+-- Diagnóstico: ¿El JOIN está multiplicando?
+SELECT c.id, COUNT(o.order_id) as order_count
+FROM customers c JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id
+HAVING COUNT(o.order_id) > 1;  -- Muestra qué clientes tienen múltiples pedidos
+
+-- Solución correcta: Agregar si necesitas métricas por cliente
+SELECT c.name, COUNT(o.order_id) as total_orders
+FROM customers c JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id, c.name;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Using DISTINCT to eliminate duplicates is one of those patterns that works on the surface but can hide serious issues underneath. I think of it as putting tape over a check engine light—it makes the symptom go away, but the problem is still there. Duplicates in query results usually come from one of two sources: either the join logic is creating a one-to-many relationship that you haven't accounted for, or there's actual duplicated data in your source tables. Slapping DISTINCT on top masks both possibilities. In my work, I've learned to treat DISTINCT as a red flag that prompts investigation. First, I check the join cardinality: am I joining to a table where one record can match multiple rows? If so, I need to aggregate before joining or use COUNT(DISTINCT ...) for metrics. Second, I validate the source data for actual duplicates. Only after ruling out these issues do I consider DISTINCT—and even then, I'm aware it adds performance overhead because the database has to sort and deduplicate the entire result set. The bottom line: DISTINCT has its place, but it shouldn't be your first response to unexpected duplicates."*
+
+## 🔑 Vocabulario Clave
+
+* **Masks:** Enmascarar / ocultar
+* **Check engine light:** Luz de advertencia
+* **Join cardinality:** Cardinalidad del JOIN
+* **Red flag:** Señal de alarma
+* **Performance overhead:** Sobrecarga de rendimiento
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]
