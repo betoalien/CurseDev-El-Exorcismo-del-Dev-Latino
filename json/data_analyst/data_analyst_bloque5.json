@@ -1,0 +1,62 @@
+[
+  {
+    "id": "dashboard-purpose",
+    "categoria": "Data Analyst / Dashboards & Reporting",
+    "pregunta": "¿Cuál es el objetivo principal de un dashboard?",
+    "concepto_tecnico_base": "El objetivo de un dashboard es mostrar información relevante de forma clara y accionable para ayudar a monitorear desempeño, detectar problemas y apoyar la toma de decisiones."
+  },
+  {
+    "id": "dashboard-vs-report",
+    "categoria": "Data Analyst / Dashboards & Reporting",
+    "pregunta": "¿Cuál es la diferencia entre un dashboard y un reporte tradicional?",
+    "concepto_tecnico_base": "Un dashboard suele ser visual, interactivo y enfocado en monitoreo continuo de KPIs. Un reporte tradicional suele ser más estático, detallado y orientado a revisión o análisis puntual."
+  },
+  {
+    "id": "good-kpi-selection",
+    "categoria": "Data Analyst / Dashboards & Reporting",
+    "pregunta": "¿Cómo decidirías qué KPIs incluir en un dashboard?",
+    "concepto_tecnico_base": "Los KPIs deben elegirse según el objetivo del usuario, el nivel de decisión que tomará y la utilidad real de cada métrica. Un buen dashboard muestra lo necesario, no todo lo disponible."
+  },
+  {
+    "id": "avoid-dashboard-clutter",
+    "categoria": "Data Analyst / Dashboards & Reporting",
+    "pregunta": "¿Por qué es importante evitar saturar un dashboard con demasiadas visualizaciones?",
+    "concepto_tecnico_base": "Demasiadas gráficas o métricas generan ruido visual, dificultan la interpretación y reducen la capacidad del usuario para detectar insights o tomar decisiones rápidas."
+  },
+  {
+    "id": "choose-right-chart",
+    "categoria": "Data Analyst / Dashboards & Reporting",
+    "pregunta": "¿Cómo elegirías el tipo de gráfica correcto para una métrica?",
+    "concepto_tecnico_base": "La elección depende del objetivo analítico. Barras sirven para comparar categorías, líneas para tendencias en el tiempo, tablas para detalle y pasteles solo en casos muy limitados de proporciones simples."
+  },
+  {
+    "id": "highlight-main-insight",
+    "categoria": "Data Analyst / Dashboards & Reporting",
+    "pregunta": "¿Cómo destacarías el insight principal en un dashboard o reporte?",
+    "concepto_tecnico_base": "El insight principal debe resaltarse con jerarquía visual, títulos claros, contexto breve y, cuando sea útil, anotaciones o comparativos que ayuden a entender rápidamente qué está pasando."
+  },
+  {
+    "id": "stakeholder-needs",
+    "categoria": "Data Analyst / Dashboards & Reporting",
+    "pregunta": "¿Por qué es importante entender al stakeholder antes de construir un dashboard?",
+    "concepto_tecnico_base": "Cada stakeholder tiene distintas necesidades, nivel técnico y objetivos de negocio. Entender eso permite construir un dashboard útil, relevante y alineado con decisiones reales."
+  },
+  {
+    "id": "explain-metric-drop",
+    "categoria": "Data Analyst / Dashboards & Reporting",
+    "pregunta": "Si un stakeholder pregunta por qué bajó una métrica, ¿cómo deberías responder como analista?",
+    "concepto_tecnico_base": "La respuesta debe apoyarse en datos, contexto, segmentación y validación previa. No conviene asumir causas sin evidencia; primero se deben revisar tendencias, cambios operativos y posibles problemas de calidad."
+  },
+  {
+    "id": "actionable-reporting",
+    "categoria": "Data Analyst / Dashboards & Reporting",
+    "pregunta": "¿Qué significa que un reporte sea accionable?",
+    "concepto_tecnico_base": "Un reporte accionable no solo muestra datos, sino que facilita entender qué pasó, por qué importa y qué se puede hacer después. Su valor está en conectar información con decisiones."
+  },
+  {
+    "id": "communicate-to-non-technical-audience",
+    "categoria": "Data Analyst / Dashboards & Reporting",
+    "pregunta": "¿Cómo explicarías un hallazgo técnico a una audiencia no técnica?",
+    "concepto_tecnico_base": "La mejor forma es traducir el hallazgo a lenguaje de negocio, enfocarse en impacto, evitar tecnicismos innecesarios y usar ejemplos claros para que la audiencia entienda el problema o la oportunidad."
+  }
+]

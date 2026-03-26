@@ -1,0 +1,62 @@
+[
+  {
+    "id": "why-python-data-engineering",
+    "categoria": "Data Engineer / Python for Data Engineering",
+    "pregunta": "¿Por qué Python es tan usado en Data Engineering?",
+    "concepto_tecnico_base": "Python es muy usado en Data Engineering porque permite automatizar tareas, consumir APIs, procesar archivos, transformar datos y conectarse fácilmente con bases de datos y servicios externos."
+  },
+  {
+    "id": "read-csv-python",
+    "categoria": "Data Engineer / Python for Data Engineering",
+    "pregunta": "¿Cómo explicarías el proceso de leer un archivo CSV con Python?",
+    "concepto_tecnico_base": "Leer un CSV en Python implica abrir el archivo, interpretar sus columnas y filas, y cargarlo en una estructura manejable como listas, diccionarios o un DataFrame para después transformarlo o validarlo."
+  },
+  {
+    "id": "json-common-format",
+    "categoria": "Data Engineer / Python for Data Engineering",
+    "pregunta": "¿Por qué JSON es un formato tan común en pipelines de datos?",
+    "concepto_tecnico_base": "JSON es común porque representa datos estructurados de forma flexible, es fácil de intercambiar entre sistemas y se usa mucho en APIs, logs, eventos y servicios web."
+  },
+  {
+    "id": "requests-api-purpose",
+    "categoria": "Data Engineer / Python for Data Engineering",
+    "pregunta": "¿Para qué sirve consumir una API desde Python en un flujo de Data Engineering?",
+    "concepto_tecnico_base": "Consumir una API permite extraer datos desde sistemas externos de forma programática, automatizando procesos de integración y facilitando la carga periódica de información."
+  },
+  {
+    "id": "error-handling-importance",
+    "categoria": "Data Engineer / Python for Data Engineering",
+    "pregunta": "¿Por qué es importante manejar errores en un script de datos?",
+    "concepto_tecnico_base": "Manejar errores evita que el proceso falle silenciosamente, ayuda a identificar problemas, mejora la estabilidad del pipeline y permite registrar información útil para debugging o reintentos."
+  },
+  {
+    "id": "logging-purpose",
+    "categoria": "Data Engineer / Python for Data Engineering",
+    "pregunta": "¿Para qué sirve el logging en un pipeline de datos?",
+    "concepto_tecnico_base": "El logging sirve para registrar eventos importantes del proceso, como inicio, fin, errores, conteos o validaciones, facilitando monitoreo, auditoría y diagnóstico de fallas."
+  },
+  {
+    "id": "functions-reusable-code",
+    "categoria": "Data Engineer / Python for Data Engineering",
+    "pregunta": "¿Por qué conviene usar funciones en scripts de Data Engineering?",
+    "concepto_tecnico_base": "Las funciones permiten dividir lógica en bloques reutilizables, mejorar la legibilidad del código, facilitar pruebas y reducir errores al evitar repetir instrucciones."
+  },
+  {
+    "id": "modular-code-importance",
+    "categoria": "Data Engineer / Python for Data Engineering",
+    "pregunta": "¿Qué significa que un proyecto de Python sea modular?",
+    "concepto_tecnico_base": "Un proyecto modular separa responsabilidades en distintos archivos o componentes, por ejemplo extracción, transformación y carga, lo que facilita mantenimiento, escalabilidad y comprensión del flujo."
+  },
+  {
+    "id": "environment-variables-purpose",
+    "categoria": "Data Engineer / Python for Data Engineering",
+    "pregunta": "¿Para qué sirven las variables de entorno en un proyecto de datos?",
+    "concepto_tecnico_base": "Las variables de entorno permiten guardar configuración sensible o variable, como credenciales, rutas o URLs, sin hardcodearla directamente en el código."
+  },
+  {
+    "id": "retry-logic-purpose",
+    "categoria": "Data Engineer / Python for Data Engineering",
+    "pregunta": "¿Por qué puede ser útil implementar reintentos en un pipeline que consume una API?",
+    "concepto_tecnico_base": "Los reintentos ayudan a recuperarse de fallas temporales como timeouts, errores de red o respuestas intermitentes, aumentando la robustez del pipeline sin intervención manual inmediata."
+  }
+]

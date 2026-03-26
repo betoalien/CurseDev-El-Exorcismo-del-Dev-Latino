@@ -1,0 +1,62 @@
+[
+  {
+    "id": "extract-step-purpose",
+    "categoria": "Data Engineer / ETL & Transformations",
+    "pregunta": "¿Qué ocurre en la etapa de extracción dentro de un proceso ETL?",
+    "concepto_tecnico_base": "En la extracción se obtienen datos desde una o varias fuentes, como bases de datos, archivos, APIs o sistemas externos, para después validarlos, transformarlos y cargarlos en un destino."
+  },
+  {
+    "id": "transform-step-purpose",
+    "categoria": "Data Engineer / ETL & Transformations",
+    "pregunta": "¿Qué tipo de tareas suelen hacerse en la etapa de transformación?",
+    "concepto_tecnico_base": "En la transformación se limpian, estandarizan, validan, enriquecen o reestructuran los datos para que cumplan reglas de negocio y queden listos para análisis o consumo operativo."
+  },
+  {
+    "id": "load-step-purpose",
+    "categoria": "Data Engineer / ETL & Transformations",
+    "pregunta": "¿Qué significa la etapa de carga en un pipeline de datos?",
+    "concepto_tecnico_base": "La carga consiste en insertar o actualizar los datos transformados en un sistema destino, como una base de datos, data warehouse, data lake o archivo final."
+  },
+  {
+    "id": "csv-vs-json-processing",
+    "categoria": "Data Engineer / ETL & Transformations",
+    "pregunta": "¿Qué diferencias importantes existen entre procesar archivos CSV y archivos JSON?",
+    "concepto_tecnico_base": "CSV suele representar datos tabulares planos con estructura fija, mientras que JSON permite estructuras jerárquicas y anidadas, lo que requiere tratamientos distintos al transformar o normalizar los datos."
+  },
+  {
+    "id": "schema-validation-files",
+    "categoria": "Data Engineer / ETL & Transformations",
+    "pregunta": "¿Por qué es importante validar el schema de un archivo antes de procesarlo?",
+    "concepto_tecnico_base": "Validar el schema ayuda a confirmar que las columnas, tipos y estructura del archivo coinciden con lo esperado, evitando errores aguas abajo y detectando cambios inesperados en la fuente."
+  },
+  {
+    "id": "column-standardization-purpose",
+    "categoria": "Data Engineer / ETL & Transformations",
+    "pregunta": "¿Por qué suele ser necesario estandarizar nombres de columnas y formatos durante una transformación?",
+    "concepto_tecnico_base": "Estandarizar columnas y formatos facilita integraciones consistentes, evita errores en joins y transformaciones, y mejora la legibilidad y reutilización de los datos procesados."
+  },
+  {
+    "id": "deduplication-purpose",
+    "categoria": "Data Engineer / ETL & Transformations",
+    "pregunta": "¿Qué significa deduplicar datos dentro de un pipeline?",
+    "concepto_tecnico_base": "Deduplicar significa identificar y remover o consolidar registros repetidos que no deberían existir varias veces, protegiendo la calidad e integridad del dataset final."
+  },
+  {
+    "id": "incremental-load-concept",
+    "categoria": "Data Engineer / ETL & Transformations",
+    "pregunta": "¿Qué es una carga incremental y por qué puede ser preferible a una carga completa?",
+    "concepto_tecnico_base": "Una carga incremental procesa solo los datos nuevos o modificados desde la última ejecución, reduciendo tiempo, costo y uso de recursos en comparación con volver a cargar todo el histórico."
+  },
+  {
+    "id": "idempotency-concept",
+    "categoria": "Data Engineer / ETL & Transformations",
+    "pregunta": "¿Qué significa que un proceso ETL sea idempotente?",
+    "concepto_tecnico_base": "Un proceso idempotente produce el mismo resultado final aunque se ejecute varias veces con la misma entrada, evitando duplicados o inconsistencias por reejecuciones."
+  },
+  {
+    "id": "reprocessing-failed-data",
+    "categoria": "Data Engineer / ETL & Transformations",
+    "pregunta": "¿Qué harías si una parte de los datos falla durante una transformación?",
+    "concepto_tecnico_base": "Lo ideal es aislar los registros problemáticos, registrar el error, continuar con lo válido si el diseño lo permite y dejar trazabilidad para reprocesar o corregir la parte fallida sin afectar todo el pipeline."
+  }
+]

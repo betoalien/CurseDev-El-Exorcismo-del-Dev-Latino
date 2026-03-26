@@ -1,0 +1,62 @@
+[
+  {
+    "id": "where-vs-having",
+    "categoria": "Data Analyst / SQL Fundamentals",
+    "pregunta": "¿Cuál es la diferencia entre WHERE y HAVING en SQL?",
+    "concepto_tecnico_base": "WHERE filtra filas antes de que ocurra la agrupación. HAVING filtra resultados después de aplicar GROUP BY."
+  },
+  {
+    "id": "inner-vs-left-join",
+    "categoria": "Data Analyst / SQL Fundamentals",
+    "pregunta": "¿Cuál es la diferencia entre INNER JOIN y LEFT JOIN?",
+    "concepto_tecnico_base": "INNER JOIN devuelve solo las filas con coincidencia en ambas tablas. LEFT JOIN devuelve todas las filas de la tabla izquierda y las coincidencias de la tabla derecha, usando NULL cuando no existe coincidencia."
+  },
+  {
+    "id": "group-by-purpose",
+    "categoria": "Data Analyst / SQL Fundamentals",
+    "pregunta": "¿Para qué sirve GROUP BY en SQL?",
+    "concepto_tecnico_base": "GROUP BY agrupa filas que comparten un mismo valor en una o varias columnas para poder aplicar funciones de agregación como COUNT, SUM, AVG, MIN o MAX."
+  },
+  {
+    "id": "count-vs-count-distinct",
+    "categoria": "Data Analyst / SQL Fundamentals",
+    "pregunta": "¿Cuál es la diferencia entre COUNT(*) y COUNT(DISTINCT columna)?",
+    "concepto_tecnico_base": "COUNT(*) cuenta todas las filas del resultado. COUNT(DISTINCT columna) cuenta únicamente los valores únicos no nulos de esa columna."
+  },
+  {
+    "id": "null-handling",
+    "categoria": "Data Analyst / SQL Fundamentals",
+    "pregunta": "¿Cómo se manejan los valores NULL en SQL?",
+    "concepto_tecnico_base": "NULL representa la ausencia de valor. No debe compararse con = o !=, sino con IS NULL o IS NOT NULL. Además, afecta agregaciones y joins si no se trata correctamente."
+  },
+  {
+    "id": "order-by-purpose",
+    "categoria": "Data Analyst / SQL Fundamentals",
+    "pregunta": "¿Para qué sirve ORDER BY en una consulta SQL?",
+    "concepto_tecnico_base": "ORDER BY ordena el resultado final de una consulta en orden ascendente o descendente según una o varias columnas."
+  },
+  {
+    "id": "limit-purpose",
+    "categoria": "Data Analyst / SQL Fundamentals",
+    "pregunta": "¿Para qué sirve LIMIT en SQL?",
+    "concepto_tecnico_base": "LIMIT restringe la cantidad de filas devueltas por una consulta, lo cual es útil para explorar datos, paginar resultados o mostrar solo los primeros registros."
+  },
+  {
+    "id": "sum-vs-avg",
+    "categoria": "Data Analyst / SQL Fundamentals",
+    "pregunta": "¿Cuál es la diferencia entre SUM() y AVG() en SQL?",
+    "concepto_tecnico_base": "SUM() calcula la suma total de una columna numérica. AVG() calcula el promedio de los valores numéricos no nulos de esa columna."
+  },
+  {
+    "id": "join-why-useful",
+    "categoria": "Data Analyst / SQL Fundamentals",
+    "pregunta": "¿Por qué son importantes los JOINs en análisis de datos?",
+    "concepto_tecnico_base": "Los JOINs permiten combinar información de distintas tablas relacionadas, lo que hace posible enriquecer análisis, construir métricas de negocio y responder preguntas más completas."
+  },
+  {
+    "id": "duplicate-rows-after-join",
+    "categoria": "Data Analyst / SQL Fundamentals",
+    "pregunta": "¿Por qué a veces aparecen filas duplicadas después de hacer un JOIN?",
+    "concepto_tecnico_base": "Las filas duplicadas suelen aparecer cuando la relación entre tablas no es uno a uno. Si una fila de una tabla coincide con varias filas de la otra, el resultado se multiplica."
+  }
+]

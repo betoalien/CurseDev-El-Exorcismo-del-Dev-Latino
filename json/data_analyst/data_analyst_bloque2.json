@@ -1,0 +1,62 @@
+[
+  {
+    "id": "case-when-purpose",
+    "categoria": "Data Analyst / SQL Intermediate",
+    "pregunta": "¿Para qué sirve CASE WHEN en SQL?",
+    "concepto_tecnico_base": "CASE WHEN permite crear lógica condicional dentro de una consulta SQL, similar a un if/else, para clasificar, transformar o etiquetar datos según ciertas condiciones."
+  },
+  {
+    "id": "cte-purpose",
+    "categoria": "Data Analyst / SQL Intermediate",
+    "pregunta": "¿Qué es una CTE y por qué puede ser útil en una consulta?",
+    "concepto_tecnico_base": "Una CTE o Common Table Expression es una subconsulta nombrada que se define con WITH. Ayuda a organizar consultas complejas, hacerlas más legibles y reutilizar resultados intermedios."
+  },
+  {
+    "id": "subquery-vs-cte",
+    "categoria": "Data Analyst / SQL Intermediate",
+    "pregunta": "¿Cuál es la diferencia entre una subquery y una CTE?",
+    "concepto_tecnico_base": "Una subquery vive dentro de otra consulta, mientras que una CTE se define al inicio con WITH. Ambas pueden resolver problemas similares, pero la CTE suele mejorar la legibilidad y mantenimiento."
+  },
+  {
+    "id": "window-function-intro",
+    "categoria": "Data Analyst / SQL Intermediate",
+    "pregunta": "¿Qué es una window function en SQL?",
+    "concepto_tecnico_base": "Una window function calcula valores sobre un conjunto de filas relacionadas con la fila actual sin colapsar el resultado como lo hace GROUP BY. Se usa para rankings, acumulados, comparaciones y análisis por partición."
+  },
+  {
+    "id": "row-number-vs-rank",
+    "categoria": "Data Analyst / SQL Intermediate",
+    "pregunta": "¿Cuál es la diferencia entre ROW_NUMBER() y RANK()?",
+    "concepto_tecnico_base": "ROW_NUMBER() asigna un número único y consecutivo a cada fila. RANK() asigna la misma posición a empates, pero deja huecos en la numeración posterior."
+  },
+  {
+    "id": "partition-by-purpose",
+    "categoria": "Data Analyst / SQL Intermediate",
+    "pregunta": "¿Para qué sirve PARTITION BY en una window function?",
+    "concepto_tecnico_base": "PARTITION BY divide el conjunto de datos en grupos lógicos dentro de los cuales se aplica la función de ventana, permitiendo cálculos independientes por categoría, cliente, región u otro campo."
+  },
+  {
+    "id": "running-total",
+    "categoria": "Data Analyst / SQL Intermediate",
+    "pregunta": "¿Cómo explicarías el concepto de running total en SQL?",
+    "concepto_tecnico_base": "Un running total o acumulado progresivo suma valores fila por fila siguiendo un orden definido, como una fecha. Se usa mucho para analizar crecimiento, ventas acumuladas o evolución en el tiempo."
+  },
+  {
+    "id": "date-trunc-purpose",
+    "categoria": "Data Analyst / SQL Intermediate",
+    "pregunta": "¿Para qué sirve agrupar fechas por mes o por semana en un análisis SQL?",
+    "concepto_tecnico_base": "Agrupar fechas por mes o semana ayuda a resumir información temporal, detectar tendencias, comparar periodos y construir métricas de negocio más útiles que el detalle diario."
+  },
+  {
+    "id": "one-to-many-join-impact",
+    "categoria": "Data Analyst / SQL Intermediate",
+    "pregunta": "¿Qué impacto tiene una relación uno a muchos al hacer un JOIN?",
+    "concepto_tecnico_base": "En una relación uno a muchos, una fila de la tabla principal puede coincidir con varias filas de la otra tabla, multiplicando registros y afectando conteos, sumas o métricas si no se controla correctamente."
+  },
+  {
+    "id": "distinct-not-always-solution",
+    "categoria": "Data Analyst / SQL Intermediate",
+    "pregunta": "¿Por qué usar DISTINCT no siempre es la mejor solución cuando una consulta devuelve duplicados?",
+    "concepto_tecnico_base": "DISTINCT elimina duplicados en el resultado, pero no corrige la causa raíz. Si los duplicados provienen de un JOIN mal planteado o una relación de datos incorrecta, usar DISTINCT puede ocultar un problema de lógica."
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "why-sql-data-engineering",
+    "categoria": "Data Engineer / SQL & Data Modeling",
+    "pregunta": "¿Por qué SQL es una habilidad fundamental para un Data Engineer?",
+    "concepto_tecnico_base": "SQL es fundamental porque permite consultar, transformar, validar y cargar datos en sistemas relacionales o analíticos, además de ser clave para construir capas limpias y modelos consumibles."
+  },
+  {
+    "id": "staging-purpose",
+    "categoria": "Data Engineer / SQL & Data Modeling",
+    "pregunta": "¿Qué es una tabla de staging y para qué se usa?",
+    "concepto_tecnico_base": "Una tabla de staging es una capa intermedia donde se cargan datos crudos o semiprocesados antes de limpiarlos, validarlos o transformarlos hacia tablas finales más confiables."
+  },
+  {
+    "id": "fact-vs-dimension",
+    "categoria": "Data Engineer / SQL & Data Modeling",
+    "pregunta": "¿Cuál es la diferencia entre una tabla de hechos y una tabla de dimensiones?",
+    "concepto_tecnico_base": "Una tabla de hechos almacena eventos o métricas medibles, como ventas o transacciones. Una tabla de dimensiones almacena contexto descriptivo, como clientes, productos, fechas o regiones."
+  },
+  {
+    "id": "primary-key-purpose",
+    "categoria": "Data Engineer / SQL & Data Modeling",
+    "pregunta": "¿Por qué es importante una Primary Key en una tabla?",
+    "concepto_tecnico_base": "La Primary Key identifica de forma única cada registro en una tabla y ayuda a evitar duplicados, mantener integridad y establecer relaciones confiables con otras tablas."
+  },
+  {
+    "id": "foreign-key-purpose",
+    "categoria": "Data Engineer / SQL & Data Modeling",
+    "pregunta": "¿Para qué sirve una Foreign Key?",
+    "concepto_tecnico_base": "Una Foreign Key conecta una tabla con otra usando una clave referenciada, permitiendo mantener integridad referencial y modelar relaciones entre entidades."
+  },
+  {
+    "id": "normalization-purpose",
+    "categoria": "Data Engineer / SQL & Data Modeling",
+    "pregunta": "¿Qué es la normalización en bases de datos?",
+    "concepto_tecnico_base": "La normalización es el proceso de organizar datos en tablas relacionadas para reducir redundancia, mejorar consistencia y facilitar el mantenimiento de la información."
+  },
+  {
+    "id": "denormalization-why",
+    "categoria": "Data Engineer / SQL & Data Modeling",
+    "pregunta": "¿Por qué a veces se desnormalizan tablas en sistemas analíticos?",
+    "concepto_tecnico_base": "La desnormalización se usa para simplificar consultas y mejorar rendimiento en consumo analítico, aceptando cierta redundancia a cambio de acceso más rápido y modelos más fáciles de usar."
+  },
+  {
+    "id": "index-purpose",
+    "categoria": "Data Engineer / SQL & Data Modeling",
+    "pregunta": "¿Para qué sirve un índice en una base de datos?",
+    "concepto_tecnico_base": "Un índice acelera la búsqueda y filtrado de datos sobre ciertas columnas, reduciendo el tiempo de lectura en consultas frecuentes, aunque también puede aumentar el costo de escritura."
+  },
+  {
+    "id": "data-type-importance",
+    "categoria": "Data Engineer / SQL & Data Modeling",
+    "pregunta": "¿Por qué es importante elegir bien el tipo de dato de una columna?",
+    "concepto_tecnico_base": "Elegir bien el tipo de dato mejora validación, rendimiento, almacenamiento y calidad del modelo, además de evitar errores al cargar, transformar o consultar información."
+  },
+  {
+    "id": "schema-design-impact",
+    "categoria": "Data Engineer / SQL & Data Modeling",
+    "pregunta": "¿Cómo impacta un mal diseño de schema en un pipeline de datos?",
+    "concepto_tecnico_base": "Un mal schema puede provocar duplicados, joins incorrectos, mala calidad de datos, bajo rendimiento y dificultad para mantener o escalar los procesos de integración y consumo."
+  }
+]

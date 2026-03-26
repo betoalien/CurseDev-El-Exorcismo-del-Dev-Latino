@@ -1,0 +1,62 @@
+[
+  {
+    "id": "what-is-fullstack-development",
+    "categoria": "Fullstack / Web Fundamentals",
+    "pregunta": "¿Qué significa ser un desarrollador fullstack?",
+    "concepto_tecnico_base": "Un desarrollador fullstack trabaja tanto en el frontend como en el backend de una aplicación, participando en la interfaz de usuario, la lógica del servidor, la base de datos y la integración entre estas capas."
+  },
+  {
+    "id": "frontend-vs-backend",
+    "categoria": "Fullstack / Web Fundamentals",
+    "pregunta": "¿Cuál es la diferencia entre frontend y backend?",
+    "concepto_tecnico_base": "El frontend es la parte de la aplicación que ve e interactúa el usuario. El backend maneja la lógica del servidor, procesamiento de datos, autenticación, reglas de negocio y conexión con bases de datos."
+  },
+  {
+    "id": "client-server-model",
+    "categoria": "Fullstack / Web Fundamentals",
+    "pregunta": "¿Qué es el modelo cliente-servidor?",
+    "concepto_tecnico_base": "El modelo cliente-servidor describe cómo una aplicación cliente, como el navegador, envía solicitudes a un servidor, y este responde con datos, vistas o resultados procesados."
+  },
+  {
+    "id": "what-is-http",
+    "categoria": "Fullstack / Web Fundamentals",
+    "pregunta": "¿Qué es HTTP y por qué es importante en desarrollo web?",
+    "concepto_tecnico_base": "HTTP es el protocolo que permite la comunicación entre clientes y servidores en la web. Define cómo se envían solicitudes y respuestas entre el navegador y el backend."
+  },
+  {
+    "id": "http-methods-purpose",
+    "categoria": "Fullstack / Web Fundamentals",
+    "pregunta": "¿Para qué sirven métodos HTTP como GET, POST, PUT y DELETE?",
+    "concepto_tecnico_base": "Estos métodos representan acciones comunes sobre recursos: GET consulta información, POST crea datos, PUT actualiza recursos y DELETE elimina registros."
+  },
+  {
+    "id": "what-is-api",
+    "categoria": "Fullstack / Web Fundamentals",
+    "pregunta": "¿Qué es una API en una aplicación fullstack?",
+    "concepto_tecnico_base": "Una API es una interfaz que permite que el frontend y otros sistemas se comuniquen con el backend mediante endpoints definidos y estructuras de datos intercambiables, normalmente en JSON."
+  },
+  {
+    "id": "json-purpose",
+    "categoria": "Fullstack / Web Fundamentals",
+    "pregunta": "¿Por qué JSON es tan usado entre frontend y backend?",
+    "concepto_tecnico_base": "JSON es un formato ligero, legible y ampliamente soportado para intercambiar datos estructurados entre el cliente y el servidor."
+  },
+  {
+    "id": "request-vs-response",
+    "categoria": "Fullstack / Web Fundamentals",
+    "pregunta": "¿Cuál es la diferencia entre una request y una response?",
+    "concepto_tecnico_base": "La request es la solicitud que envía el cliente al servidor. La response es la respuesta que devuelve el servidor con datos, mensajes o códigos de estado."
+  },
+  {
+    "id": "status-code-purpose",
+    "categoria": "Fullstack / Web Fundamentals",
+    "pregunta": "¿Qué son los códigos de estado HTTP y para qué sirven?",
+    "concepto_tecnico_base": "Los códigos de estado HTTP indican el resultado de una solicitud. Por ejemplo, 200 significa éxito, 404 recurso no encontrado y 500 error interno del servidor."
+  },
+  {
+    "id": "why-fullstack-needs-db",
+    "categoria": "Fullstack / Web Fundamentals",
+    "pregunta": "¿Por qué una aplicación fullstack normalmente necesita una base de datos?",
+    "concepto_tecnico_base": "La base de datos permite almacenar, consultar y actualizar información persistente como usuarios, productos, sesiones, órdenes o cualquier dato que deba sobrevivir entre solicitudes."
+  }
+]

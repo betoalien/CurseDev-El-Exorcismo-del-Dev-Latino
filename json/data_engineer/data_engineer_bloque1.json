@@ -1,0 +1,62 @@
+[
+  {
+    "id": "what-is-data-engineering",
+    "categoria": "Data Engineer / Fundamentals",
+    "pregunta": "¿Qué es Data Engineering y cuál es su objetivo principal?",
+    "concepto_tecnico_base": "Data Engineering es la disciplina encargada de diseñar, construir y mantener sistemas que recolectan, transforman, almacenan y preparan datos para su consumo analítico, operacional o de negocio."
+  },
+  {
+    "id": "data-engineer-vs-data-analyst",
+    "categoria": "Data Engineer / Fundamentals",
+    "pregunta": "¿Cuál es la diferencia entre un Data Engineer y un Data Analyst?",
+    "concepto_tecnico_base": "El Data Engineer se enfoca en construir y mantener pipelines, bases de datos e integración de datos. El Data Analyst consume datos ya preparados para analizarlos, generar insights y apoyar decisiones."
+  },
+  {
+    "id": "etl-vs-elt",
+    "categoria": "Data Engineer / Fundamentals",
+    "pregunta": "¿Cuál es la diferencia entre ETL y ELT?",
+    "concepto_tecnico_base": "ETL significa Extract, Transform, Load: primero se transforman los datos y luego se cargan. ELT significa Extract, Load, Transform: primero se cargan al destino y después se transforman dentro del sistema de almacenamiento."
+  },
+  {
+    "id": "what-is-pipeline",
+    "categoria": "Data Engineer / Fundamentals",
+    "pregunta": "¿Qué es un pipeline de datos?",
+    "concepto_tecnico_base": "Un pipeline de datos es un flujo automatizado que mueve y procesa datos desde una o varias fuentes hasta un destino, aplicando validaciones, transformaciones y controles intermedios."
+  },
+  {
+    "id": "batch-vs-streaming",
+    "categoria": "Data Engineer / Fundamentals",
+    "pregunta": "¿Cuál es la diferencia entre procesamiento batch y streaming?",
+    "concepto_tecnico_base": "El procesamiento batch trabaja con datos acumulados en bloques o periodos definidos. El streaming procesa eventos o registros casi en tiempo real a medida que llegan."
+  },
+  {
+    "id": "raw-vs-clean-data",
+    "categoria": "Data Engineer / Fundamentals",
+    "pregunta": "¿Qué diferencia hay entre datos raw y datos limpios o transformados?",
+    "concepto_tecnico_base": "Los datos raw son los datos originales extraídos de la fuente con mínima o nula modificación. Los datos limpios o transformados ya pasaron por reglas de calidad, estandarización y modelado para ser usados con mayor seguridad."
+  },
+  {
+    "id": "what-is-data-source",
+    "categoria": "Data Engineer / Fundamentals",
+    "pregunta": "¿Qué puede considerarse una fuente de datos en un proyecto de Data Engineering?",
+    "concepto_tecnico_base": "Una fuente de datos puede ser una base de datos, un archivo CSV o Excel, una API, un sistema transaccional, logs, un servicio externo o cualquier origen desde donde se obtenga información útil para procesar."
+  },
+  {
+    "id": "what-is-data-destination",
+    "categoria": "Data Engineer / Fundamentals",
+    "pregunta": "¿Qué es un destino de datos y cuáles son algunos ejemplos?",
+    "concepto_tecnico_base": "Un destino de datos es el lugar donde se almacenan o entregan los datos procesados. Puede ser un data warehouse, una base de datos, un data lake, un dashboard, una API o un archivo final."
+  },
+  {
+    "id": "why-data-quality-matters",
+    "categoria": "Data Engineer / Fundamentals",
+    "pregunta": "¿Por qué la calidad de datos es tan importante en Data Engineering?",
+    "concepto_tecnico_base": "Porque un pipeline rápido pero con datos incorrectos genera reportes erróneos, decisiones equivocadas y pérdida de confianza. La calidad de datos es clave para que el consumo analítico y operativo sea confiable."
+  },
+  {
+    "id": "what-is-schema",
+    "categoria": "Data Engineer / Fundamentals",
+    "pregunta": "¿Qué es un schema en el contexto de datos?",
+    "concepto_tecnico_base": "Un schema define la estructura de los datos, incluyendo nombres de columnas, tipos de datos, relaciones o reglas esperadas. Es esencial para validar, transformar y cargar información correctamente."
+  }
+]

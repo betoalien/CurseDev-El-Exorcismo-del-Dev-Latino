@@ -1,0 +1,62 @@
+[
+  {
+    "id": "why-authentication-matters",
+    "categoria": "Fullstack / Auth, Redis & Real-World Architecture",
+    "pregunta": "¿Por qué la autenticación es importante en una aplicación fullstack?",
+    "concepto_tecnico_base": "La autenticación permite verificar la identidad del usuario antes de darle acceso a recursos, acciones o información protegida dentro de la aplicación."
+  },
+  {
+    "id": "authentication-vs-authorization",
+    "categoria": "Fullstack / Auth, Redis & Real-World Architecture",
+    "pregunta": "¿Cuál es la diferencia entre autenticación y autorización?",
+    "concepto_tecnico_base": "La autenticación confirma quién es el usuario. La autorización define qué puede hacer o a qué recursos puede acceder una vez que ya fue autenticado."
+  },
+  {
+    "id": "why-password-hashing",
+    "categoria": "Fullstack / Auth, Redis & Real-World Architecture",
+    "pregunta": "¿Por qué nunca se deben guardar contraseñas en texto plano?",
+    "concepto_tecnico_base": "Guardar contraseñas en texto plano es inseguro porque expone directamente credenciales sensibles en caso de fuga. Lo correcto es almacenarlas hasheadas usando algoritmos seguros."
+  },
+  {
+    "id": "jwt-purpose",
+    "categoria": "Fullstack / Auth, Redis & Real-World Architecture",
+    "pregunta": "¿Qué es un JWT y para qué puede servir en autenticación?",
+    "concepto_tecnico_base": "Un JWT es un token firmado que puede contener información básica del usuario o la sesión. Se usa para identificar al usuario entre solicitudes sin reenviar credenciales cada vez."
+  },
+  {
+    "id": "session-vs-token-auth",
+    "categoria": "Fullstack / Auth, Redis & Real-World Architecture",
+    "pregunta": "¿Cuál es la diferencia entre autenticación basada en sesiones y autenticación basada en tokens?",
+    "concepto_tecnico_base": "La autenticación con sesiones guarda el estado en el servidor y asocia al usuario con un identificador de sesión. La autenticación con tokens suele delegar más estado al cliente mediante un token firmado."
+  },
+  {
+    "id": "what-is-redis",
+    "categoria": "Fullstack / Auth, Redis & Real-World Architecture",
+    "pregunta": "¿Qué es Redis y por qué puede ser útil en una aplicación fullstack?",
+    "concepto_tecnico_base": "Redis es una base de datos en memoria muy rápida, útil para caching, sesiones, colas, rate limiting y otros casos donde se necesita acceso veloz a datos temporales."
+  },
+  {
+    "id": "redis-for-cache",
+    "categoria": "Fullstack / Auth, Redis & Real-World Architecture",
+    "pregunta": "¿Para qué sirve usar Redis como caché?",
+    "concepto_tecnico_base": "Usar Redis como caché permite guardar temporalmente resultados frecuentes o costosos de calcular, reduciendo carga sobre la base de datos y mejorando tiempos de respuesta."
+  },
+  {
+    "id": "rate-limiting-purpose",
+    "categoria": "Fullstack / Auth, Redis & Real-World Architecture",
+    "pregunta": "¿Qué es rate limiting y por qué puede ser importante en una API?",
+    "concepto_tecnico_base": "Rate limiting es una técnica para limitar cuántas solicitudes puede hacer un cliente en cierto tiempo, ayudando a proteger la API contra abuso, spam o sobrecarga."
+  },
+  {
+    "id": "background-tasks-purpose",
+    "categoria": "Fullstack / Auth, Redis & Real-World Architecture",
+    "pregunta": "¿Por qué algunas tareas conviene ejecutarlas en segundo plano en lugar de hacerlas dentro de la request principal?",
+    "concepto_tecnico_base": "Las tareas en segundo plano evitan bloquear la respuesta al usuario cuando una operación tarda más, como enviar correos, procesar archivos o ejecutar trabajos pesados."
+  },
+  {
+    "id": "real-world-architecture-separation",
+    "categoria": "Fullstack / Auth, Redis & Real-World Architecture",
+    "pregunta": "¿Por qué es importante separar frontend, backend, base de datos y servicios auxiliares en una arquitectura real?",
+    "concepto_tecnico_base": "Separar responsabilidades mejora mantenibilidad, escalabilidad, seguridad y claridad del sistema, permitiendo que cada capa cumpla su función sin mezclar lógica de interfaz, negocio, persistencia y soporte."
+  }
+]

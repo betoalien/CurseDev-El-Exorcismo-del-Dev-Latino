@@ -1,0 +1,62 @@
+[
+  {
+    "id": "frontend-backend-communication",
+    "categoria": "Fullstack / Integration, Testing & Production Readiness",
+    "pregunta": "¿Cómo se comunican el frontend y el backend en una aplicación fullstack?",
+    "concepto_tecnico_base": "El frontend y el backend se comunican mediante solicitudes HTTP a endpoints de una API, intercambiando datos normalmente en formato JSON para consultar, crear o actualizar información."
+  },
+  {
+    "id": "cors-purpose",
+    "categoria": "Fullstack / Integration, Testing & Production Readiness",
+    "pregunta": "¿Qué es CORS y por qué puede ser necesario configurarlo?",
+    "concepto_tecnico_base": "CORS es un mecanismo de seguridad del navegador que controla qué orígenes pueden acceder a una API. Es necesario configurarlo cuando frontend y backend viven en dominios o puertos distintos."
+  },
+  {
+    "id": "frontend-backend-validation",
+    "categoria": "Fullstack / Integration, Testing & Production Readiness",
+    "pregunta": "¿Por qué conviene validar datos tanto en frontend como en backend?",
+    "concepto_tecnico_base": "Validar en frontend mejora experiencia de usuario al detectar errores rápido, mientras que validar en backend protege la aplicación y asegura que solo entren datos correctos y seguros."
+  },
+  {
+    "id": "what-is-end-to-end-flow",
+    "categoria": "Fullstack / Integration, Testing & Production Readiness",
+    "pregunta": "¿Qué significa que un flujo funcione end-to-end en una aplicación fullstack?",
+    "concepto_tecnico_base": "Significa que una acción del usuario recorre correctamente toda la aplicación, desde la interfaz hasta el backend y la base de datos, devolviendo el resultado esperado sin romperse en ninguna capa."
+  },
+  {
+    "id": "environment-variables-fullstack",
+    "categoria": "Fullstack / Integration, Testing & Production Readiness",
+    "pregunta": "¿Para qué sirven las variables de entorno en una aplicación fullstack?",
+    "concepto_tecnico_base": "Las variables de entorno permiten separar configuración del código, por ejemplo URLs, credenciales, secretos o modos de ejecución, facilitando seguridad y despliegues en distintos entornos."
+  },
+  {
+    "id": "dev-vs-production",
+    "categoria": "Fullstack / Integration, Testing & Production Readiness",
+    "pregunta": "¿Cuál es la diferencia entre un entorno de desarrollo y uno de producción?",
+    "concepto_tecnico_base": "El entorno de desarrollo se usa para construir y probar la aplicación localmente. El de producción es el entorno real donde los usuarios finales consumen la aplicación desplegada."
+  },
+  {
+    "id": "basic-testing-purpose",
+    "categoria": "Fullstack / Integration, Testing & Production Readiness",
+    "pregunta": "¿Por qué es útil tener pruebas básicas en una aplicación fullstack?",
+    "concepto_tecnico_base": "Las pruebas básicas ayudan a detectar errores antes de desplegar, aumentar confianza en cambios y verificar que componentes, endpoints o flujos clave sigan funcionando como se espera."
+  },
+  {
+    "id": "debugging-fullstack",
+    "categoria": "Fullstack / Integration, Testing & Production Readiness",
+    "pregunta": "¿Cómo abordarías un bug cuando no sabes si el problema está en frontend, backend o base de datos?",
+    "concepto_tecnico_base": "Lo correcto es aislar el flujo paso a paso, revisar entrada y salida en cada capa, validar requests, respuestas, logs y datos persistidos para ubicar dónde comienza realmente el error."
+  },
+  {
+    "id": "logging-production-purpose",
+    "categoria": "Fullstack / Integration, Testing & Production Readiness",
+    "pregunta": "¿Por qué es importante tener logs en una aplicación desplegada?",
+    "concepto_tecnico_base": "Los logs permiten observar qué ocurrió durante la ejecución, identificar fallas, entender comportamientos inesperados y facilitar el debugging una vez que la app ya está en uso real."
+  },
+  {
+    "id": "deployment-readiness",
+    "categoria": "Fullstack / Integration, Testing & Production Readiness",
+    "pregunta": "¿Qué significa que una aplicación esté lista para deploy?",
+    "concepto_tecnico_base": "Significa que la aplicación tiene configuración adecuada, variables de entorno, manejo de errores, persistencia funcional, integración entre capas y suficiente estabilidad para ejecutarse fuera del entorno local."
+  }
+]

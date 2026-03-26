@@ -1,0 +1,62 @@
+[
+  {
+    "id": "missing-values-handling",
+    "categoria": "Data Analyst / Data Cleaning & Validation",
+    "pregunta": "¿Qué harías si una columna importante tiene muchos valores nulos?",
+    "concepto_tecnico_base": "Primero se debe entender por qué existen los nulos, cuánto representan y cómo afectan el análisis. Dependiendo del contexto, pueden eliminarse, imputarse, marcarse como categoría aparte o escalarse como problema de calidad."
+  },
+  {
+    "id": "duplicates-detection",
+    "categoria": "Data Analyst / Data Cleaning & Validation",
+    "pregunta": "¿Cómo detectarías registros duplicados en un dataset?",
+    "concepto_tecnico_base": "Los duplicados se detectan revisando combinaciones de columnas clave que deberían identificar un registro único. También se puede comparar conteos totales contra conteos distintos para validar si existe repetición no esperada."
+  },
+  {
+    "id": "inconsistent-formatting",
+    "categoria": "Data Analyst / Data Cleaning & Validation",
+    "pregunta": "¿Por qué los formatos inconsistentes pueden afectar un análisis?",
+    "concepto_tecnico_base": "Formatos inconsistentes en fechas, texto, mayúsculas, códigos o nombres provocan errores al agrupar, unir tablas o calcular métricas. Estandarizar formatos es un paso clave antes de analizar."
+  },
+  {
+    "id": "outliers-meaning",
+    "categoria": "Data Analyst / Data Cleaning & Validation",
+    "pregunta": "¿Qué es un outlier y por qué no siempre debe eliminarse?",
+    "concepto_tecnico_base": "Un outlier es un valor atípico que se aleja significativamente del resto de los datos. No siempre debe eliminarse porque podría representar un caso real, una señal importante del negocio o un error que primero debe investigarse."
+  },
+  {
+    "id": "data-validation-before-analysis",
+    "categoria": "Data Analyst / Data Cleaning & Validation",
+    "pregunta": "¿Qué validaciones básicas harías antes de empezar un análisis?",
+    "concepto_tecnico_base": "Antes de analizar, conviene revisar volumen de filas, valores nulos, duplicados, tipos de datos, rangos válidos, consistencia de fechas, integridad de joins y si las definiciones del negocio coinciden con los datos disponibles."
+  },
+  {
+    "id": "text-standardization",
+    "categoria": "Data Analyst / Data Cleaning & Validation",
+    "pregunta": "¿Por qué es importante estandarizar columnas de texto como nombres de ciudad, país o categoría?",
+    "concepto_tecnico_base": "Estandarizar texto evita que una misma entidad aparezca fragmentada en múltiples versiones, como Monterrey, monterrey o MTY. Esto mejora agrupaciones, filtros, joins y precisión del análisis."
+  },
+  {
+    "id": "date-validation",
+    "categoria": "Data Analyst / Data Cleaning & Validation",
+    "pregunta": "¿Qué problemas comunes pueden aparecer en columnas de fecha?",
+    "concepto_tecnico_base": "Las fechas pueden venir en distintos formatos, contener valores inválidos, zonas horarias inconsistentes o mezclarse como texto. Eso impacta agrupaciones temporales, comparaciones y análisis de tendencia."
+  },
+  {
+    "id": "source-vs-target-reconciliation",
+    "categoria": "Data Analyst / Data Cleaning & Validation",
+    "pregunta": "¿Qué significa reconciliar datos entre una fuente y un reporte final?",
+    "concepto_tecnico_base": "Reconciliar significa comparar conteos, totales o métricas clave entre la fuente original y el resultado final para validar que el proceso no perdió, duplicó o alteró información de forma inesperada."
+  },
+  {
+    "id": "business-rule-validation",
+    "categoria": "Data Analyst / Data Cleaning & Validation",
+    "pregunta": "¿Por qué es importante validar reglas de negocio y no solo revisar si los datos existen?",
+    "concepto_tecnico_base": "Que un dato exista no significa que sea correcto. Las reglas de negocio ayudan a validar lógica esperada, por ejemplo que una fecha de cierre no sea anterior a la fecha de apertura o que un monto no sea negativo cuando no debería."
+  },
+  {
+    "id": "quality-issue-escalation",
+    "categoria": "Data Analyst / Data Cleaning & Validation",
+    "pregunta": "¿Qué harías si descubres un problema de calidad de datos que afecta una métrica importante?",
+    "concepto_tecnico_base": "Lo correcto es documentar el hallazgo, medir el impacto, evitar conclusiones incorrectas, comunicarlo a los involucrados y, si es posible, proponer una solución temporal y una corrección de fondo."
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "why-nextjs",
+    "categoria": "Fullstack / Next.js & Frontend Basics",
+    "pregunta": "¿Por qué usar Next.js en lugar de React puro para una aplicación fullstack?",
+    "concepto_tecnico_base": "Next.js añade estructura, routing, rendering híbrido, optimizaciones y herramientas integradas sobre React, lo que facilita construir aplicaciones más organizadas y listas para producción."
+  },
+  {
+    "id": "what-is-component",
+    "categoria": "Fullstack / Next.js & Frontend Basics",
+    "pregunta": "¿Qué es un componente en React o Next.js?",
+    "concepto_tecnico_base": "Un componente es una pieza reutilizable de interfaz que encapsula estructura, comportamiento y, en algunos casos, estado para construir partes de una aplicación web."
+  },
+  {
+    "id": "props-vs-state",
+    "categoria": "Fullstack / Next.js & Frontend Basics",
+    "pregunta": "¿Cuál es la diferencia entre props y state?",
+    "concepto_tecnico_base": "Las props son datos que un componente recibe desde fuera. El state es información interna que el componente puede cambiar y que afecta su renderizado."
+  },
+  {
+    "id": "what-is-routing",
+    "categoria": "Fullstack / Next.js & Frontend Basics",
+    "pregunta": "¿Qué significa routing en una aplicación con Next.js?",
+    "concepto_tecnico_base": "El routing es el sistema que define qué vista o página se muestra según la URL. Next.js lo maneja de forma estructurada a partir de archivos y carpetas."
+  },
+  {
+    "id": "ssr-vs-csr",
+    "categoria": "Fullstack / Next.js & Frontend Basics",
+    "pregunta": "¿Cuál es la diferencia entre SSR y CSR?",
+    "concepto_tecnico_base": "SSR o Server-Side Rendering genera la vista en el servidor antes de enviarla al navegador. CSR o Client-Side Rendering genera gran parte de la interfaz en el navegador usando JavaScript."
+  },
+  {
+    "id": "loading-state-purpose",
+    "categoria": "Fullstack / Next.js & Frontend Basics",
+    "pregunta": "¿Por qué es importante manejar estados de carga en el frontend?",
+    "concepto_tecnico_base": "Los estados de carga mejoran la experiencia del usuario al comunicar que la aplicación sigue trabajando mientras espera datos, evitando pantallas vacías o confusión."
+  },
+  {
+    "id": "error-state-ui",
+    "categoria": "Fullstack / Next.js & Frontend Basics",
+    "pregunta": "¿Por qué también debes manejar errores en la interfaz de usuario?",
+    "concepto_tecnico_base": "Manejar errores en la UI permite informar claramente cuando algo falla, dar contexto al usuario y evitar una mala experiencia cuando una petición o acción no se completa."
+  },
+  {
+    "id": "form-handling-purpose",
+    "categoria": "Fullstack / Next.js & Frontend Basics",
+    "pregunta": "¿Qué debes considerar al trabajar con formularios en el frontend?",
+    "concepto_tecnico_base": "Al trabajar con formularios hay que considerar control de inputs, validación, feedback visual, envío de datos, manejo de errores y una experiencia clara para el usuario."
+  },
+  {
+    "id": "fetch-data-frontend",
+    "categoria": "Fullstack / Next.js & Frontend Basics",
+    "pregunta": "¿Qué significa hacer fetch de datos en el frontend?",
+    "concepto_tecnico_base": "Hacer fetch de datos significa solicitar información desde una API o servicio para mostrarla, actualizarla o usarla dentro de la interfaz de usuario."
+  },
+  {
+    "id": "reusable-ui-components",
+    "categoria": "Fullstack / Next.js & Frontend Basics",
+    "pregunta": "¿Por qué es buena práctica crear componentes reutilizables en una aplicación frontend?",
+    "concepto_tecnico_base": "Los componentes reutilizables reducen duplicación, mejoran mantenimiento, facilitan consistencia visual y permiten escalar la interfaz de forma más ordenada."
+  }
+]

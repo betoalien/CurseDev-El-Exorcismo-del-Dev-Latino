@@ -1,0 +1,62 @@
+[
+  {
+    "id": "why-fastapi",
+    "categoria": "Fullstack / FastAPI & Backend Fundamentals",
+    "pregunta": "¿Por qué FastAPI es una buena opción para construir APIs en Python?",
+    "concepto_tecnico_base": "FastAPI es una buena opción porque permite crear APIs rápidas, claras y tipadas en Python, con validación automática, documentación integrada y una experiencia moderna para desarrollo backend."
+  },
+  {
+    "id": "what-is-endpoint",
+    "categoria": "Fullstack / FastAPI & Backend Fundamentals",
+    "pregunta": "¿Qué es un endpoint en una API?",
+    "concepto_tecnico_base": "Un endpoint es una ruta específica del backend que expone una funcionalidad o recurso, como obtener usuarios, crear productos o actualizar información."
+  },
+  {
+    "id": "http-methods-backend",
+    "categoria": "Fullstack / FastAPI & Backend Fundamentals",
+    "pregunta": "¿Cómo se relacionan los métodos HTTP con los endpoints de un backend?",
+    "concepto_tecnico_base": "Los métodos HTTP definen la acción esperada sobre un recurso en un endpoint, por ejemplo GET para consultar, POST para crear, PUT para actualizar y DELETE para eliminar."
+  },
+  {
+    "id": "request-body-purpose",
+    "categoria": "Fullstack / FastAPI & Backend Fundamentals",
+    "pregunta": "¿Qué es el request body y cuándo se usa?",
+    "concepto_tecnico_base": "El request body es la información que el cliente envía al servidor dentro de una solicitud, normalmente usada para crear o actualizar recursos mediante datos estructurados como JSON."
+  },
+  {
+    "id": "path-vs-query-params",
+    "categoria": "Fullstack / FastAPI & Backend Fundamentals",
+    "pregunta": "¿Cuál es la diferencia entre path parameters y query parameters?",
+    "concepto_tecnico_base": "Los path parameters identifican un recurso específico dentro de la URL, mientras que los query parameters suelen usarse para filtrar, paginar, ordenar o modificar una consulta."
+  },
+  {
+    "id": "pydantic-validation-purpose",
+    "categoria": "Fullstack / FastAPI & Backend Fundamentals",
+    "pregunta": "¿Para qué sirve la validación con Pydantic en FastAPI?",
+    "concepto_tecnico_base": "Pydantic permite definir esquemas de entrada y salida para validar tipos, campos requeridos y estructura de datos, ayudando a proteger el backend contra entradas inválidas."
+  },
+  {
+    "id": "response-model-purpose",
+    "categoria": "Fullstack / FastAPI & Backend Fundamentals",
+    "pregunta": "¿Por qué es útil definir modelos de respuesta en una API?",
+    "concepto_tecnico_base": "Definir modelos de respuesta ayuda a controlar qué datos devuelve el backend, mantener consistencia entre endpoints y mejorar documentación y seguridad."
+  },
+  {
+    "id": "backend-error-handling",
+    "categoria": "Fullstack / FastAPI & Backend Fundamentals",
+    "pregunta": "¿Por qué es importante manejar errores en el backend?",
+    "concepto_tecnico_base": "Manejar errores en el backend permite responder de forma clara, evitar caídas innecesarias, proteger información sensible y facilitar debugging para clientes y desarrolladores."
+  },
+  {
+    "id": "business-logic-separation",
+    "categoria": "Fullstack / FastAPI & Backend Fundamentals",
+    "pregunta": "¿Por qué conviene separar la lógica de negocio de los endpoints?",
+    "concepto_tecnico_base": "Separar la lógica de negocio mejora mantenibilidad, reutilización, pruebas y claridad del código, evitando que los endpoints se conviertan en bloques difíciles de escalar."
+  },
+  {
+    "id": "api-docs-importance",
+    "categoria": "Fullstack / FastAPI & Backend Fundamentals",
+    "pregunta": "¿Por qué la documentación automática de una API puede ser tan útil?",
+    "concepto_tecnico_base": "La documentación automática permite explorar endpoints, entender contratos de entrada y salida, probar solicitudes y acelerar integración entre frontend, backend y otros consumidores."
+  }
+]

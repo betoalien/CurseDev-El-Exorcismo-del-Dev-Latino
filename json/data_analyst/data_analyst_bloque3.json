@@ -1,0 +1,62 @@
+[
+  {
+    "id": "what-is-kpi",
+    "categoria": "Data Analyst / Business Metrics",
+    "pregunta": "¿Qué es un KPI y en qué se diferencia de una métrica general?",
+    "concepto_tecnico_base": "Un KPI es un indicador clave de desempeño alineado a un objetivo de negocio. Una métrica general mide algo, pero no necesariamente refleja una meta estratégica o una decisión importante."
+  },
+  {
+    "id": "north-star-metric",
+    "categoria": "Data Analyst / Business Metrics",
+    "pregunta": "¿Qué es una North Star Metric y por qué puede ser importante?",
+    "concepto_tecnico_base": "La North Star Metric es una métrica principal que busca representar el valor que un producto o negocio entrega al cliente. Ayuda a alinear equipos y priorizar decisiones alrededor de impacto real."
+  },
+  {
+    "id": "conversion-rate-definition",
+    "categoria": "Data Analyst / Business Metrics",
+    "pregunta": "¿Qué es una tasa de conversión y cómo la explicarías de forma simple?",
+    "concepto_tecnico_base": "La tasa de conversión mide qué porcentaje de usuarios completa una acción deseada, como registrarse, comprar o hacer clic. Se calcula dividiendo conversiones entre el total de usuarios o sesiones relevantes."
+  },
+  {
+    "id": "retention-vs-churn",
+    "categoria": "Data Analyst / Business Metrics",
+    "pregunta": "¿Cuál es la diferencia entre retención y churn?",
+    "concepto_tecnico_base": "Retención mide qué porcentaje de usuarios permanece activo en un periodo. Churn mide qué porcentaje abandona o deja de usar el producto o servicio en ese mismo periodo."
+  },
+  {
+    "id": "average-ticket",
+    "categoria": "Data Analyst / Business Metrics",
+    "pregunta": "¿Qué es el ticket promedio y por qué es útil en análisis de negocio?",
+    "concepto_tecnico_base": "El ticket promedio representa cuánto gasta en promedio cada compra o transacción. Ayuda a entender comportamiento de clientes, desempeño comercial y oportunidades de crecimiento en ingresos."
+  },
+  {
+    "id": "funnel-analysis-purpose",
+    "categoria": "Data Analyst / Business Metrics",
+    "pregunta": "¿Para qué sirve analizar un funnel o embudo de conversión?",
+    "concepto_tecnico_base": "El funnel muestra las etapas que sigue un usuario hasta completar una meta, como comprar o registrarse. Sirve para detectar en qué paso se pierden usuarios y dónde hay fricción en la experiencia."
+  },
+  {
+    "id": "cohort-analysis-intro",
+    "categoria": "Data Analyst / Business Metrics",
+    "pregunta": "¿Qué es un análisis de cohortes?",
+    "concepto_tecnico_base": "El análisis de cohortes agrupa usuarios por una característica común, como su fecha de registro, para estudiar cómo cambia su comportamiento a lo largo del tiempo y comparar grupos entre sí."
+  },
+  {
+    "id": "vanity-metrics",
+    "categoria": "Data Analyst / Business Metrics",
+    "pregunta": "¿Qué son las vanity metrics y por qué pueden ser peligrosas?",
+    "concepto_tecnico_base": "Las vanity metrics son métricas que se ven bien a simple vista, como visitas o likes, pero que no necesariamente reflejan valor de negocio, crecimiento sostenible o impacto real en decisiones."
+  },
+  {
+    "id": "segmentation-importance",
+    "categoria": "Data Analyst / Business Metrics",
+    "pregunta": "¿Por qué es importante segmentar datos antes de sacar conclusiones?",
+    "concepto_tecnico_base": "La segmentación permite analizar grupos específicos como región, canal, tipo de cliente o producto. Sin segmentar, un promedio general puede ocultar comportamientos muy distintos dentro del mismo negocio."
+  },
+  {
+    "id": "metric-drop-investigation",
+    "categoria": "Data Analyst / Business Metrics",
+    "pregunta": "Si una métrica importante cae de un periodo a otro, ¿qué deberías revisar antes de sacar conclusiones?",
+    "concepto_tecnico_base": "Antes de concluir, hay que validar calidad de datos, cambios en definición de la métrica, estacionalidad, segmentación, volumen de datos, contexto del negocio y posibles incidentes operativos o técnicos."
+  }
+]

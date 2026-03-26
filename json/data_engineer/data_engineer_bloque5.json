@@ -1,0 +1,62 @@
+[
+  {
+    "id": "api-ingestion-purpose",
+    "categoria": "Data Engineer / APIs & Ingestion",
+    "pregunta": "¿Por qué es común usar APIs como fuente de datos en Data Engineering?",
+    "concepto_tecnico_base": "Las APIs permiten extraer datos directamente desde sistemas externos, servicios web o plataformas SaaS de forma automatizada, estructurada y repetible."
+  },
+  {
+    "id": "rest-api-concept",
+    "categoria": "Data Engineer / APIs & Ingestion",
+    "pregunta": "¿Qué es una API REST de forma simple?",
+    "concepto_tecnico_base": "Una API REST es una interfaz que permite intercambiar información entre sistemas usando endpoints y métodos HTTP como GET, POST, PUT o DELETE."
+  },
+  {
+    "id": "pagination-purpose",
+    "categoria": "Data Engineer / APIs & Ingestion",
+    "pregunta": "¿Por qué es importante manejar paginación al consumir una API?",
+    "concepto_tecnico_base": "La paginación divide grandes volúmenes de datos en múltiples respuestas más pequeñas. Si no se maneja correctamente, el pipeline puede perder registros o consumir solo una parte del dataset."
+  },
+  {
+    "id": "rate-limit-concept",
+    "categoria": "Data Engineer / APIs & Ingestion",
+    "pregunta": "¿Qué es un rate limit y cómo afecta un pipeline que consume una API?",
+    "concepto_tecnico_base": "Un rate limit es una restricción en la cantidad de solicitudes permitidas en un periodo. Si se excede, la API puede rechazar llamadas y causar fallos o datos incompletos."
+  },
+  {
+    "id": "api-authentication-purpose",
+    "categoria": "Data Engineer / APIs & Ingestion",
+    "pregunta": "¿Por qué muchas APIs requieren autenticación?",
+    "concepto_tecnico_base": "La autenticación protege el acceso a los datos y permite controlar qué usuario o sistema puede consultar, modificar o integrar información mediante llaves, tokens o credenciales."
+  },
+  {
+    "id": "raw-api-storage",
+    "categoria": "Data Engineer / APIs & Ingestion",
+    "pregunta": "¿Por qué puede ser buena práctica guardar una copia raw de la respuesta de una API?",
+    "concepto_tecnico_base": "Guardar el raw permite auditoría, reprocesamiento, debugging y comparación futura en caso de errores, cambios de schema o discrepancias entre la fuente y el dataset transformado."
+  },
+  {
+    "id": "api-schema-change",
+    "categoria": "Data Engineer / APIs & Ingestion",
+    "pregunta": "¿Qué problema puede causar un cambio de schema en la respuesta de una API?",
+    "concepto_tecnico_base": "Un cambio de schema puede romper validaciones, transformaciones o cargas si aparecen columnas nuevas, faltan campos esperados o cambian tipos de datos sin previo aviso."
+  },
+  {
+    "id": "scheduled-jobs-purpose",
+    "categoria": "Data Engineer / APIs & Ingestion",
+    "pregunta": "¿Por qué es útil programar ejecuciones automáticas de un pipeline?",
+    "concepto_tecnico_base": "Programar ejecuciones automáticas permite que la integración de datos ocurra de forma periódica, confiable y sin intervención manual constante, mejorando continuidad operativa."
+  },
+  {
+    "id": "cron-basic-purpose",
+    "categoria": "Data Engineer / APIs & Ingestion",
+    "pregunta": "¿Qué es cron y para qué puede servir en un proyecto de datos?",
+    "concepto_tecnico_base": "Cron es una herramienta de programación de tareas en sistemas tipo Unix que permite ejecutar scripts o procesos automáticamente en horarios o frecuencias definidas."
+  },
+  {
+    "id": "api-failure-resilience",
+    "categoria": "Data Engineer / APIs & Ingestion",
+    "pregunta": "¿Qué prácticas ayudan a hacer más robusto un pipeline que depende de APIs externas?",
+    "concepto_tecnico_base": "Ayudan prácticas como manejo de errores, reintentos, timeouts, logging, validación de schema, almacenamiento raw, control de paginación y monitoreo de ejecuciones."
+  }
+]
