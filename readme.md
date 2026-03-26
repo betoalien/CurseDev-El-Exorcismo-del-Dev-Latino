@@ -1,8 +1,10 @@
-# Curse Dev - Interview Prep
+# Curse Dev - Interview Prep `v0.1`
 
 **Prepara entrevistas técnicas para roles de tecnología en EE.UU.**
 
 Contenido en español con scripts de respuesta en inglés para perfiles de Data Analyst, Data Engineer y Fullstack Developer.
+
+📖 [wiki.cursedev.com](https://wiki.cursedev.com)
 
 ---
 
