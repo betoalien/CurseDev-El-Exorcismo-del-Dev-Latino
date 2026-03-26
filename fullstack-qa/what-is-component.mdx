@@ -1,0 +1,77 @@
+---
+title: "¿Qué es un componente en React o Next.js?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Next.js & Frontend Basics"
+---
+
+## 🛑 El Error del Junior
+
+"Es como una función que devuelve HTML"—técnicamente correcto pero no explica la reutilización, la composición ni la distinción entre Server y Client Components en Next.js moderno.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Components are the fundamental building block of any React or Next.js application. Would it help if I explained what makes them powerful and how I think about their design?"*
+
+## 💻 La Respuesta Técnica
+
+Un **componente** es una pieza reutilizable de interfaz que encapsula estructura (JSX), comportamiento y, opcionalmente, estado. Es la unidad fundamental con la que se construye cualquier aplicación React/Next.js.
+
+**Ejemplo: de código repetido a componente reutilizable:**
+
+```tsx
+// ❌ Sin componentes — código duplicado
+<div className="card">
+  <h3>Ana García</h3>
+  <p>Analista</p>
+</div>
+<div className="card">
+  <h3>Carlos López</h3>
+  <p>Engineer</p>
+</div>
+
+// ✅ Con componente — reutilizable y consistente
+interface UserCardProps {
+  name: string;
+  role: string;
+}
+
+function UserCard({ name, role }: UserCardProps) {
+  return (
+    <div className="card">
+      <h3>{name}</h3>
+      <p>{role}</p>
+    </div>
+  );
+}
+
+// Uso
+<UserCard name="Ana García" role="Analista" />
+<UserCard name="Carlos López" role="Engineer" />
+```
+
+**Server vs Client Components en Next.js:**
+
+| | Server Component | Client Component |
+|-|-----------------|-----------------|
+| **Default en Next.js** | ✅ Sí | No (requiere `"use client"`) |
+| **Puede hacer fetch** | ✅ Directamente | Solo con useEffect o SWR |
+| **Puede usar hooks** | ❌ No | ✅ Sí |
+| **Estado interactivo** | ❌ No | ✅ Sí |
+| **SEO** | ✅ Mejor | Depende del rendering |
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A component in React or Next.js is a self-contained, reusable piece of UI that encapsulates structure, behavior, and optionally state. The key idea is composability: you build complex interfaces by combining simple components, the same way you build software from functions. In Next.js specifically, there's an important distinction between Server Components, which render on the server and can fetch data directly without JavaScript on the client, and Client Components, which run in the browser and support interactivity through state and event handlers. My approach is to start everything as a Server Component—they're simpler, faster, and better for SEO—and only add 'use client' when I actually need interactivity like form state, click handlers, or real-time updates."*
+
+## 🔑 Vocabulario Clave
+
+* **Component:** Unidad reutilizable de interfaz en React/Next.js
+* **Props:** Propiedades que recibe un componente desde su padre
+* **Server Component:** Componente renderizado en el servidor sin JS en el cliente
+* **Client Component:** Componente interactivo que corre en el navegador
+* **Composability:** Capacidad de componer componentes simples en interfaces complejas
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

@@ -1,0 +1,70 @@
+---
+title: "¿Qué tipo de tareas suelen hacerse en la etapa de transformación?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / ETL & Transformations"
+---
+
+## 🛑 El Error del Junior
+
+"Se limpian los datos"—vago y genérico. No especifica las categorías concretas de transformación ni qué decisiones implica cada una.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Transformation is where most of the business logic lives in a pipeline. Would it help if I broke down the main categories of transformations and gave examples of each?"*
+
+## 💻 La Respuesta Técnica
+
+La etapa de **transformación** convierte datos crudos en datos confiables, estructurados y listos para consumo. Abarca varias categorías de operaciones:
+
+**Categorías de transformación:**
+
+| Categoría | Qué hace | Ejemplo |
+|-----------|----------|---------|
+| **Limpieza** | Elimina o corrige valores inválidos | Reemplazar nulos, eliminar espacios |
+| **Estandarización** | Unifica formatos y convenciones | `"PERU"` → `"Peru"`, fechas a ISO 8601 |
+| **Validación** | Verifica reglas de negocio | Amount > 0, status en lista permitida |
+| **Enriquecimiento** | Agrega información adicional | Agregar país a partir del código postal |
+| **Deduplicación** | Elimina registros repetidos | Un order_id único por fila |
+| **Reestructuración** | Cambia la forma del dato | Aplanar JSON anidado, pivotear columnas |
+| **Tipado** | Convierte tipos de dato | `"2024-01-15"` string → DATE |
+
+**Ejemplo en Python:**
+
+```python
+import pandas as pd
+
+def transform_orders(df: pd.DataFrame) -> pd.DataFrame:
+    # Estandarizar columnas
+    df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
+
+    # Limpiar y tipar
+    df["amount"] = pd.to_numeric(df["amount"], errors="coerce")
+    df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
+    df["status"] = df["status"].str.strip().str.lower()
+
+    # Validar
+    df = df[df["amount"] > 0]
+    df = df[df["order_id"].notna()]
+
+    # Deduplicar
+    df = df.drop_duplicates(subset=["order_id"])
+
+    return df
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"The transformation stage is where raw data is shaped into something reliable and business-ready, and it covers several distinct categories of work. Cleaning removes or corrects invalid values—nulls, empty strings, out-of-range numbers. Standardization unifies formats across data sources, like normalizing date formats or country name spellings. Validation enforces business rules, ensuring that amounts are positive and statuses are within the expected set of values. Enrichment adds context by joining with reference data. And deduplication removes records that appear more than once. In practice, transformation is where the most business logic lives, which means it's also where bugs have the most impact—so I always write transformation functions with unit tests."*
+
+## 🔑 Vocabulario Clave
+
+* **Data cleaning:** Limpieza de valores inválidos o inconsistentes
+* **Standardization:** Estandarización de formatos entre fuentes
+* **Business rule validation:** Validación de reglas del negocio
+* **Data enrichment:** Enriquecimiento con información adicional
+* **Type casting:** Conversión de tipos de dato
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

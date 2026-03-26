@@ -1,0 +1,73 @@
+---
+title: "¿Qué diferencias importantes existen entre procesar archivos CSV y archivos JSON?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / ETL & Transformations"
+---
+
+## 🛑 El Error del Junior
+
+"CSV son filas y columnas, JSON es más flexible"—describe el formato pero no las implicaciones técnicas para el pipeline ni los desafíos de transformación de cada uno.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"The differences go beyond format—they affect how you validate, transform, and load each one. Would it help if I walked through the specific challenges each format introduces in a pipeline?"*
+
+## 💻 La Respuesta Técnica
+
+CSV y JSON representan paradigmas estructurales distintos que requieren tratamientos diferentes en el pipeline:
+
+**Diferencias clave:**
+
+| Característica | CSV | JSON |
+|----------------|-----|------|
+| **Estructura** | Tabular (filas/columnas) | Jerárquica (objetos anidados) |
+| **Schema** | Implícito en la primera fila | Flexible, sin schema fijo |
+| **Tipos de dato** | Todo como texto, inferencia manual | Nativo (string, number, bool, array) |
+| **Anidamiento** | No soporta | Soporta objetos y arrays |
+| **Parsing** | Más rápido y simple | Más lento para archivos grandes |
+| **Transformación** | Directa a DataFrame | Requiere flattening previo |
+
+**Procesamiento en Python:**
+
+```python
+import csv
+import json
+import pandas as pd
+
+# CSV: lectura directa
+with open("orders.csv") as f:
+    reader = csv.DictReader(f)
+    rows = list(reader)  # Lista de dicts con columnas como keys
+
+# JSON: puede requerir aplanamiento
+with open("orders.json") as f:
+    data = json.load(f)
+
+# JSON anidado → aplanar antes de cargar
+orders = []
+for record in data["orders"]:
+    orders.append({
+        "order_id": record["id"],
+        "customer_name": record["customer"]["name"],    # Anidado nivel 1
+        "customer_email": record["customer"]["email"],  # Anidado nivel 1
+        "item_count": len(record["items"])              # Array anidado
+    })
+df = pd.DataFrame(orders)
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"CSV and JSON require fundamentally different processing approaches in a pipeline. CSV is tabular by nature—each row maps directly to a record and each column to a field—which makes it straightforward to load into a DataFrame or database table. JSON, however, supports hierarchical and nested structures, so before you can load it into a relational system, you often need to flatten it: extracting nested objects and expanding arrays into separate rows or columns. JSON is also schema-flexible, which is both its advantage and its risk—a provider can add or remove fields without warning. On the other hand, JSON carries native type information while CSV treats everything as text, requiring explicit type casting after reading. I always validate the schema of both formats at ingestion time before any transformation runs."*
+
+## 🔑 Vocabulario Clave
+
+* **Tabular structure:** Estructura tabular de filas y columnas
+* **Hierarchical data:** Datos jerárquicos con estructuras anidadas
+* **Flattening:** Aplanar estructuras anidadas a formato tabular
+* **Type inference:** Inferencia automática de tipos de dato
+* **Schema flexibility:** Flexibilidad de schema sin estructura fija
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

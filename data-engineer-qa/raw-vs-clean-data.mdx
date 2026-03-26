@@ -1,0 +1,52 @@
+---
+title: "¿Qué diferencia hay entre datos raw y datos limpios o transformados?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Los datos raw son los originales y los limpios ya se procesaron"—correcto pero no explica por qué se conservan los raw ni qué riesgos tiene trabajar directo sobre ellos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"This distinction is actually foundational to how we architect data layers. Would it help if I explained why keeping raw data separate is a deliberate design decision, not just a step in the process?"*
+
+## 💻 La Respuesta Técnica
+
+**Datos raw**: Son los datos tal como llegan de la fuente, con mínima o nula modificación. Pueden contener nulos, duplicados, formatos inconsistentes o valores incorrectos.
+
+**Datos limpios/transformados**: Han pasado por reglas de calidad, estandarización, validación y modelado. Son confiables para análisis o consumo operativo.
+
+**Arquitectura de capas (patrón común):**
+
+```
+[Fuente] → Raw Layer → Staging Layer → Clean/Curated Layer → Consumo
+              ↓              ↓                  ↓
+         Datos crudos    Semi-limpios     Datos confiables
+         Sin modificar   Validados        Modelados para uso
+```
+
+**¿Por qué conservar el raw?**
+
+- **Auditoría**: Poder comparar raw vs. resultado final
+- **Reprocesamiento**: Si hay un bug en la transformación, puedes volver al origen
+- **Debugging**: Identificar si el error viene de la fuente o del pipeline
+- **Trazabilidad**: Saber exactamente qué recibiste de cada fuente
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Raw data is the original, unmodified data as it arrives from the source—it might have nulls, inconsistent formats, duplicates, or even incorrect values. Clean or transformed data has been processed through quality rules, standardization, and modeling to make it reliable for consumption. The important design decision is why we preserve raw data separately: it gives us a recovery point if a transformation has a bug, an audit trail for compliance, and the ability to reprocess history when business rules change. In practice, I always advocate for a multi-layer architecture where raw data is never modified in place—it's treated as an immutable source of truth."*
+
+## 🔑 Vocabulario Clave
+
+* **Raw layer:** Capa de datos crudos sin modificar
+* **Curated data:** Datos curados o enriquecidos para consumo
+* **Immutable:** Inmutable, no modificable
+* **Audit trail:** Rastro de auditoría
+* **Reprocessing:** Reprocesamiento del pipeline
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

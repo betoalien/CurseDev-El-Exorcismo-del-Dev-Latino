@@ -1,0 +1,90 @@
+---
+title: "¿Por qué es buena práctica crear componentes reutilizables en una aplicación frontend?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Next.js & Frontend Basics"
+---
+
+## 🛑 El Error del Junior
+
+Copia y pega el mismo botón o card en múltiples lugares con pequeñas variaciones — cuando el diseño cambia, tiene que actualizar 10 archivos distintos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Reusable components are the frontend equivalent of functions in backend code—they enforce consistency and make the codebase maintainable at scale. Would it help if I showed the pattern and explained when to extract a component?"*
+
+## 💻 La Respuesta Técnica
+
+Los **componentes reutilizables** reducen duplicación, mejoran consistencia visual y permiten escalar la aplicación sin multiplicar el código.
+
+**Ejemplo: de código duplicado a componente reutilizable:**
+
+```tsx
+// ❌ Sin componente reutilizable — duplicación con variaciones sutiles
+// En checkout:
+<button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+  Confirmar pedido
+</button>
+
+// En login:
+<button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+  Iniciar sesión
+</button>
+
+// En el carrito:
+<button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+  {/* Alguien cambió el color — inconsistencia visual */}
+  Agregar al carrito
+</button>
+
+// ✅ Componente reutilizable — una fuente de verdad
+interface ButtonProps {
+  children: React.ReactNode;
+  variant?: "primary" | "secondary" | "danger";
+  disabled?: boolean;
+  loading?: boolean;
+  onClick?: () => void;
+}
+
+function Button({ children, variant = "primary", disabled, loading, onClick }: ButtonProps) {
+  const baseStyles = "px-4 py-2 rounded font-medium transition-colors";
+  const variants = {
+    primary: "bg-blue-600 text-white hover:bg-blue-700",
+    secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
+    danger: "bg-red-600 text-white hover:bg-red-700",
+  };
+
+  return (
+    <button
+      className={`${baseStyles} ${variants[variant]} ${disabled || loading ? "opacity-50 cursor-not-allowed" : ""}`}
+      disabled={disabled || loading}
+      onClick={onClick}
+    >
+      {loading ? "Cargando..." : children}
+    </button>
+  );
+}
+
+// Uso consistente en toda la app
+<Button variant="primary" onClick={handleCheckout}>Confirmar pedido</Button>
+<Button variant="primary" loading={submitting}>Iniciar sesión</Button>
+<Button variant="secondary">Cancelar</Button>
+```
+
+**La regla de tres:** si copias el mismo código por tercera vez, es hora de extraerlo como componente.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Reusable components are the frontend equivalent of functions in backend code—they encapsulate a piece of UI with its behavior and styles in one place, so every part of the application that needs that UI element uses the same source of truth. The practical benefits are significant: when a design requirement changes, you update one component and the change propagates everywhere automatically; when a bug is found, you fix it once; and the visual consistency of the application is enforced by default rather than by convention. My rule of thumb is the rule of three: if I find myself writing the same UI pattern for the third time, it's time to extract it into a component. I also think about the right level of abstraction—a Button component with variant props is useful; a PrimaryBlueCheckoutButton is too specific and defeats the purpose."*
+
+## 🔑 Vocabulario Clave
+
+* **Reusable component:** Componente que se usa en múltiples lugares del proyecto
+* **Single source of truth:** Fuente única de verdad para cada elemento de UI
+* **Component abstraction:** Nivel de abstracción adecuado del componente
+* **Variant prop:** Prop que controla la variante visual del componente
+* **Rule of three:** Regla de extraer cuando repites el mismo código por tercera vez
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

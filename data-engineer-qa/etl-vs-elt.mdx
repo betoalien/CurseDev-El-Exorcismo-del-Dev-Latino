@@ -1,0 +1,51 @@
+---
+title: "¿Cuál es la diferencia entre ETL y ELT?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+Dice "ETL es el proceso clásico y ELT es más moderno"—correcto pero superficial. No explica por qué importa ni cuándo usar cada uno.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Both approaches solve the same problem but with different trade-offs. Would it help if I explained when each one makes more sense architecturally?"*
+
+## 💻 La Respuesta Técnica
+
+La diferencia está en **el orden** de las operaciones y **dónde** ocurre la transformación:
+
+| | ETL | ELT |
+|-|-----|-----|
+| **Orden** | Extract → Transform → Load | Extract → Load → Transform |
+| **Dónde transforma** | En un servidor intermedio | Dentro del sistema destino |
+| **Ideal para** | Datos sensibles, sistemas legacy | Data warehouses modernos (BigQuery, Snowflake) |
+| **Ventaja** | Control fino antes de cargar | Aprovecha el poder de cómputo del destino |
+| **Herramientas típicas** | Informatica, SSIS, scripts Python | dbt, Spark, SQL en warehouse |
+
+**Flujo visual:**
+
+```
+ETL:  [Fuente] → EXTRAER → TRANSFORMAR → CARGAR → [Destino]
+ELT:  [Fuente] → EXTRAER → CARGAR → [Destino] → TRANSFORMAR
+```
+
+Con ELT, el data warehouse moderno actúa como motor de transformación, lo que suele ser más escalable y económico hoy.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"ETL and ELT both describe the movement of data from source to destination, but they differ in where the transformation happens. In ETL—Extract, Transform, Load—data is cleaned and shaped before it reaches the destination, typically on an intermediate server. In ELT—Extract, Load, Transform—raw data lands in the destination first, and transformations happen inside the data warehouse using its own compute power. The shift toward ELT has been driven by modern cloud warehouses like BigQuery and Snowflake, which are powerful enough to handle transformations at scale efficiently. ETL still makes sense when data needs to be filtered or masked before it ever enters the destination—for example, for compliance or security reasons."*
+
+## 🔑 Vocabulario Clave
+
+* **Extract:** Extraer datos de la fuente
+* **Transform:** Limpiar, estandarizar y estructurar datos
+* **Load:** Cargar datos al destino
+* **Data warehouse:** Almacén de datos analítico en la nube
+* **Compute power:** Capacidad de procesamiento
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

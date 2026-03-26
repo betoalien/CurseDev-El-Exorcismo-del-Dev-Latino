@@ -1,0 +1,68 @@
+---
+title: "¿Qué significa que un proceso ETL sea idempotente?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / ETL & Transformations"
+---
+
+## 🛑 El Error del Junior
+
+No conoce el término o lo confunde con "que no falla"—la idempotencia es una propiedad distinta que tiene que ver con reproducibilidad, no con ausencia de errores.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Idempotency is one of those properties that separates a script from a production-grade pipeline. Would it help if I explained what it means in practice and why it matters when pipelines fail and need to be re-run?"*
+
+## 💻 La Respuesta Técnica
+
+Un proceso **idempotente** produce el **mismo resultado final** sin importar cuántas veces se ejecute con la misma entrada. Es decir, re-ejecutar el pipeline no crea duplicados ni estados inconsistentes.
+
+**Sin idempotencia — el problema:**
+
+```python
+# ❌ No idempotente: cada re-ejecución duplica los datos
+def load_orders(df, engine):
+    df.to_sql("orders", con=engine, if_exists="append")
+    # Si se re-ejecuta: duplica todas las filas → datos corruptos
+```
+
+**Con idempotencia — la solución:**
+
+```python
+# ✅ Idempotente: misma entrada, mismo resultado siempre
+def load_orders_idempotent(df, engine):
+    # Opción 1: Truncate + insert en transacción
+    with engine.begin() as conn:
+        conn.execute("TRUNCATE TABLE orders")
+        df.to_sql("orders", con=engine, if_exists="append")
+
+    # Opción 2: Upsert por clave primaria
+    df.to_sql("orders_staging", con=engine, if_exists="replace")
+    with engine.begin() as conn:
+        conn.execute("""
+            INSERT INTO orders SELECT * FROM orders_staging
+            ON CONFLICT (order_id) DO UPDATE SET
+                amount = EXCLUDED.amount,
+                status = EXCLUDED.status
+        """)
+```
+
+**¿Por qué es tan importante?**
+
+En producción, los pipelines fallan. Cuando se re-ejecutan, deben producir el mismo resultado que si hubieran corrido una sola vez. Sin idempotencia, cada re-ejecución acumula duplicados o estados inconsistentes.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"An idempotent ETL process produces the same final state regardless of how many times it runs with the same input. This property is critical in production because pipelines fail—network issues, timeouts, infrastructure problems—and when they do, you need to re-run them safely without creating duplicates or corrupting the destination. A simple append-based load is not idempotent: if it runs twice, you get twice the data. An upsert-based load is idempotent: if it runs twice on the same data, the second run just updates what the first run already inserted. Designing for idempotency is one of the things that separates a script that works in development from a pipeline that's reliable in production."*
+
+## 🔑 Vocabulario Clave
+
+* **Idempotency:** Propiedad de producir el mismo resultado en múltiples ejecuciones
+* **Re-execution:** Re-ejecución del pipeline tras un fallo
+* **Upsert:** Operación que inserta o actualiza, garantizando idempotencia
+* **Append-only:** Carga que solo agrega filas, no idempotente por defecto
+* **State consistency:** Consistencia del estado del destino tras múltiples runs
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

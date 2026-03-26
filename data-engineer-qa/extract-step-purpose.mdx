@@ -1,0 +1,66 @@
+---
+title: "¿Qué ocurre en la etapa de extracción dentro de un proceso ETL?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / ETL & Transformations"
+---
+
+## 🛑 El Error del Junior
+
+"Se sacan los datos de la fuente"—correcto pero no menciona estrategias de extracción, impacto sobre sistemas de producción ni validación inicial.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Extraction sounds straightforward, but there are several design decisions that determine how safe and efficient it is. Would it help if I described the key considerations?"*
+
+## 💻 La Respuesta Técnica
+
+La **extracción** es la primera etapa del pipeline: obtener datos desde una o varias fuentes sin modificarlos, preservando su estado original para auditoría y reprocesamiento.
+
+**Estrategias de extracción:**
+
+| Estrategia | Descripción | Cuándo usarla |
+|------------|-------------|----------------|
+| **Full extract** | Extraer todos los registros | Primeras cargas o tablas pequeñas |
+| **Incremental** | Solo registros nuevos/modificados | Tablas grandes, cargas frecuentes |
+| **CDC (Change Data Capture)** | Capturar cambios en tiempo real del log | Sistemas transaccionales de alta frecuencia |
+
+**Consideraciones críticas:**
+
+```python
+# Extracción incremental: solo datos nuevos desde el último run
+def extract_incremental(conn, last_run_timestamp: str) -> list:
+    query = """
+        SELECT *
+        FROM orders
+        WHERE updated_at > %s
+        ORDER BY updated_at ASC
+    """
+    cursor = conn.cursor()
+    cursor.execute(query, (last_run_timestamp,))
+    records = cursor.fetchall()
+    logger.info(f"Extracted {len(records)} new records since {last_run_timestamp}")
+    return records
+```
+
+**Riesgos a manejar en extracción:**
+- **Impacto en producción**: Queries pesadas pueden ralentizar la DB fuente
+- **Consistencia**: Datos que cambian durante la extracción
+- **Volumen**: Extraer millones de filas sin memoria suficiente
+- **Auth y permisos**: Acceso de solo lectura, nunca escritura en la fuente
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"The extraction stage is about pulling data from one or more sources and bringing it into the pipeline without modifying it—the raw data should arrive exactly as the source provides it. The key design decisions are the extraction strategy and the impact on the source system. A full extract works for small, infrequently changing tables, but for large tables with millions of rows, incremental extraction—where you only pull records changed since the last run—is far more efficient. I also pay close attention to not overloading the source: I schedule extractions during off-peak hours, use read-only credentials, and add query timeout limits to avoid degrading production database performance."*
+
+## 🔑 Vocabulario Clave
+
+* **Full extract:** Extracción completa de todos los registros
+* **Incremental extraction:** Extracción de solo registros nuevos o modificados
+* **Change Data Capture (CDC):** Captura de cambios en tiempo real
+* **Read-only credentials:** Credenciales de solo lectura para proteger la fuente
+* **Off-peak scheduling:** Programar extracciones en horas de bajo tráfico
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

@@ -1,0 +1,79 @@
+---
+title: "¿Por qué es importante validar el schema de un archivo antes de procesarlo?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / ETL & Transformations"
+---
+
+## 🛑 El Error del Junior
+
+"Para saber si tiene las columnas correctas"—superficial. No explica qué pasa si el schema es inválido ni cómo una validación ausente puede propagar errores silenciosos al destino.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Schema validation is your first defense against source changes that can silently corrupt your pipeline. Would it help if I explained what I validate and what happens if you skip it?"*
+
+## 💻 La Respuesta Técnica
+
+La **validación de schema** verifica que la estructura del archivo recibido coincida con lo esperado antes de iniciar cualquier transformación. Es la primera línea de defensa contra cambios inesperados en la fuente.
+
+**Qué validar en el schema de un archivo:**
+
+```python
+import pandas as pd
+import logging
+
+logger = logging.getLogger(__name__)
+
+EXPECTED_SCHEMA = {
+    "order_id": "int64",
+    "customer_id": "int64",
+    "amount": "float64",
+    "status": "object",
+    "order_date": "object"
+}
+
+REQUIRED_COLUMNS = {"order_id", "customer_id", "amount"}
+
+def validate_schema(df: pd.DataFrame) -> bool:
+    # 1. Verificar columnas requeridas presentes
+    missing = REQUIRED_COLUMNS - set(df.columns)
+    if missing:
+        logger.error(f"Missing required columns: {missing}")
+        return False
+
+    # 2. Verificar no haya columnas completamente vacías
+    empty_cols = [c for c in REQUIRED_COLUMNS if df[c].isna().all()]
+    if empty_cols:
+        logger.error(f"Columns with all null values: {empty_cols}")
+        return False
+
+    # 3. Verificar que el archivo no esté vacío
+    if len(df) == 0:
+        logger.error("File contains no rows")
+        return False
+
+    logger.info(f"Schema validation passed: {len(df)} rows, {len(df.columns)} columns")
+    return True
+```
+
+**Qué ocurre sin validación:**
+- Una columna `amount` renombrada a `total` → carga con valores nulos
+- Una columna nueva no esperada → puede romper la transformación
+- Archivo vacío → carga vacía que sobreescribe datos válidos en el destino
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Schema validation at ingestion is your first line of defense against source changes that would otherwise silently corrupt your pipeline. Data providers change their schemas—they rename columns, add new fields, change data types, or occasionally send empty files—and without upfront validation, those changes propagate all the way to the destination before anyone notices. My approach is to validate three things: that all required columns are present, that the file isn't empty, and that critical columns don't contain entirely null values. If any of these checks fail, the pipeline stops immediately with a clear error message rather than loading bad data. It's much easier to investigate a validation failure at ingestion than to debug corrupted data in a production dashboard."*
+
+## 🔑 Vocabulario Clave
+
+* **Schema validation:** Validación de estructura al inicio del pipeline
+* **Schema drift:** Cambio inesperado en la estructura de la fuente
+* **Fail-fast:** Fallar inmediatamente al detectar un error, sin continuar
+* **Required columns:** Columnas obligatorias definidas por el schema esperado
+* **Silent corruption:** Carga de datos incorrectos sin generar error visible
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

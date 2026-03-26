@@ -1,0 +1,60 @@
+---
+title: "¿Qué es una API en una aplicación fullstack?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Web Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Es una interfaz para que los sistemas se comuniquen"—correcto pero tan genérico que no demuestra comprensión del rol concreto de una API en una aplicación fullstack.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"In fullstack development, the API is the contract between frontend and backend. Would it help if I explained what that contract looks like and why getting it right is critical?"*
+
+## 💻 La Respuesta Técnica
+
+Una **API (Application Programming Interface)** en una aplicación fullstack es el **contrato de comunicación** entre el frontend y el backend: define qué endpoints existen, qué datos acepta cada uno y qué devuelve.
+
+**Cómo funciona en la práctica:**
+
+```
+Frontend (Next.js)                    Backend (FastAPI)
+─────────────────                     ─────────────────
+// Solicitar lista de productos        @app.get("/products")
+const res = await fetch(              def get_products():
+  "/api/products?category=tech"  →       products = db.query(Product)
+);                                        return {"products": products}
+const data = await res.json();
+```
+
+**La API como contrato:**
+
+```
+CONTRATO: GET /api/products
+  Input:  query param ?category=string (opcional)
+  Output: { "products": [{ "id": int, "name": str, "price": float }] }
+  Errors: 404 si no hay productos, 400 si category es inválido
+```
+
+**Por qué el diseño de la API importa:**
+- Si el frontend espera `{ "products": [...] }` y el backend devuelve `{ "data": [...] }`, hay un bug
+- Un contrato claro permite que frontend y backend trabajen en paralelo
+- Los cambios de schema en la API deben ser coordinados (versioning)
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"In a fullstack application, the API is the contract between the frontend and the backend—it defines what operations are available, what input each operation expects, and what data it returns. The frontend doesn't know anything about the database schema or how data is stored; it only knows what the API exposes. This separation is powerful: frontend and backend teams can work in parallel as long as they agree on the API contract first. In practice, a well-designed API has consistent naming conventions, predictable error responses, and clear documentation—because every ambiguity in the API design will eventually become a bug or a miscommunication between the teams building each side."*
+
+## 🔑 Vocabulario Clave
+
+* **API contract:** Contrato que define entradas y salidas de cada endpoint
+* **Endpoint:** Ruta específica del backend que expone una funcionalidad
+* **API versioning:** Versionado de la API para gestionar cambios sin romper clientes
+* **Schema:** Estructura de datos que define el formato de requests y responses
+* **Decoupling:** Desacoplamiento entre frontend y backend mediante la API
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

@@ -1,0 +1,74 @@
+---
+title: "¿Para qué sirven métodos HTTP como GET, POST, PUT y DELETE?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Web Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+Sabe que GET obtiene datos y POST crea, pero no explica el principio de semántica REST ni cuándo elegir PUT vs PATCH o por qué importa usar el método correcto.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"HTTP methods aren't just conventions—they carry semantic meaning that clients, servers, and intermediaries like caches rely on. Would it help if I explained each one and why using them correctly matters?"*
+
+## 💻 La Respuesta Técnica
+
+Los métodos HTTP definen la **acción semántica** que el cliente quiere realizar sobre un recurso. Usarlos correctamente hace las APIs predecibles y permite que la infraestructura (caches, proxies) se comporte correctamente.
+
+**Los métodos principales:**
+
+| Método | Acción | Idempotente | Ejemplo |
+|--------|--------|-------------|---------|
+| **GET** | Leer/consultar | ✅ Sí | `GET /orders/123` |
+| **POST** | Crear nuevo recurso | ❌ No | `POST /orders` |
+| **PUT** | Reemplazar completo | ✅ Sí | `PUT /orders/123` (body completo) |
+| **PATCH** | Actualización parcial | ✅ Sí | `PATCH /orders/123` (solo campos) |
+| **DELETE** | Eliminar | ✅ Sí | `DELETE /orders/123` |
+
+**Ejemplo en FastAPI:**
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class Order(BaseModel):
+    customer_id: int
+    amount: float
+
+@app.get("/orders/{order_id}")       # Leer
+def get_order(order_id: int): ...
+
+@app.post("/orders")                  # Crear
+def create_order(order: Order): ...
+
+@app.put("/orders/{order_id}")        # Reemplazar completo
+def replace_order(order_id: int, order: Order): ...
+
+@app.patch("/orders/{order_id}")      # Actualizar parcialmente
+def update_order(order_id: int, data: dict): ...
+
+@app.delete("/orders/{order_id}")     # Eliminar
+def delete_order(order_id: int): ...
+```
+
+**Por qué importa:** GET es cacheable por la infraestructura; POST no. Un `GET` nunca debe tener efectos secundarios (no modifica datos).
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"HTTP methods define the semantic intent of a request—they tell the server what kind of operation the client wants to perform on a resource. GET retrieves data without side effects and is safe to cache and repeat. POST creates a new resource and is not idempotent—calling it twice creates two records. PUT replaces an entire resource, while PATCH updates it partially. DELETE removes it. Using these correctly matters beyond convention: GET requests are cacheable by browsers and CDNs, which directly affects performance; POST requests are not. And idempotency—the property that running the same request multiple times has the same effect as running it once—matters for retry logic in unreliable networks. Misusing methods, like using GET for operations that modify data, breaks these guarantees and causes subtle, hard-to-debug issues."*
+
+## 🔑 Vocabulario Clave
+
+* **HTTP method:** Verbo HTTP que define la acción sobre el recurso
+* **Idempotent:** Idempotente — el mismo resultado al ejecutarse múltiples veces
+* **Side effects:** Efectos secundarios (modificar datos en el servidor)
+* **Cacheable:** Respuesta que puede ser guardada por el navegador o CDN
+* **RESTful API:** API que sigue las convenciones semánticas de REST
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

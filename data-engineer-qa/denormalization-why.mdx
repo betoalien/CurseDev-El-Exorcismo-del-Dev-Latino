@@ -1,0 +1,58 @@
+---
+title: "¿Por qué a veces se desnormalizan tablas en sistemas analíticos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / SQL & Data Modeling"
+---
+
+## 🛑 El Error del Junior
+
+"Porque no les importa la calidad de datos"—malinterpreta el trade-off. La desnormalización es una decisión deliberada de arquitectura, no un descuido.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Denormalization is actually a conscious optimization for read performance in analytical systems. Would it help if I explained the trade-off and when it makes architectural sense?"*
+
+## 💻 La Respuesta Técnica
+
+La **desnormalización** consiste en combinar datos de múltiples tablas normalizadas en una sola tabla más amplia, aceptando redundancia a cambio de simplicidad y rendimiento en consultas analíticas.
+
+**Comparación: normalizado vs. desnormalizado:**
+
+```sql
+-- Normalizado: requiere JOINs para obtener el contexto completo
+SELECT o.order_id, c.name, c.country, p.name AS product, o.amount
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+JOIN products p ON o.product_id = p.product_id;
+
+-- Desnormalizado: todo en una tabla, consulta más rápida y simple
+SELECT order_id, customer_name, customer_country, product_name, amount
+FROM fact_sales_flat;
+-- → Un solo scan de tabla, sin JOINs
+```
+
+**¿Por qué tiene sentido en analytics?**
+
+| Característica | OLTP (Normalizado) | Analytics (Desnormalizado) |
+|----------------|--------------------|-----------------------------|
+| **Operación dominante** | Escrituras frecuentes | Lecturas masivas |
+| **Problema de redundancia** | Crítico (inconsistencias) | Aceptable (datos históricos) |
+| **JOINs** | Pocos registros afectados | Millones de filas = lento |
+| **Quién consulta** | Aplicaciones | Analistas con SQL ad-hoc |
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Denormalization in analytical systems is a deliberate performance optimization, not a data quality compromise. In transactional databases, normalization prevents write anomalies and keeps storage efficient—but in a data warehouse, the primary operation is reading, often scanning millions of rows for aggregations. Joining five tables across billions of rows is expensive, so analytical models pre-join the data into wide, flat tables that analysts can query without complex joins. The redundancy is acceptable because analytical data is historical and rarely updated in place—there's no risk of the inconsistencies that normalization protects against in transactional systems. Tools like dbt formalize this pattern by building materialized models from normalized staging data."*
+
+## 🔑 Vocabulario Clave
+
+* **Denormalization:** Desnormalización intencional para rendimiento
+* **Wide table:** Tabla ancha con muchas columnas pre-unidas
+* **Read-heavy workload:** Carga de trabajo dominada por lecturas
+* **Materialized model:** Modelo materializado (tabla precomputada)
+* **Historical data:** Datos históricos que raramente se actualizan
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

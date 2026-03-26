@@ -1,0 +1,50 @@
+---
+title: "¿Por qué la calidad de datos es tan importante en Data Engineering?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Porque datos malos dan resultados malos"—respuesta circular que no explica el impacto real ni cómo un Data Engineer actúa sobre la calidad.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Data quality is actually where engineering and business impact intersect most directly. Would it help if I described what happens downstream when quality fails—and how we prevent it?"*
+
+## 💻 La Respuesta Técnica
+
+La calidad de datos determina si el trabajo del Data Engineer tiene valor real. Un pipeline rápido que entrega datos incorrectos es más peligroso que uno lento que entrega datos confiables.
+
+**Dimensiones de calidad de datos:**
+
+| Dimensión | Definición | Ejemplo de falla |
+|-----------|------------|-----------------|
+| **Completitud** | ¿Están todos los registros? | Pedidos sin customer_id |
+| **Exactitud** | ¿Los valores son correctos? | Precio negativo en una venta |
+| **Consistencia** | ¿Coincide entre sistemas? | 1000 usuarios en CRM, 800 en analytics |
+| **Unicidad** | ¿No hay duplicados? | Mismo pedido contado dos veces |
+| **Temporalidad** | ¿Llegan a tiempo? | Reporte del día anterior con datos de hace 3 días |
+
+**Consecuencias de mala calidad:**
+- Decisiones equivocadas basadas en métricas incorrectas
+- Pérdida de confianza en el equipo de datos
+- Trabajo extra para analistas que tienen que "limpiar antes de analizar"
+- Impacto económico real (facturaciones incorrectas, predicciones erradas)
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Data quality is the foundation everything else is built on—if the data is wrong, every analysis, dashboard, and decision built on top of it is compromised. In Data Engineering, we own the upstream systems that determine quality, so it's our responsibility to define and enforce standards before data reaches consumers. I think about quality across five dimensions: completeness, accuracy, consistency, uniqueness, and timeliness. The real business risk of poor quality isn't just bad reports—it's eroded trust. Once analysts stop trusting the data platform, they revert to spreadsheets and shadow systems, which is far worse for the organization than a delayed pipeline."*
+
+## 🔑 Vocabulario Clave
+
+* **Data quality:** Calidad de datos
+* **Completeness:** Completitud de registros
+* **Shadow systems:** Sistemas paralelos no oficiales (ej: spreadsheets)
+* **Downstream consumer:** Consumidor aguas abajo del pipeline
+* **Eroded trust:** Confianza deteriorada en el equipo de datos
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

@@ -1,0 +1,65 @@
+---
+title: "¿Qué problema puede causar un cambio de schema en la respuesta de una API?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / APIs & Ingestion"
+---
+
+## 🛑 El Error del Junior
+
+"Que el código da error"—correcto pero incompleto. Los cambios de schema a veces no generan errores inmediatos — producen datos silenciosamente incorrectos, que es peor.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Schema changes in APIs are one of the most common causes of pipeline failures—but the scariest ones are the silent ones. Would it help if I explained how to detect them before they corrupt your data?"*
+
+## 💻 La Respuesta Técnica
+
+Un cambio de schema en la respuesta de una API puede romper el pipeline de forma **explícita** (error inmediato) o **silenciosa** (datos incorrectos que llegan al destino sin generar alerta).
+
+**Tipos de cambios de schema y su impacto:**
+
+| Cambio | Impacto inmediato | Impacto silencioso |
+|--------|-------------------|-------------------|
+| Campo renombrado | KeyError en transformación | Columna queda nula si no hay validación |
+| Campo eliminado | KeyError si era requerido | Nulos inesperados si era opcional |
+| Tipo de dato cambiado | Error en cast | Corrupción de datos en el destino |
+| Campo nuevo agregado | Ninguno visible | Dato valioso que nunca se captura |
+| Estructura anidada cambiada | Error en acceso | Pérdida de datos anidados |
+
+**Detección y manejo:**
+
+```python
+def validate_api_response_schema(data: dict) -> bool:
+    """Valida que la respuesta tenga los campos esperados."""
+    required_fields = {"order_id", "customer_id", "amount", "status"}
+    actual_fields = set(data.keys())
+
+    missing = required_fields - actual_fields
+    new_fields = actual_fields - required_fields
+
+    if missing:
+        logger.error(f"API schema change detected — missing fields: {missing}")
+        return False
+
+    if new_fields:
+        logger.warning(f"New fields in API response (not yet captured): {new_fields}")
+
+    return True
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Schema changes in API responses are one of the most common and insidious causes of pipeline failures. The obvious case is when a required field is renamed or removed—your code throws a KeyError and the pipeline fails visibly. But the dangerous case is when an optional field is removed or a new field is added: the pipeline continues running and loading data, but critical columns are now null or new valuable data is being silently ignored. My defense is to validate the API response schema before any transformation: check that all required fields are present, log a warning if unexpected new fields appear, and fail fast if required fields are missing. Combined with storing the raw response, this gives you both detection and recovery when a provider changes their API without notice."*
+
+## 🔑 Vocabulario Clave
+
+* **Schema change:** Cambio en la estructura de la respuesta de la API
+* **Breaking change:** Cambio que rompe el pipeline inmediatamente
+* **Silent failure:** Fallo silencioso que corrompe datos sin error visible
+* **Field validation:** Validación de presencia de campos requeridos
+* **API versioning:** Versionado de la API para gestionar cambios de schema
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

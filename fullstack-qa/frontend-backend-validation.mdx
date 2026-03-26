@@ -1,0 +1,111 @@
+---
+title: "¿Por qué conviene validar datos tanto en frontend como en backend?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Integration, Testing & Production Readiness"
+---
+
+## 🛑 El Error del Junior
+
+Valida solo en el frontend creyendo que es suficiente — cualquier persona puede hacer un request directo a la API con curl o Postman saltándose todas las validaciones del formulario.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Frontend and backend validation serve different purposes and neither can replace the other. Would it help if I explained what each layer protects and showed how they work together in a real form flow?"*
+
+## 💻 La Respuesta Técnica
+
+Las validaciones en frontend y backend tienen objetivos distintos y **ambas son necesarias**:
+
+| Capa | Objetivo | Quién se beneficia | Puede saltarse |
+|---|---|---|---|
+| **Frontend** | Feedback rápido, buena UX | Usuario | ✅ Sí (con DevTools, curl) |
+| **Backend** | Seguridad e integridad | Sistema | ❌ No — es la fuente de verdad |
+
+**El problema de validar solo en frontend:**
+
+```bash
+# El usuario malo ignora el formulario completamente:
+curl -X POST http://api.miapp.com/users \
+  -H "Content-Type: application/json" \
+  -d '{"email": "no-es-email", "age": -999, "role": "admin"}'
+
+# Si el backend no valida → datos inválidos entran a la DB
+```
+
+**Validación en el frontend (Next.js + React Hook Form):**
+
+```typescript
+// Solo para UX — dar feedback inmediato al usuario
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+
+const schema = z.object({
+  email: z.string().email("Email inválido"),
+  age: z.number().min(18, "Debes tener 18 años o más").max(120),
+  name: z.string().min(2, "Nombre demasiado corto")
+})
+
+export function RegisterForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(schema)
+  })
+
+  async function onSubmit(data) {
+    // Si llega aquí, el frontend validó — pero el backend también validará
+    const res = await fetch("/api/users", {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+
+    if (!res.ok) {
+      // Manejar errores del backend también
+      const error = await res.json()
+      console.error("Backend error:", error.detail)
+    }
+  }
+}
+```
+
+**Validación en el backend (FastAPI + Pydantic) — la fuente de verdad:**
+
+```python
+from pydantic import BaseModel, EmailStr, Field, validator
+
+class UserCreate(BaseModel):
+    email: EmailStr                    # Valida formato de email
+    age: int = Field(ge=18, le=120)   # Mayor de edad, número razonable
+    name: str = Field(min_length=2, max_length=100)
+    # role: NO incluido — el usuario no puede asignarse su propio rol
+
+    @validator("name")
+    def name_must_be_clean(cls, v):
+        if "<" in v or ">" in v:
+            raise ValueError("Invalid characters in name")
+        return v.strip()
+
+@app.post("/api/users", response_model=UserPublic, status_code=201)
+async def create_user(user: UserCreate):
+    # Si llega aquí, Pydantic ya validó todo
+    # ✅ Seguro guardar en DB
+    return save_user(user)
+```
+
+**Regla de oro:** El frontend valida para el usuario, el backend valida para el sistema. Nunca confíes solo en el cliente.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Frontend and backend validation serve fundamentally different purposes, which is why you need both. Frontend validation is for user experience—catching errors immediately, highlighting invalid fields in real time, and preventing unnecessary round trips to the server. But frontend validation can always be bypassed: anyone with browser developer tools, curl, or Postman can send arbitrary data directly to the API endpoint, completely ignoring your form constraints. Backend validation is the actual security and data integrity boundary. In FastAPI, Pydantic models enforce the rules that cannot be circumvented regardless of how the request is made—invalid types, missing fields, out-of-range values, or forbidden fields like user-assigned roles all get rejected before the code runs. The pattern is: frontend gives instant feedback to honest users; backend enforces rules for everyone, including bad actors."*
+
+## 🔑 Vocabulario Clave
+
+* **Client-side validation:** Validación en el navegador — mejora UX pero puede saltarse
+* **Server-side validation:** Validación en el backend — obligatoria, no puede evitarse
+* **Bypass:** Eludir la validación del frontend enviando requests directos a la API
+* **Schema validation:** Validación de estructura y tipos de datos con Pydantic o Zod
+* **Single source of truth:** El backend es la fuente de verdad para la validez de los datos
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

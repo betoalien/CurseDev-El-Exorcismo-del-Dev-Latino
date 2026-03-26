@@ -1,0 +1,75 @@
+---
+title: "¿Qué es el request body y cuándo se usa?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / FastAPI & Backend Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+Envía todos los datos por query params aunque sean sensibles o complejos — no entiende cuándo corresponde usar el body ni por qué es importante para seguridad y estructura.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Choosing between query params and request body is a design decision that affects security and API clarity. Would it help if I explained the difference and when each is appropriate?"*
+
+## 💻 La Respuesta Técnica
+
+El **request body** es la parte de la solicitud HTTP donde el cliente envía datos estructurados al servidor, típicamente en formato JSON. Se usa para operaciones que crean o actualizan recursos.
+
+**Cuándo usar request body vs. query params:**
+
+| | Request Body | Query Params |
+|-|-------------|-------------|
+| **Métodos** | POST, PUT, PATCH | GET (principalmente) |
+| **Visibilidad** | No visible en la URL | Visible en la URL y logs |
+| **Datos sensibles** | ✅ Apropiado | ❌ Nunca (se loggea) |
+| **Datos complejos** | ✅ Objetos, arrays | ❌ Solo strings simples |
+| **Volumen** | Sin límite práctico | Limitado por longitud de URL |
+| **Cacheable** | No | Sí (con GET) |
+
+**Ejemplo en FastAPI:**
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel, EmailStr
+
+app = FastAPI()
+
+class UserCreate(BaseModel):
+    email: str          # Dato en el body — no visible en URL
+    password: str       # Dato sensible — NUNCA en query params
+    name: str
+    role: str = "user"  # Valor por defecto
+
+@app.post("/users", status_code=201)
+async def create_user(user: UserCreate):
+    # FastAPI lee el body, valida con Pydantic y pasa el objeto tipado
+    # Si el body está mal formado → 422 Unprocessable Entity automático
+    hashed_pw = hash_password(user.password)
+    new_user = save_user(email=user.email, password=hashed_pw, name=user.name)
+    return {"user_id": new_user.id, "email": new_user.email}
+
+# Frontend lo llama así:
+# fetch("/users", {
+#   method: "POST",
+#   headers: { "Content-Type": "application/json" },
+#   body: JSON.stringify({ email: "ana@email.com", password: "secret", name: "Ana" })
+# })
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"The request body is the payload the client sends inside an HTTP request, typically as JSON, to provide structured data for creating or updating resources. It's used with POST, PUT, and PATCH—not with GET, because GET requests shouldn't carry a body by convention. The key distinction from query parameters is visibility and structure: query parameters are part of the URL and appear in server logs, browser history, and analytics, so sensitive data like passwords or payment details must never be in query params—they belong in the request body, which isn't logged by default. FastAPI makes this very clean: you define a Pydantic model for the expected body, and FastAPI automatically validates the incoming data, returns a 422 error if the structure doesn't match, and gives you a typed Python object in your function."*
+
+## 🔑 Vocabulario Clave
+
+* **Request body:** Cuerpo de la solicitud con datos enviados al servidor
+* **Payload:** Datos útiles enviados en el cuerpo de la solicitud
+* **Query parameter:** Parámetro visible en la URL (no para datos sensibles)
+* **422 Unprocessable Entity:** Error cuando el body tiene estructura inválida
+* **Pydantic model:** Modelo que define y valida la estructura del request body
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

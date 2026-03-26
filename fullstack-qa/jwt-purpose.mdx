@@ -1,0 +1,93 @@
+---
+title: "¿Qué es un JWT y para qué puede servir en autenticación?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Auth, Redis & Real-World Architecture"
+---
+
+## 🛑 El Error del Junior
+
+"Es un token para autenticarse"—no explica qué contiene, cómo está firmado, por qué no necesita consultar la base de datos en cada request ni cuáles son sus limitaciones.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"A JWT is a self-contained token that carries identity information. Would it help if I explained its structure, how it's verified, and why it reduces database lookups per request?"*
+
+## 💻 La Respuesta Técnica
+
+Un **JSON Web Token (JWT)** es un token firmado que transporta información (claims) del usuario sin necesidad de consultar la base de datos en cada request.
+
+**Estructura del JWT — tres partes separadas por puntos:**
+
+```
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMjMsInJvbGUiOiJ1c2VyIn0.signature
+       ↑ Header              ↑ Payload (claims)                    ↑ Firma
+```
+
+```python
+# Decoded:
+# Header:  {"alg": "HS256", "typ": "JWT"}
+# Payload: {"user_id": 123, "role": "user", "exp": 1700000000}
+# Firma:   HMAC-SHA256(header + "." + payload, SECRET_KEY)
+```
+
+**Crear y verificar JWTs en FastAPI:**
+
+```python
+from jose import JWTError, jwt
+from datetime import datetime, timedelta
+
+SECRET_KEY = "your-secret-key"  # En producción: variable de entorno
+ALGORITHM = "HS256"
+
+def create_access_token(user_id: int, role: str) -> str:
+    payload = {
+        "user_id": user_id,
+        "role": role,
+        "exp": datetime.utcnow() + timedelta(hours=24)  # Expira en 24h
+    }
+    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+def verify_token(token: str) -> dict:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload  # {"user_id": 123, "role": "user"}
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+# En cada request protegido:
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    payload = verify_token(token)
+    # ✅ No hay consulta a la DB — la identidad está en el token
+    return payload
+```
+
+**Flujo completo:**
+
+```
+1. Usuario hace login → Backend verifica contraseña
+2. Backend crea JWT con user_id y role → devuelve al frontend
+3. Frontend guarda JWT (cookie httpOnly o memory)
+4. Cada request → frontend envía JWT en Authorization header
+5. Backend verifica firma → extrae user_id sin tocar la DB
+```
+
+**Limitación importante:**
+- Los JWTs no se pueden invalidar antes de que expiren (sin lista negra)
+- Por eso el tiempo de expiración debe ser corto (15min–24h según el contexto)
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A JWT is a signed token that encodes user information—like the user ID and role—in a format that can be verified without querying the database. It has three parts: a header describing the algorithm, a payload with the claims, and a cryptographic signature. When the backend receives a request, it verifies the signature using a secret key—if the signature is valid, it trusts the payload without a database lookup, which makes JWTs efficient for stateless authentication at scale. The key limitation is that JWTs can't be invalidated before they expire—once issued, a token is valid until its expiry time, which is why keeping expiration windows short is important. For use cases that require immediate revocation, like logout or account suspension, you need an additional mechanism like a token blacklist or switching to session-based auth."*
+
+## 🔑 Vocabulario Clave
+
+* **JWT (JSON Web Token):** Token firmado que contiene claims del usuario — no requiere DB lookup
+* **Payload / Claims:** Datos que lleva el token (user_id, role, exp)
+* **Signature:** Firma criptográfica que verifica que el token no fue alterado
+* **Expiration (exp):** Tiempo de vida del token — después es inválido automáticamente
+* **Stateless authentication:** Autenticación sin estado en el servidor — el token es autocontenido
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

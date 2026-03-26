@@ -1,0 +1,59 @@
+---
+title: "¿Para qué sirve un índice en una base de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / SQL & Data Modeling"
+---
+
+## 🛑 El Error del Junior
+
+"Para que las consultas sean más rápidas"—correcto pero incompleto. No explica el trade-off con escrituras ni cuándo los índices pueden perjudicar el rendimiento.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Indexes are a classic read-write trade-off. Would it help if I explained how they work internally and when adding one can actually hurt performance?"*
+
+## 💻 La Respuesta Técnica
+
+Un **índice** es una estructura de datos auxiliar que permite a la base de datos encontrar filas rápidamente sin escanear toda la tabla, similar al índice de un libro.
+
+**Cómo funciona:**
+
+```sql
+-- Sin índice: full table scan (escanea todas las filas)
+SELECT * FROM orders WHERE customer_id = 12345;
+-- → Lee las 10 millones de filas para encontrar las de customer_id=12345
+
+-- Con índice en customer_id: búsqueda directa
+CREATE INDEX idx_orders_customer ON orders(customer_id);
+-- → Salta directo a las filas relevantes en milisegundos
+```
+
+**El trade-off del índice:**
+
+| Operación | Sin índice | Con índice |
+|-----------|-----------|-----------|
+| **SELECT con filtro** | Lento (full scan) | Rápido (índice lookup) |
+| **INSERT / UPDATE / DELETE** | Más rápido | Más lento (actualiza el índice) |
+| **Almacenamiento** | Normal | Extra espacio para el índice |
+
+**¿Cuándo agregar un índice?**
+- Columnas que se usan frecuentemente en `WHERE`, `JOIN ON` u `ORDER BY`
+- Columnas con alta cardinalidad (muchos valores únicos)
+- **No** indexar todo: cada índice ralentiza las escrituras
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"An index is a data structure that allows the database to locate specific rows without scanning the entire table—like a book index that points directly to the right page. Without an index, a query filtering on a column in a 10-million-row table has to read every single row; with an index on that column, it jumps directly to the relevant rows in milliseconds. The trade-off is that indexes consume additional storage and slow down writes, because every INSERT, UPDATE, or DELETE must also update the index structure. The right strategy is to index selectively: columns that appear frequently in WHERE clauses, JOINs, or ORDER BY with high cardinality—but avoid over-indexing tables that have heavy write workloads, like event or log tables."*
+
+## 🔑 Vocabulario Clave
+
+* **Full table scan:** Escaneo completo de todas las filas de una tabla
+* **Index lookup:** Búsqueda directa usando el índice
+* **Cardinality:** Cardinalidad (cantidad de valores únicos en una columna)
+* **Write overhead:** Costo adicional en operaciones de escritura
+* **Composite index:** Índice sobre múltiples columnas combinadas
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

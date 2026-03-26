@@ -1,0 +1,78 @@
+---
+title: "¿Para qué sirve el logging en un pipeline de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Python for Data Engineering"
+---
+
+## 🛑 El Error del Junior
+
+"Para ver mensajes en la consola mientras corre"—confunde logging con prints de desarrollo. No explica su rol en monitoreo, auditoría o diagnóstico en producción.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Logging is the difference between knowing what your pipeline did and having to guess. Would it help if I explained what makes a good logging strategy in a data context?"*
+
+## 💻 La Respuesta Técnica
+
+El **logging** en un pipeline de datos sirve para **registrar el estado del proceso** de forma estructurada, persistente y accionable. No es para el developer durante desarrollo — es para quien diagnostica a las 2 AM cuando algo falla en producción.
+
+**Configuración básica con el módulo `logging` de Python:**
+
+```python
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+    handlers=[
+        logging.FileHandler("pipeline.log"),
+        logging.StreamHandler()  # También en consola
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# Uso en el pipeline
+def run_pipeline(source: str):
+    logger.info(f"Pipeline started | source={source}")
+
+    try:
+        records = extract(source)
+        logger.info(f"Extracted {len(records)} records")
+
+        clean = transform(records)
+        logger.info(f"Transformed: {len(clean)} valid, {len(records)-len(clean)} rejected")
+
+        load(clean)
+        logger.info("Load completed successfully")
+
+    except Exception as e:
+        logger.error(f"Pipeline failed: {e}", exc_info=True)
+        raise
+```
+
+**Qué registrar en un pipeline:**
+
+| Evento | Nivel | Ejemplo |
+|--------|-------|---------|
+| Inicio y fin | INFO | "Pipeline started at 06:00" |
+| Conteos clave | INFO | "Loaded 5,432 rows" |
+| Advertencias no críticas | WARNING | "3 rows with null price, skipped" |
+| Errores recuperables | ERROR | "API timeout, retrying..." |
+| Errores fatales | CRITICAL | "DB connection failed, pipeline stopped" |
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Logging in a data pipeline is your observability layer—it's the record of what happened, when it happened, and what the outcome was, without needing to re-run the process. In production, when something fails at 3 AM, good logs tell you exactly where the pipeline broke, how many records were processed before the failure, and what the error was. I structure logs around key events: pipeline start and end, record counts at each stage, any data quality warnings, and full stack traces on errors. I avoid print statements in production code and instead use Python's logging module with appropriate severity levels so that monitoring systems can filter and alert on the right signals."*
+
+## 🔑 Vocabulario Clave
+
+* **Observability:** Capacidad de observar el estado interno del sistema
+* **Log level:** Nivel de severidad del mensaje (INFO, WARNING, ERROR)
+* **Stack trace:** Traza completa del error con línea de código
+* **Monitoring system:** Sistema de monitoreo automatizado
+* **Structured logging:** Logging con formato consistente y parseable
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

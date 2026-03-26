@@ -1,0 +1,67 @@
+---
+title: "¿Qué es un schema en el contexto de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Es la estructura de la base de datos"—parcialmente correcto, pero no abarca el concepto en el contexto de pipelines, archivos o APIs, ni menciona por qué el schema importa operativamente.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Schema is one of those concepts that shows up everywhere in Data Engineering—databases, files, APIs. Would it help if I explained what it means in each context and why schema changes are one of the most common pipeline failure points?"*
+
+## 💻 La Respuesta Técnica
+
+Un **schema** define la **estructura esperada** de un conjunto de datos: qué campos existen, qué tipo de dato tiene cada uno y qué restricciones aplican.
+
+**Ejemplos de schema en distintos contextos:**
+
+```sql
+-- Schema en una tabla SQL
+CREATE TABLE orders (
+    order_id   INT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    amount     DECIMAL(10, 2),
+    created_at TIMESTAMP
+);
+```
+
+```python
+# Schema en Python con Pydantic o diccionario esperado
+expected_schema = {
+    "order_id": int,
+    "customer_id": int,
+    "amount": float,
+    "created_at": str
+}
+```
+
+**Por qué el schema es crítico en DE:**
+
+| Situación | Impacto |
+|-----------|---------|
+| Columna nueva en la fuente | Puede no cargarse o romper validaciones |
+| Tipo de dato cambiado | Errores en transformaciones downstream |
+| Campo requerido ahora nulo | Fallas silenciosas en el pipeline |
+| Schema no documentado | Dificultad para mantener o escalar |
+
+Validar el schema al inicio del pipeline es una práctica esencial para detectar cambios antes de que rompan todo el flujo.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A schema is the formal definition of a dataset's structure—it specifies what fields exist, what data type each field holds, and what constraints apply, like whether a field is required or must be unique. In Data Engineering, schema matters across every layer: database tables have schemas, JSON files from APIs have implicit schemas, and data warehouses enforce schemas at write time. The reason schema is so operationally important is that schema changes are one of the most common causes of pipeline failures—a provider adds a field, renames a column, or changes a data type without notice, and suddenly your pipeline either breaks or silently loads incorrect data. I always validate schema at the point of ingestion, before any transformation runs, so I can catch changes early and handle them explicitly."*
+
+## 🔑 Vocabulario Clave
+
+* **Schema:** Estructura definida de un conjunto de datos
+* **Data type:** Tipo de dato (entero, texto, fecha, etc.)
+* **Schema validation:** Validación de estructura al inicio del pipeline
+* **Schema drift:** Cambio inesperado en la estructura de la fuente
+* **Constraint:** Restricción sobre los valores permitidos
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

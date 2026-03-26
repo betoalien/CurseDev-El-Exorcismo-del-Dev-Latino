@@ -1,0 +1,95 @@
+---
+title: "Data Engineer Interview Questions"
+description: "50 preguntas técnicas de entrevista para Data Engineer con respuestas en español e inglés"
+---
+
+# Data Engineer Interview Questions
+
+**50 preguntas técnicas** organizadas por categoría para preparar entrevistas de Data Engineer.
+
+Cada pregunta incluye:
+- Explicación técnica en español
+- Script de respuesta en inglés (nivel B2/C1)
+- Vocabulario clave
+
+---
+
+## 🏗️ Fundamentals
+
+| Pregunta | Archivo |
+|----------|---------|
+| ¿Qué es Data Engineering y cuál es su objetivo principal? | [what-is-data-engineering](./what-is-data-engineering.mdx) |
+| ¿Cuál es la diferencia entre un Data Engineer y un Data Analyst? | [data-engineer-vs-data-analyst](./data-engineer-vs-data-analyst.mdx) |
+| ¿Cuál es la diferencia entre ETL y ELT? | [etl-vs-elt](./etl-vs-elt.mdx) |
+| ¿Qué es un pipeline de datos? | [what-is-pipeline](./what-is-pipeline.mdx) |
+| ¿Cuál es la diferencia entre procesamiento batch y streaming? | [batch-vs-streaming](./batch-vs-streaming.mdx) |
+| ¿Qué diferencia hay entre datos raw y datos limpios o transformados? | [raw-vs-clean-data](./raw-vs-clean-data.mdx) |
+| ¿Qué puede considerarse una fuente de datos en un proyecto de Data Engineering? | [what-is-data-source](./what-is-data-source.mdx) |
+| ¿Qué es un destino de datos y cuáles son algunos ejemplos? | [what-is-data-destination](./what-is-data-destination.mdx) |
+| ¿Por qué la calidad de datos es tan importante en Data Engineering? | [why-data-quality-matters](./why-data-quality-matters.mdx) |
+| ¿Qué es un schema en el contexto de datos? | [what-is-schema](./what-is-schema.mdx) |
+
+## 🐍 Python for Data Engineering
+
+| Pregunta | Archivo |
+|----------|---------|
+| ¿Por qué Python es tan usado en Data Engineering? | [why-python-data-engineering](./why-python-data-engineering.mdx) |
+| ¿Cómo explicarías el proceso de leer un archivo CSV con Python? | [read-csv-python](./read-csv-python.mdx) |
+| ¿Por qué JSON es un formato tan común en pipelines de datos? | [json-common-format](./json-common-format.mdx) |
+| ¿Para qué sirve consumir una API desde Python en un flujo de Data Engineering? | [requests-api-purpose](./requests-api-purpose.mdx) |
+| ¿Por qué es importante manejar errores en un script de datos? | [error-handling-importance](./error-handling-importance.mdx) |
+| ¿Para qué sirve el logging en un pipeline de datos? | [logging-purpose](./logging-purpose.mdx) |
+| ¿Por qué conviene usar funciones en scripts de Data Engineering? | [functions-reusable-code](./functions-reusable-code.mdx) |
+| ¿Qué significa que un proyecto de Python sea modular? | [modular-code-importance](./modular-code-importance.mdx) |
+| ¿Para qué sirven las variables de entorno en un proyecto de datos? | [environment-variables-purpose](./environment-variables-purpose.mdx) |
+| ¿Por qué puede ser útil implementar reintentos en un pipeline que consume una API? | [retry-logic-purpose](./retry-logic-purpose.mdx) |
+
+## 🗄️ SQL & Data Modeling
+
+| Pregunta | Archivo |
+|----------|---------|
+| ¿Por qué SQL es una habilidad fundamental para un Data Engineer? | [why-sql-data-engineering](./why-sql-data-engineering.mdx) |
+| ¿Qué es una tabla de staging y para qué se usa? | [staging-purpose](./staging-purpose.mdx) |
+| ¿Cuál es la diferencia entre una tabla de hechos y una tabla de dimensiones? | [fact-vs-dimension](./fact-vs-dimension.mdx) |
+| ¿Por qué es importante una Primary Key en una tabla? | [primary-key-purpose](./primary-key-purpose.mdx) |
+| ¿Para qué sirve una Foreign Key? | [foreign-key-purpose](./foreign-key-purpose.mdx) |
+| ¿Qué es la normalización en bases de datos? | [normalization-purpose](./normalization-purpose.mdx) |
+| ¿Por qué a veces se desnormalizan tablas en sistemas analíticos? | [denormalization-why](./denormalization-why.mdx) |
+| ¿Para qué sirve un índice en una base de datos? | [index-purpose](./index-purpose.mdx) |
+| ¿Por qué es importante elegir bien el tipo de dato de una columna? | [data-type-importance](./data-type-importance.mdx) |
+| ¿Cómo impacta un mal diseño de schema en un pipeline de datos? | [schema-design-impact](./schema-design-impact.mdx) |
+
+## 🔄 ETL & Transformations
+
+| Pregunta | Archivo |
+|----------|---------|
+| ¿Qué ocurre en la etapa de extracción dentro de un proceso ETL? | [extract-step-purpose](./extract-step-purpose.mdx) |
+| ¿Qué tipo de tareas suelen hacerse en la etapa de transformación? | [transform-step-purpose](./transform-step-purpose.mdx) |
+| ¿Qué significa la etapa de carga en un pipeline de datos? | [load-step-purpose](./load-step-purpose.mdx) |
+| ¿Qué diferencias importantes existen entre procesar archivos CSV y archivos JSON? | [csv-vs-json-processing](./csv-vs-json-processing.mdx) |
+| ¿Por qué es importante validar el schema de un archivo antes de procesarlo? | [schema-validation-files](./schema-validation-files.mdx) |
+| ¿Por qué suele ser necesario estandarizar nombres de columnas y formatos durante una transformación? | [column-standardization-purpose](./column-standardization-purpose.mdx) |
+| ¿Qué significa deduplicar datos dentro de un pipeline? | [deduplication-purpose](./deduplication-purpose.mdx) |
+| ¿Qué es una carga incremental y por qué puede ser preferible a una carga completa? | [incremental-load-concept](./incremental-load-concept.mdx) |
+| ¿Qué significa que un proceso ETL sea idempotente? | [idempotency-concept](./idempotency-concept.mdx) |
+| ¿Qué harías si una parte de los datos falla durante una transformación? | [reprocessing-failed-data](./reprocessing-failed-data.mdx) |
+
+## 🌐 APIs & Ingestion
+
+| Pregunta | Archivo |
+|----------|---------|
+| ¿Por qué es común usar APIs como fuente de datos en Data Engineering? | [api-ingestion-purpose](./api-ingestion-purpose.mdx) |
+| ¿Qué es una API REST de forma simple? | [rest-api-concept](./rest-api-concept.mdx) |
+| ¿Por qué es importante manejar paginación al consumir una API? | [pagination-purpose](./pagination-purpose.mdx) |
+| ¿Qué es un rate limit y cómo afecta un pipeline que consume una API? | [rate-limit-concept](./rate-limit-concept.mdx) |
+| ¿Por qué muchas APIs requieren autenticación? | [api-authentication-purpose](./api-authentication-purpose.mdx) |
+| ¿Por qué puede ser buena práctica guardar una copia raw de la respuesta de una API? | [raw-api-storage](./raw-api-storage.mdx) |
+| ¿Qué problema puede causar un cambio de schema en la respuesta de una API? | [api-schema-change](./api-schema-change.mdx) |
+| ¿Por qué es útil programar ejecuciones automáticas de un pipeline? | [scheduled-jobs-purpose](./scheduled-jobs-purpose.mdx) |
+| ¿Qué es cron y para qué puede servir en un proyecto de datos? | [cron-basic-purpose](./cron-basic-purpose.mdx) |
+| ¿Qué prácticas ayudan a hacer más robusto un pipeline que depende de APIs externas? | [api-failure-resilience](./api-failure-resilience.mdx) |
+
+---
+
+💡 **¿Quieres simular estas y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí](https://cursedev.com)

@@ -1,0 +1,83 @@
+---
+title: "¿Cuál es la diferencia entre path parameters y query parameters?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / FastAPI & Backend Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+Los confunde o los usa indistintamente — no entiende la diferencia semántica ni cuándo usar cada uno para diseñar APIs claras y predecibles.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Path and query parameters serve different semantic purposes in API design. Would it help if I explained the distinction and gave examples of when I use each?"*
+
+## 💻 La Respuesta Técnica
+
+**Path parameters** y **query parameters** son dos formas de pasar información al backend en la URL, pero con semánticas distintas:
+
+**Path parameters** — identifican un recurso específico:
+
+```
+GET /orders/123
+              ↑
+        order_id = 123 (identifica exactamente qué orden)
+```
+
+**Query parameters** — modifican, filtran o paginan la consulta:
+
+```
+GET /orders?status=paid&limit=20&page=2
+            ↑           ↑        ↑
+          filtro      paginación paginación
+```
+
+**Implementación en FastAPI:**
+
+```python
+from fastapi import FastAPI, Query
+from typing import Optional
+
+app = FastAPI()
+
+# Path parameter: identifica el recurso
+@app.get("/orders/{order_id}")
+async def get_order(order_id: int):  # Requerido, en la URL
+    order = find_order(order_id)
+    return order
+
+# Query parameters: filtran, paginan, ordenan
+@app.get("/orders")
+async def list_orders(
+    status: Optional[str] = Query(None, description="Filter by status"),
+    limit: int = Query(20, ge=1, le=100),   # Entre 1 y 100
+    page: int = Query(1, ge=1),
+    sort_by: str = Query("created_at"),
+):
+    return get_orders(status=status, limit=limit, page=page, sort_by=sort_by)
+
+# Combinando ambos: un recurso específico con opciones
+@app.get("/users/{user_id}/orders")
+async def get_user_orders(
+    user_id: int,          # Path param: identifica el usuario
+    status: Optional[str] = None,  # Query param: filtra sus pedidos
+):
+    return find_user_orders(user_id=user_id, status=status)
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Path parameters and query parameters both pass information to the backend, but they serve different semantic purposes. Path parameters identify a specific resource—if you're retrieving order number 123, it belongs in the path: /orders/123. It's part of the resource's identity and makes the URL a stable reference to that specific thing. Query parameters modify or refine the request—they're for filtering, pagination, sorting, or options: /orders?status=paid&limit=20&page=2. The rule I follow is: if removing the parameter would make the URL point to a different resource, it's a path parameter; if removing it would just return different results from the same resource set, it's a query parameter. FastAPI makes both explicit in the function signature, which also generates correct documentation automatically."*
+
+## 🔑 Vocabulario Clave
+
+* **Path parameter:** Segmento variable en la URL que identifica un recurso específico
+* **Query parameter:** Parámetro opcional en la URL para filtrar o modificar la consulta
+* **Resource identity:** Identidad del recurso que define la URL de forma estable
+* **Pagination:** Paginación implementada normalmente como query params
+* **Optional parameter:** Parámetro que puede omitirse sin romper la solicitud
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

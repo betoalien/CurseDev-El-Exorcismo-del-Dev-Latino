@@ -1,0 +1,63 @@
+---
+title: "¿Por qué es útil programar ejecuciones automáticas de un pipeline?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / APIs & Ingestion"
+---
+
+## 🛑 El Error del Junior
+
+"Para no tener que correrlo manualmente"—correcto pero no explica las implicaciones de confiabilidad, operación continua y SLAs que justifican la automatización en producción.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Scheduling is what transforms a script into a production pipeline. Would it help if I explained what a proper scheduling setup looks like and what it enables operationally?"*
+
+## 💻 La Respuesta Técnica
+
+**Programar ejecuciones automáticas** convierte un script en un pipeline de producción confiable que entrega datos según acuerdos de nivel de servicio (SLAs) sin intervención manual.
+
+**Beneficios de la automatización:**
+
+| Sin scheduling | Con scheduling |
+|----------------|---------------|
+| Ejecución manual y propensa a olvidos | Ejecución garantizada en el horario definido |
+| Datos desactualizados si alguien olvida correrlo | Datos frescos según SLA acordado |
+| Sin historial de ejecuciones | Logs de cada run, duración, éxito/fallo |
+| Operación dependiente de personas | Pipeline autónomo, team libre para otras tareas |
+
+**Opciones de scheduling según madurez:**
+
+```
+Básico:    Cron (Linux/Unix) — scripts simples sin dependencias
+Intermedio: GitHub Actions / Cloud Functions + Cloud Scheduler
+Avanzado:  Apache Airflow, Prefect, Dagster — DAGs, dependencias, UI
+```
+
+**Ejemplo de cron simple:**
+```bash
+# Ejecutar el pipeline de ingesta todos los días a las 6 AM
+0 6 * * * /usr/bin/python3 /opt/pipelines/ingest_orders.py >> /var/log/pipeline.log 2>&1
+```
+
+**Lo que debe monitorear un pipeline automatizado:**
+- ¿Corrió a tiempo?
+- ¿Tuvo errores?
+- ¿Cuántos registros procesó?
+- ¿Cuánto tardó vs. el baseline?
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Scheduling automatic pipeline executions is what makes the transition from a script to a production data system. Without scheduling, data freshness depends on someone remembering to run the pipeline manually, which is unreliable and doesn't scale. With scheduling, the pipeline runs on a defined cadence—hourly, daily, after a source system updates—delivering data to consumers according to agreed SLAs without manual intervention. In production, I use schedulers like Airflow or cloud-native tools like Cloud Scheduler depending on complexity: simple single-step pipelines work well with cron or Cloud Functions; multi-step pipelines with dependencies need an orchestrator that can handle failure states, retries, and alerting. The scheduler also gives you an execution log, so you can audit when each run happened and whether it succeeded."*
+
+## 🔑 Vocabulario Clave
+
+* **Scheduling:** Programación automática de ejecuciones del pipeline
+* **SLA (Service Level Agreement):** Acuerdo de nivel de servicio para datos frescos
+* **Orchestrator:** Herramienta de orquestación (Airflow, Prefect, Dagster)
+* **Cron expression:** Expresión que define el horario de ejecución
+* **Execution log:** Registro histórico de ejecuciones del pipeline
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

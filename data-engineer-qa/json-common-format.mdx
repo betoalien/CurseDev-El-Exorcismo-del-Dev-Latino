@@ -1,0 +1,69 @@
+---
+title: "¿Por qué JSON es un formato tan común en pipelines de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Python for Data Engineering"
+---
+
+## 🛑 El Error del Junior
+
+"Porque es fácil de leer y muy usado en APIs"—correcto pero superficial. No explica sus ventajas estructurales ni los desafíos que introduce en pipelines de datos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"JSON is ubiquitous but it also introduces challenges that CSV doesn't. Would it help if I explained both why it's so common and where it gets tricky in a pipeline?"*
+
+## 💻 La Respuesta Técnica
+
+**JSON (JavaScript Object Notation)** domina el intercambio de datos por razones estructurales y prácticas:
+
+**Por qué es tan común:**
+
+| Ventaja | Descripción |
+|---------|-------------|
+| **Flexible** | Soporta estructuras anidadas, arrays y objetos |
+| **Universal** | Soportado nativamente en todos los lenguajes |
+| **Legible** | Los humanos pueden leerlo e interpretarlo |
+| **Estándar de APIs** | Virtualmente toda API REST devuelve JSON |
+| **Sin schema fijo** | El schema puede evolucionar sin romperse |
+
+**Ejemplo en Python:**
+
+```python
+import json
+import requests
+
+# Leer JSON de una API
+response = requests.get("https://api.ejemplo.com/orders")
+data = response.json()  # Devuelve un dict o lista
+
+# Leer JSON de un archivo
+with open("data.json", "r", encoding="utf-8") as f:
+    data = json.load(f)
+
+# Acceder a estructuras anidadas
+for order in data["orders"]:
+    customer = order["customer"]["name"]  # Campo anidado
+    items = order["items"]               # Array anidado
+```
+
+**Desafíos de JSON en pipelines:**
+- Estructuras anidadas requieren aplanamiento (flattening) antes de cargar a tablas
+- Sin schema fijo → el schema puede cambiar sin aviso
+- Archivos grandes en JSON son más pesados que Parquet o CSV
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"JSON is the dominant format in data pipelines because it's the native output of virtually every REST API, it supports nested and hierarchical structures that flat files can't represent, and it's readable across all languages and systems without special tooling. In practice, its flexibility is both its strength and its challenge: because JSON doesn't enforce a strict schema, a provider can add, rename, or remove fields without warning, which can silently break your pipeline. The other challenge is that nested JSON needs to be flattened before loading into relational or columnar storage. My standard practice is to always save the raw JSON response, then handle flattening and validation as a separate transformation step."*
+
+## 🔑 Vocabulario Clave
+
+* **Nested structure:** Estructura anidada o jerárquica
+* **Flattening:** Aplanamiento de estructuras anidadas a formato tabular
+* **Schema-less:** Sin schema fijo o rígido
+* **Columnar storage:** Almacenamiento en formato columnar (Parquet, BigQuery)
+* **Raw response:** Respuesta cruda sin procesar de una API
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

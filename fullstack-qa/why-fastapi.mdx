@@ -1,0 +1,75 @@
+---
+title: "¿Por qué FastAPI es una buena opción para construir APIs en Python?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / FastAPI & Backend Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Porque es rápido"—no explica qué lo hace rápido ni las otras ventajas que lo diferencian de Django o Flask para construir APIs modernas.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"FastAPI's speed is actually a byproduct of a deeper design philosophy around Python type hints. Would it help if I explained what sets it apart from alternatives like Flask or Django REST Framework?"*
+
+## 💻 La Respuesta Técnica
+
+**FastAPI** combina velocidad de desarrollo, performance en producción y una experiencia de desarrollo moderna que ningún otro framework Python ofrece en conjunto.
+
+**Por qué FastAPI destaca:**
+
+| Característica | FastAPI | Flask | Django REST |
+|----------------|---------|-------|-------------|
+| **Validación automática** | ✅ Pydantic | Manual | Serializers |
+| **Documentación automática** | ✅ Swagger + ReDoc | Manual | Manual |
+| **Type hints nativos** | ✅ Integrado | No | No |
+| **Async nativo** | ✅ async/await | Limitado | Limitado |
+| **Performance** | ⚡ Muy alto | Medio | Medio |
+| **Curva de aprendizaje** | Baja | Muy baja | Alta |
+
+**Ejemplo que demuestra su poder:**
+
+```python
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class OrderIn(BaseModel):
+    customer_id: int
+    amount: float  # Pydantic valida el tipo automáticamente
+
+class OrderOut(BaseModel):
+    order_id: int
+    customer_id: int
+    amount: float
+    status: str
+
+@app.post("/orders", response_model=OrderOut, status_code=201)
+async def create_order(order: OrderIn):
+    # Si el body tiene campos incorrectos → FastAPI devuelve 422 automáticamente
+    # Si amount no es float → error antes de entrar a la función
+    new_order = save_order(order)
+    return new_order
+
+# Documentación generada automáticamente en:
+# http://localhost:8000/docs  (Swagger UI)
+# http://localhost:8000/redoc (ReDoc)
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"FastAPI is an excellent choice for building APIs in Python because it combines three things that previously required trade-offs: performance, developer experience, and automatic tooling. It's built on ASGI and is genuinely fast—comparable to Node.js—because it's async by design. But the real productivity advantage comes from its integration with Pydantic: you define your request and response schemas as Python classes with type hints, and FastAPI automatically handles validation, serialization, and generates interactive Swagger documentation that reflects your actual API. This means you spend less time writing boilerplate and more time on business logic. Compared to Flask, it's more structured; compared to Django, it's much lighter for APIs-only projects."*
+
+## 🔑 Vocabulario Clave
+
+* **ASGI:** Asynchronous Server Gateway Interface — base de FastAPI para async
+* **Pydantic:** Librería de validación de datos mediante type hints de Python
+* **Swagger UI:** Documentación interactiva generada automáticamente por FastAPI
+* **Type hints:** Anotaciones de tipo en Python (`def f(x: int) -> str`)
+* **Async/await:** Patrón de programación asíncrona nativa en Python
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

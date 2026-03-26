@@ -1,0 +1,89 @@
+---
+title: "¿Qué significa hacer fetch de datos en el frontend?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Next.js & Frontend Basics"
+---
+
+## 🛑 El Error del Junior
+
+Sabe usar `fetch()` pero no entiende cuándo hacer el fetch en el servidor vs. en el cliente, ni cómo manejar los estados derivados (loading, error, data).
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"In Next.js, where you fetch data matters as much as how you fetch it. Would it help if I explained the different fetch strategies and when each is appropriate?"*
+
+## 💻 La Respuesta Técnica
+
+**Hacer fetch** significa solicitar datos desde una API para mostrarlos, actualizarlos o procesarlos en la interfaz. En Next.js moderno, hay dos contextos distintos para hacer fetch:
+
+**1. Fetch en Server Components (preferido para datos estáticos):**
+
+```tsx
+// app/products/page.tsx — Server Component
+// El fetch se ejecuta en el servidor, no en el navegador
+async function ProductsPage() {
+  const res = await fetch("https://api.tienda.com/products", {
+    next: { revalidate: 60 }  // Revalidar cada 60 segundos
+  });
+  const data = await res.json();
+
+  return <ProductList products={data.products} />;
+}
+```
+
+**2. Fetch en Client Components (para datos interactivos o en tiempo real):**
+
+```tsx
+"use client";
+import { useState, useEffect } from "react";
+
+function UserDashboard() {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/user/stats")
+      .then(r => {
+        if (!r.ok) throw new Error("API error");
+        return r.json();
+      })
+      .then(data => {
+        setStats(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <Skeleton />;
+  return <StatsChart data={stats} />;
+}
+```
+
+**Cuándo usar cada uno:**
+
+| Situación | Estrategia |
+|-----------|-----------|
+| Datos públicos, SEO importante | Server Component fetch |
+| Datos del usuario autenticado | Client Component con useEffect |
+| Mutaciones (crear, actualizar) | Client Component con handler |
+| Datos en tiempo real | Client Component con polling o WebSocket |
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Fetching data in the frontend means requesting information from an API to display or interact with in the UI. In Next.js, where you fetch matters: Server Components can fetch data directly on the server, which is faster, more secure, and better for SEO because the data is included in the HTML sent to the browser. Client Components fetch data in the browser using useEffect or libraries like SWR, which is necessary for user-specific data, interactive dashboards, or data that changes frequently after the initial load. My default is to start with a Server Component fetch—it's simpler and avoids a loading state on the client—and only move to client-side fetching when I need interactivity or real-time updates that require the browser's environment."*
+
+## 🔑 Vocabulario Clave
+
+* **Data fetching:** Obtención de datos desde una API para mostrar en la UI
+* **useEffect:** Hook de React para ejecutar efectos secundarios en Client Components
+* **SWR:** Librería de fetching con caché, revalidación y estados automáticos
+* **Revalidation:** Actualización periódica de datos cacheados
+* **Server-side fetch:** Fetch ejecutado en el servidor antes de enviar el HTML
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

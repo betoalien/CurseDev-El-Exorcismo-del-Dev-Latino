@@ -1,0 +1,109 @@
+---
+title: "¿Por qué es útil tener pruebas básicas en una aplicación fullstack?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Integration, Testing & Production Readiness"
+---
+
+## 🛑 El Error del Junior
+
+No escribe pruebas porque "tarda más" o porque "ya probé manualmente que funciona" — cada cambio podría romper funcionalidad existente sin que nadie lo detecte hasta que un usuario lo reporta.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Tests aren't about proving code works today—they're about knowing immediately when future changes break what worked before. Would it help if I showed the types of tests that give the most value in a fullstack app?"*
+
+## 💻 La Respuesta Técnica
+
+Las pruebas detectan **regresiones** — cuando un cambio nuevo rompe funcionalidad que antes funcionaba. En una app fullstack, hay distintos niveles de pruebas.
+
+**Pirámide de testing en una app fullstack:**
+
+```
+         ╱ E2E Tests ╲         ← Pocos, lentos, verifican flujos completos
+        ╱─────────────╲
+       ╱ Integration   ╲       ← Varios, verifican capas trabajando juntas
+      ╱─────────────────╲
+     ╱   Unit Tests      ╲     ← Muchos, rápidos, una función a la vez
+    ╱─────────────────────╲
+```
+
+**Tests de endpoint en FastAPI — el mayor valor por menor esfuerzo:**
+
+```python
+from fastapi.testclient import TestClient
+import pytest
+from main import app
+
+client = TestClient(app)
+
+# Test del happy path
+def test_create_product_success():
+    response = client.post(
+        "/api/products",
+        json={"name": "Laptop", "price": 999.99, "category": "electronics"},
+        headers={"Authorization": "Bearer valid-test-token"}
+    )
+    assert response.status_code == 201
+    data = response.json()
+    assert data["name"] == "Laptop"
+    assert data["price"] == 999.99
+    assert "id" in data  # La DB asignó un ID
+
+# Test de validación — rechaza datos inválidos
+def test_create_product_invalid_price():
+    response = client.post(
+        "/api/products",
+        json={"name": "Laptop", "price": -100},  # Precio negativo
+        headers={"Authorization": "Bearer valid-test-token"}
+    )
+    assert response.status_code == 422  # Pydantic rechaza
+
+# Test de autenticación — rechaza sin token
+def test_create_product_unauthorized():
+    response = client.post("/api/products", json={"name": "Test"})
+    assert response.status_code == 401
+```
+
+**Tests de componente en Next.js — verificar UI crítica:**
+
+```typescript
+// ProductCard.test.tsx
+import { render, screen } from "@testing-library/react"
+import { ProductCard } from "./ProductCard"
+
+describe("ProductCard", () => {
+  it("displays product name and price", () => {
+    render(<ProductCard name="Laptop" price={999.99} />)
+    expect(screen.getByText("Laptop")).toBeInTheDocument()
+    expect(screen.getByText("$999.99")).toBeInTheDocument()
+  })
+
+  it("shows out of stock badge when stock is 0", () => {
+    render(<ProductCard name="Laptop" price={999.99} stock={0} />)
+    expect(screen.getByText("Out of stock")).toBeInTheDocument()
+  })
+})
+```
+
+**El valor real de las pruebas:**
+- Hacer un refactor con confianza — si los tests pasan, la funcionalidad se mantuvo
+- Detectar regresiones automáticamente en el CI antes de llegar a producción
+- Documentar el comportamiento esperado del sistema de forma ejecutable
+- Reducir el tiempo de debugging — el test que falla señala exactamente dónde está el problema
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Tests in a fullstack application are primarily about catching regressions—ensuring that changes to one part of the system don't silently break functionality that was working before. Manual testing only covers what you specifically think to check; automated tests run every single scenario every time, automatically. In a fullstack context, the tests with the highest return on investment are endpoint tests that verify the API contract: does this endpoint return the right status code and shape for valid input? Does it reject invalid input with the right error? Does it enforce authentication? These tests run fast, require no browser, and catch the most critical failures. For the frontend, testing critical UI components—especially ones with conditional rendering based on data—prevents visual regressions. The goal isn't 100% coverage; it's covering the paths that would cause the most pain if they broke."*
+
+## 🔑 Vocabulario Clave
+
+* **Regression:** Error introducido por un cambio nuevo que rompe funcionalidad que antes funcionaba
+* **Test coverage:** Porcentaje de código cubierto por pruebas — útil pero no el objetivo final
+* **Happy path:** Flujo exitoso esperado — el primero que debe tener test
+* **TestClient:** Cliente de pruebas de FastAPI/Starlette que simula requests HTTP sin servidor
+* **CI (Continuous Integration):** Sistema que ejecuta pruebas automáticamente en cada commit
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

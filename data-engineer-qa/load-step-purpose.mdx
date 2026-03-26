@@ -1,0 +1,62 @@
+---
+title: "¿Qué significa la etapa de carga en un pipeline de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / ETL & Transformations"
+---
+
+## 🛑 El Error del Junior
+
+"Es cuando se guardan los datos en la base de datos"—correcto pero no distingue entre estrategias de carga ni explica cómo prevenir duplicados o corrupción en el destino.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"The load step is where most data quality bugs in production actually surface. Would it help if I explained the main load strategies and when each one is appropriate?"*
+
+## 💻 La Respuesta Técnica
+
+La etapa de **carga** consiste en escribir los datos transformados en el sistema destino. La estrategia de carga elegida determina si los datos son correctos, si hay duplicados y cómo se comporta ante re-ejecuciones.
+
+**Estrategias de carga:**
+
+| Estrategia | Descripción | Riesgo |
+|------------|-------------|--------|
+| **Full replace** | Borra y recarga toda la tabla | Downtime, perder historial |
+| **Append** | Agrega filas nuevas sin borrar | Duplicados si se re-ejecuta |
+| **Upsert (MERGE)** | Inserta si es nuevo, actualiza si existe | Más complejo pero seguro |
+| **Truncate + Insert** | Borra todo y recarga en una transacción | Seguro, común en analytics |
+
+**Ejemplo de upsert en SQL:**
+
+```sql
+-- UPSERT: insertar nuevo o actualizar si ya existe (por PK)
+INSERT INTO clean.orders (order_id, customer_id, amount, status, updated_at)
+SELECT order_id, customer_id, amount, status, updated_at
+FROM staging.raw_orders
+ON CONFLICT (order_id)
+DO UPDATE SET
+    status     = EXCLUDED.status,
+    amount     = EXCLUDED.amount,
+    updated_at = EXCLUDED.updated_at;
+```
+
+**Consideraciones críticas en la carga:**
+- Usar transacciones para que una carga parcial no deje datos a medias
+- Verificar conteos antes y después de la carga
+- Nunca hacer `if_exists="replace"` sin entender que borra el historial
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"The load step writes transformed data to the destination system, and the strategy you choose has major implications for data correctness and pipeline reliability. A simple append adds rows without checking for existing records, which causes duplicates if the pipeline re-runs—that's fine for event tables where each event is unique, but dangerous for tables representing current state. An upsert, or MERGE operation, inserts records that don't exist and updates records that do, based on a primary key—this is the safest pattern for most pipelines. I always wrap loads in transactions so that a partial failure doesn't leave the destination in an inconsistent state, and I validate row counts after loading to confirm the expected volume arrived."*
+
+## 🔑 Vocabulario Clave
+
+* **Upsert:** Operación que inserta o actualiza según existencia previa
+* **Append:** Agregar filas sin modificar las existentes
+* **Transaction:** Transacción que garantiza atomicidad de la carga
+* **Idempotent load:** Carga que produce el mismo resultado al re-ejecutarse
+* **Row count validation:** Verificación de conteo de filas post-carga
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

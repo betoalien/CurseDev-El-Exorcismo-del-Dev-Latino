@@ -1,0 +1,80 @@
+---
+title: "¿Qué harías si una parte de los datos falla durante una transformación?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / ETL & Transformations"
+---
+
+## 🛑 El Error del Junior
+
+"Pararía el pipeline y lo arreglaría"—no considera aislar los registros problemáticos para continuar con los válidos, ni la trazabilidad necesaria para reprocesar después.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"The answer depends on whether the failure is in a subset of records or the entire batch—and that distinction drives very different recovery strategies. Could I walk you through how I approach both cases?"*
+
+## 💻 La Respuesta Técnica
+
+La estrategia ante un fallo parcial en transformación depende del **tipo y alcance del error**. El objetivo es maximizar los datos válidos que llegan al destino mientras se mantiene trazabilidad de los problemáticos.
+
+**Patrón de aislamiento de registros problemáticos:**
+
+```python
+import pandas as pd
+import logging
+
+logger = logging.getLogger(__name__)
+
+def transform_with_isolation(df: pd.DataFrame) -> tuple:
+    """Transforma filas válidas y aísla las problemáticas."""
+    valid_rows = []
+    failed_rows = []
+
+    for _, row in df.iterrows():
+        try:
+            # Transformación que puede fallar por fila
+            row["amount"] = float(row["amount"])
+            row["order_date"] = pd.to_datetime(row["order_date"])
+            if row["amount"] <= 0:
+                raise ValueError(f"Invalid amount: {row['amount']}")
+            valid_rows.append(row)
+
+        except Exception as e:
+            logger.warning(f"Row {row['order_id']} failed: {e}")
+            row["error_reason"] = str(e)
+            failed_rows.append(row)
+
+    logger.info(f"Valid: {len(valid_rows)}, Failed: {len(failed_rows)}")
+
+    df_valid = pd.DataFrame(valid_rows)
+    df_failed = pd.DataFrame(failed_rows)
+
+    # Guardar fallidos para reprocesamiento posterior
+    if len(df_failed) > 0:
+        df_failed.to_csv("failed_records.csv", index=False)
+
+    return df_valid, df_failed
+```
+
+**Estrategia completa:**
+1. **Aislar** los registros problemáticos
+2. **Cargar** los válidos al destino normalmente
+3. **Registrar** los fallidos con el motivo del error
+4. **Alertar** si el % de fallos supera un umbral aceptable
+5. **Reprocesar** los fallidos una vez corregido el problema
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"My approach depends on the scope of the failure. If the entire batch fails—for example, the schema changed or the source is unavailable—the pipeline stops and alerts, and we fix the root cause before re-running. But if only a subset of records fails—for example, some rows have invalid data—I prefer an isolation pattern: transform and load the valid records, quarantine the failed ones to a separate file or table with the error reason, and alert if the failure rate exceeds a threshold. This way, 95% of valid data reaches the destination on schedule while we investigate the 5% that failed. The quarantine log gives us everything we need to fix and reprocess those records without re-running the entire pipeline."*
+
+## 🔑 Vocabulario Clave
+
+* **Record isolation:** Aislamiento de registros problemáticos del flujo principal
+* **Quarantine table:** Tabla de cuarentena para registros fallidos
+* **Failure threshold:** Umbral de fallos aceptable antes de alertar
+* **Root cause:** Causa raíz del fallo en la transformación
+* **Reprocessing:** Reprocesamiento de registros aislados tras corrección
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

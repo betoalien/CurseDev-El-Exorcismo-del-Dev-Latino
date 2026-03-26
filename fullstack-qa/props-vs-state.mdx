@@ -1,0 +1,80 @@
+---
+title: "¿Cuál es la diferencia entre props y state?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Next.js & Frontend Basics"
+---
+
+## 🛑 El Error del Junior
+
+"Props son los parámetros y state es lo que cambia"—correcto pero no explica el flujo de datos ni por qué la distinción importa para el diseño de componentes.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Props and state are the two ways data flows in a React application, and confusing them leads to poorly designed components. Would it help if I explained the ownership model behind each?"*
+
+## 💻 La Respuesta Técnica
+
+**Props** y **state** son las dos fuentes de datos de un componente, pero con propiedades muy distintas:
+
+| Característica | Props | State |
+|----------------|-------|-------|
+| **Origen** | Vienen del componente padre | Interno del componente |
+| **Quién los controla** | El padre | El propio componente |
+| **Son mutables** | No (read-only) | Sí (con setState/useState) |
+| **Cuándo cambian** | Cuando el padre los actualiza | Cuando el componente los actualiza |
+| **Causa re-render** | Sí, si el padre se re-renderiza | Sí, al actualizarse |
+
+**Ejemplo práctico:**
+
+```tsx
+// Props: datos que vienen de afuera, el componente no puede cambiarlos
+interface ProductCardProps {
+  name: string;
+  price: number;
+  inStock: boolean;
+}
+
+function ProductCard({ name, price, inStock }: ProductCardProps) {
+  // State: datos internos que el componente controla
+  const [quantity, setQuantity] = useState(1);
+  const [addedToCart, setAddedToCart] = useState(false);
+
+  const handleAddToCart = () => {
+    // El componente puede cambiar su propio state
+    setAddedToCart(true);
+    // Pero NO puede cambiar sus props
+  };
+
+  return (
+    <div>
+      <h3>{name}</h3>          {/* Prop: no cambia aquí */}
+      <p>${price}</p>          {/* Prop: no cambia aquí */}
+      <input
+        type="number"
+        value={quantity}
+        onChange={(e) => setQuantity(Number(e.target.value))}
+      />                       {/* State: cambia con el usuario */}
+      <button onClick={handleAddToCart}>
+        {addedToCart ? "Added!" : "Add to Cart"}
+      </button>
+    </div>
+  );
+}
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Props and state are both data sources for a component, but they differ in ownership and mutability. Props are data passed into a component from its parent—they're read-only from the component's perspective; the component receives them but cannot modify them. State is data that the component owns and manages internally—it can be updated by the component itself using useState, and every update triggers a re-render. The mental model I use is: props are what you're told, state is what you remember. A good design principle is to keep state as high up the component tree as necessary, but no higher—lift state up when multiple components need to read or modify the same piece of data, and keep it local when only one component cares about it."*
+
+## 🔑 Vocabulario Clave
+
+* **Props:** Propiedades inmutables recibidas del componente padre
+* **State:** Estado mutable interno del componente
+* **useState:** Hook de React para declarar y actualizar state
+* **Re-render:** Re-renderizado del componente al cambiar props o state
+* **Lifting state up:** Mover el state al componente padre para compartirlo
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

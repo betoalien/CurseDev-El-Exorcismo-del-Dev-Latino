@@ -1,0 +1,120 @@
+---
+title: "¿Por qué es importante tener logs en una aplicación desplegada?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Integration, Testing & Production Readiness"
+---
+
+## 🛑 El Error del Junior
+
+No configura logging — cuando algo falla en producción, no hay registro de qué ocurrió, quién lo causó ni cuándo empezó, haciendo el debugging casi imposible sin reproducir el error manualmente.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Logs in production are your only window into what's happening in a system you can't debug interactively. Would it help if I explained what to log, at what level, and how to structure logs to make them searchable?"*
+
+## 💻 La Respuesta Técnica
+
+Los **logs** son el registro de lo que ocurrió en la aplicación. En producción, son la única fuente de verdad cuando algo falla.
+
+**Sin logging — debugging a ciegas:**
+
+```python
+# ❌ Sin logs: cuando falla en producción no sabes nada
+@app.post("/api/orders")
+async def create_order(order: OrderCreate):
+    try:
+        result = process_order(order)
+        return result
+    except Exception:
+        raise HTTPException(500, "Something went wrong")
+        # ¿Qué falló? ¿Con qué datos? ¿A qué hora? → Imposible saberlo
+```
+
+**Con logging estructurado:**
+
+```python
+import logging
+import json
+from datetime import datetime
+
+# Configuración del logger en FastAPI
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+)
+logger = logging.getLogger(__name__)
+
+@app.post("/api/orders")
+async def create_order(
+    order: OrderCreate,
+    current_user = Depends(get_current_user),
+    request: Request = None
+):
+    # Log de entrada — quién, qué, cuándo
+    logger.info(f"Order creation started | user_id={current_user['id']} | product_id={order.product_id}")
+
+    try:
+        result = process_order(order, current_user["id"])
+
+        # Log de éxito
+        logger.info(f"Order created successfully | order_id={result.id} | user_id={current_user['id']}")
+        return result
+
+    except InsufficientStockError as e:
+        # Error de negocio — no es fallo del sistema
+        logger.warning(f"Order rejected - insufficient stock | product_id={order.product_id} | requested={order.quantity}")
+        raise HTTPException(400, "Insufficient stock")
+
+    except Exception as e:
+        # Error inesperado — log con contexto completo
+        logger.error(
+            f"Unexpected error creating order | user_id={current_user['id']} | error={str(e)}",
+            exc_info=True  # Incluye el stack trace completo
+        )
+        raise HTTPException(500, "Internal server error")
+```
+
+**Niveles de log y cuándo usarlos:**
+
+```python
+logger.debug("Variable value: %s", var)          # Solo en desarrollo — muy verboso
+logger.info("User logged in | user_id=%s", uid)  # Eventos normales del sistema
+logger.warning("High memory usage: %s%%", mem)   # Algo anormal pero no crítico
+logger.error("Payment failed | order_id=%s", id) # Error que requiere atención
+logger.critical("Database unreachable!")          # Sistema comprometido — alerta inmediata
+```
+
+**Qué SÍ y NO loggear:**
+
+```python
+# ✅ Loggear
+logger.info(f"Login attempt | email={email} | success={success}")
+logger.error(f"DB connection failed | host={db_host} | error={e}")
+
+# ❌ NUNCA loggear datos sensibles
+logger.info(f"Login | password={password}")        # ← Credenciales
+logger.info(f"Payment | card_number={card_no}")    # ← Datos financieros
+logger.info(f"User data: {user.__dict__}")         # ← Puede incluir campos sensibles
+```
+
+**En producción — herramientas de observabilidad:**
+- **Loguru** (Python) — logging más expresivo con rotación automática
+- **Sentry** — captura errores con contexto y alertas en tiempo real
+- **Datadog / Grafana** — dashboards y alertas basadas en métricas de logs
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Logs in a deployed application are your only visibility into what happened when something goes wrong—you can't attach a debugger to a production server and step through code. A good logging strategy captures the who, what, when, and outcome of significant operations: who made the request, what they were trying to do, when it happened, and whether it succeeded or failed. I use different log levels intentionally: INFO for normal operations I want to track, WARNING for unexpected but recoverable situations, and ERROR with full stack traces for failures that need investigation. Crucially, logs should never contain sensitive data—passwords, tokens, credit card numbers, or personally identifiable information shouldn't appear in log files because logs are often stored in third-party systems or accessible to more people than the production database. In production I pair structured logging with a tool like Sentry for real-time error alerting so I know about failures before users report them."*
+
+## 🔑 Vocabulario Clave
+
+* **Structured logging:** Logs con formato consistente (JSON o clave=valor) que facilitan búsquedas
+* **Log level:** Severidad del evento — DEBUG, INFO, WARNING, ERROR, CRITICAL
+* **`exc_info=True`:** Parámetro que incluye el stack trace completo en el log de error
+* **Observability:** Capacidad de entender el estado interno del sistema desde sus outputs externos
+* **Sentry:** Herramienta de monitoreo de errores que captura excepciones en tiempo real
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

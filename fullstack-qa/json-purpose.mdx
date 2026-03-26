@@ -1,0 +1,72 @@
+---
+title: "¿Por qué JSON es tan usado entre frontend y backend?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Web Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Porque es fácil de leer"—correcto pero no explica las razones técnicas que lo hacen el formato estándar de intercambio en aplicaciones web modernas.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"JSON became the standard for a combination of technical and ecosystem reasons. Would it help if I explained what makes it the right choice for frontend-backend communication and where its limitations show up?"*
+
+## 💻 La Respuesta Técnica
+
+**JSON (JavaScript Object Notation)** es el formato estándar de intercambio de datos entre frontend y backend porque combina simplicidad, compatibilidad universal y alineación natural con JavaScript.
+
+**Por qué JSON domina:**
+
+| Razón | Explicación |
+|-------|-------------|
+| **Nativo en JS** | `JSON.parse()` y `JSON.stringify()` son built-in en todos los navegadores |
+| **Legible** | Los humanos pueden leerlo e inspeccionarlo en las devtools |
+| **Ligero** | Menos verboso que XML |
+| **Universal** | Soportado en Python, Java, Go, Ruby y prácticamente cualquier lenguaje |
+| **Tipado básico** | Soporta string, number, boolean, array, object, null nativamente |
+
+**Ejemplo de intercambio:**
+
+```typescript
+// Frontend (TypeScript/Next.js)
+const response = await fetch("/api/users/42");
+const user = await response.json();
+// user = { id: 42, name: "Ana García", email: "ana@email.com", active: true }
+
+console.log(user.name);  // "Ana García"
+```
+
+```python
+# Backend (FastAPI)
+@app.get("/api/users/{user_id}")
+def get_user(user_id: int):
+    return {  # FastAPI serializa automáticamente a JSON
+        "id": user_id,
+        "name": "Ana García",
+        "email": "ana@email.com",
+        "active": True
+    }
+```
+
+**Limitaciones de JSON:**
+- No soporta fechas nativas (se envían como strings ISO 8601)
+- No distingue entre integer y float (ambos son `number`)
+- Para archivos binarios (imágenes), se usa base64 o multipart/form-data
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"JSON became the standard for frontend-backend communication because it strikes the right balance between simplicity, readability, and universal support. It's natively supported in JavaScript—which powers the frontend—so parsing a JSON response is a single method call with no external libraries. Backend frameworks in Python, Java, Go, and Node all serialize to JSON automatically. It's human-readable, which makes debugging in browser developer tools straightforward. And it's lightweight compared to alternatives like XML or SOAP. The main limitation is that JSON has no native date type, so dates are always transmitted as strings and must be explicitly parsed on both ends. For binary data like images, we use multipart form data or base64 encoding instead."*
+
+## 🔑 Vocabulario Clave
+
+* **Serialization:** Convertir un objeto en JSON para transmitirlo
+* **Deserialization:** Convertir JSON de vuelta en un objeto del lenguaje
+* **Built-in:** Función nativa del lenguaje sin necesidad de librería externa
+* **ISO 8601:** Formato estándar para fechas en strings JSON
+* **Multipart form data:** Formato para enviar archivos binarios en HTTP
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

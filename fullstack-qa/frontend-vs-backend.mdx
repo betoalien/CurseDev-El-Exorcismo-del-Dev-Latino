@@ -1,0 +1,54 @@
+---
+title: "¿Cuál es la diferencia entre frontend y backend?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Web Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Frontend es lo visual y backend es el servidor"—correcto pero superficial. No explica qué responsabilidades tiene cada capa ni cómo se comunican.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"The frontend/backend distinction is about more than where the code runs—it's about what each layer is responsible for. Would it help if I explained it in terms of responsibilities and what happens when they're mixed incorrectly?"*
+
+## 💻 La Respuesta Técnica
+
+**Frontend** y **Backend** son las dos capas principales de una aplicación web, con responsabilidades bien diferenciadas:
+
+| Dimensión | Frontend | Backend |
+|-----------|----------|---------|
+| **Dónde corre** | En el navegador del usuario | En el servidor |
+| **Qué produce** | Interfaz de usuario visual | Datos, lógica, respuestas JSON |
+| **Lenguajes** | JavaScript, TypeScript, HTML, CSS | Python, Node.js, Go, Java |
+| **Frameworks** | React, Next.js, Vue | FastAPI, Express, Django |
+| **Qué maneja** | UX, navegación, formularios | Auth, reglas de negocio, DB |
+| **Quién lo ve** | El usuario final | Solo el servidor y los developers |
+
+**La comunicación entre ambos:**
+
+```
+[Navegador]  →  GET /api/orders  →  [Servidor]
+[Frontend]   ←  JSON response   ←  [Backend]
+                                      ↕
+                                 [Base de datos]
+```
+
+**Un error común:** poner lógica de negocio en el frontend — el usuario puede manipularla con las devtools. Las reglas críticas siempre van en el backend.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"The frontend is everything that runs in the user's browser—the visual interface, navigation, forms, and user interactions. It's responsible for how the application looks and feels. The backend runs on the server and handles the application's core logic: processing requests, enforcing business rules, authenticating users, and interacting with the database. They communicate through HTTP: the frontend sends requests to backend API endpoints and receives structured data—usually JSON—in response. A critical distinction is where security-sensitive logic belongs: business rules, authorization checks, and data validation must live in the backend, because anything in the frontend can be inspected and manipulated by the user through browser developer tools."*
+
+## 🔑 Vocabulario Clave
+
+* **Client-side:** Del lado del cliente (navegador)
+* **Server-side:** Del lado del servidor
+* **API endpoint:** Ruta del backend que responde a solicitudes del frontend
+* **Business logic:** Lógica del negocio que debe vivir en el backend
+* **Developer tools:** Herramientas del navegador que exponen el código frontend
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

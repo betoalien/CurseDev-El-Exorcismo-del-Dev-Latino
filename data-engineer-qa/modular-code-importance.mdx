@@ -1,0 +1,59 @@
+---
+title: "¿Qué significa que un proyecto de Python sea modular?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Python for Data Engineering"
+---
+
+## 🛑 El Error del Junior
+
+"Que tiene varios archivos"—no entiende la separación de responsabilidades ni el principio detrás de la modularidad en proyectos de datos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Modularity is one of those things that feels unnecessary until a project grows and suddenly matters a lot. Would it help if I explained how I structure a real data project and why?"*
+
+## 💻 La Respuesta Técnica
+
+Un proyecto **modular** separa responsabilidades en distintos archivos o componentes, donde cada módulo tiene una función clara y delimitada.
+
+**Estructura modular típica en DE:**
+
+```
+pipeline_proyecto/
+├── main.py              # Punto de entrada, orquesta el flujo
+├── extract.py           # Lógica de extracción (API, DB, archivos)
+├── transform.py         # Lógica de transformación y limpieza
+├── load.py              # Lógica de carga al destino
+├── validators.py        # Validaciones de schema y calidad
+├── config.py            # Configuración, constantes, env vars
+├── utils.py             # Funciones utilitarias reutilizables
+└── tests/
+    ├── test_transform.py
+    └── test_validators.py
+```
+
+**Por qué importa:**
+
+| Escenario | Sin modularidad | Con modularidad |
+|-----------|----------------|----------------|
+| Cambiar la fuente de datos | Tocar todo el script | Solo modificar `extract.py` |
+| Agregar validación nueva | Buscar dónde encaja | Agregar a `validators.py` |
+| Escribir tests | Muy difícil | Importar y probar cada módulo |
+| Incorporar un nuevo developer | Código confuso | Estructura clara desde el día 1 |
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A modular Python project organizes code by responsibility—each file or module handles one specific concern, such as extraction, transformation, loading, or validation. This separation makes projects significantly easier to maintain and scale: when the data source changes, you only touch the extraction module; when a new validation rule is needed, you add it to the validators module without affecting anything else. Modularity also enables proper testing, because you can import and test each module in isolation. In my experience, projects that start as a single script inevitably become hard to maintain once they grow past a few hundred lines—modularizing early is always worth the investment."*
+
+## 🔑 Vocabulario Clave
+
+* **Separation of concerns:** Separación de responsabilidades en el código
+* **Module:** Módulo o archivo Python con una responsabilidad específica
+* **Scalability:** Escalabilidad del proyecto a medida que crece
+* **Entry point:** Punto de entrada que orquesta el flujo completo
+* **Isolation:** Aislamiento de cada componente para pruebas
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

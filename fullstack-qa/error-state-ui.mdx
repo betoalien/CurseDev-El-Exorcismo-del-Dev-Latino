@@ -1,0 +1,89 @@
+---
+title: "¿Por qué también debes manejar errores en la interfaz de usuario?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Next.js & Frontend Basics"
+---
+
+## 🛑 El Error del Junior
+
+No maneja errores en la UI — cuando la API falla, la pantalla queda en blanco o el componente se rompe completamente con un error de JavaScript en la consola.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Error states in the UI are as important as the happy path—they define how the application behaves under failure, which is what real users encounter. Would it help if I explained the layers of error handling in a Next.js app?"*
+
+## 💻 La Respuesta Técnica
+
+Manejar errores en la UI protege la experiencia del usuario y da contexto accionable cuando algo falla. Sin manejo de errores, un fallo en la API puede romper toda la página.
+
+**Capas de manejo de errores en Next.js:**
+
+```tsx
+// Capa 1: Error boundary (error.tsx) — captura errores de Server Components
+// app/orders/error.tsx
+"use client";
+
+export default function OrdersError({
+  error,
+  reset,
+}: {
+  error: Error;
+  reset: () => void;
+}) {
+  return (
+    <div className="error-container">
+      <h2>No se pudieron cargar los pedidos</h2>
+      <p className="text-gray-500">{error.message}</p>
+      <button onClick={reset}>Intentar de nuevo</button>
+    </div>
+  );
+}
+
+// Capa 2: Manejo de error en Client Components
+"use client";
+
+function OrdersList() {
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch("/api/orders");
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
+      const data = await res.json();
+      setOrders(data.orders);
+    } catch (err) {
+      setError("No se pudieron cargar los pedidos. Intenta de nuevo.");
+    }
+  };
+
+  if (error) return (
+    <div className="error-message">
+      <p>{error}</p>
+      <button onClick={fetchOrders}>Reintentar</button>
+    </div>
+  );
+}
+```
+
+**Principios de buen manejo de errores en UI:**
+- Mensaje claro en lenguaje del usuario (no mensajes técnicos)
+- Opción de reintentar cuando tiene sentido
+- No exponer detalles técnicos del error al usuario final
+- Reportar el error a un sistema de monitoreo (Sentry, etc.)
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Handling errors in the UI is just as critical as the happy path—network failures, API errors, and unexpected states are part of normal operation, not edge cases. Without error handling, a single failed API call can crash the entire component and leave the user staring at a blank screen with no context. My approach is layered: at the page level, I use Next.js error.tsx boundaries to catch Server Component failures and show a user-friendly message with a retry option. At the component level, I track an error state alongside loading state and display contextual messages when requests fail. The key principle is that error messages should be written for users, not developers—clear language about what went wrong and what they can do next, without exposing technical stack traces."*
+
+## 🔑 Vocabulario Clave
+
+* **Error boundary:** Componente que captura errores de sus hijos y muestra un fallback
+* **error.tsx:** Archivo especial de Next.js para manejar errores de ruta
+* **Fallback UI:** Interfaz de respaldo que se muestra cuando ocurre un error
+* **User-friendly error message:** Mensaje de error en lenguaje accesible para el usuario
+* **Error monitoring:** Monitoreo de errores en producción (Sentry, Datadog)
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

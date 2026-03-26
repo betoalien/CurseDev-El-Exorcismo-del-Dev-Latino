@@ -1,0 +1,67 @@
+---
+title: "¿Cómo explicarías el proceso de leer un archivo CSV con Python?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Python for Data Engineering"
+---
+
+## 🛑 El Error del Junior
+
+"Con pandas haces `pd.read_csv('archivo.csv')`"—correcto pero incompleto. No menciona validación, encoding, delimitadores o manejo de errores, que son lo que diferencia un script de producción de un ejercicio.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Reading a CSV sounds simple, but in production there are several things that can go wrong. Would it help if I walked through how I approach it to make the process robust?"*
+
+## 💻 La Respuesta Técnica
+
+Leer un CSV en Python implica más que abrir el archivo: hay que considerar encoding, delimitadores, tipos de datos y validación básica del contenido.
+
+**Enfoque robusto para producción:**
+
+```python
+import pandas as pd
+import logging
+
+logger = logging.getLogger(__name__)
+
+def read_csv_safe(filepath: str) -> pd.DataFrame:
+    try:
+        df = pd.read_csv(
+            filepath,
+            encoding="utf-8",       # Encoding explícito
+            sep=",",                 # Delimitador explícito
+            dtype=str,               # Leer todo como string primero
+            na_values=["", "NULL", "N/A"],  # Valores nulos conocidos
+        )
+        logger.info(f"CSV loaded: {len(df)} rows, {len(df.columns)} columns")
+        return df
+    except FileNotFoundError:
+        logger.error(f"File not found: {filepath}")
+        raise
+    except pd.errors.ParserError as e:
+        logger.error(f"CSV parsing error: {e}")
+        raise
+```
+
+**Puntos críticos en producción:**
+- Siempre especificar `encoding` (UTF-8 vs Latin-1 puede romper caracteres)
+- Leer como `str` primero y convertir tipos después de validar
+- Registrar cuántas filas y columnas se cargaron
+- Manejar excepciones con mensajes descriptivos
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Reading a CSV with Python is conceptually simple—you open the file, parse its rows and columns, and load it into a structure you can work with. In practice, production-grade CSV reading requires handling several failure modes: encoding issues where UTF-8 and Latin-1 produce different results, inconsistent delimiters, malformed rows, and unexpected null representations. My standard approach is to read everything as strings first, validate the schema and content, and then cast to the appropriate types—rather than letting pandas infer types automatically, which can silently produce wrong results. I also always log the row count after loading as a basic sanity check."*
+
+## 🔑 Vocabulario Clave
+
+* **Encoding:** Codificación de caracteres del archivo
+* **Delimiter:** Separador de columnas en un archivo CSV
+* **Schema inference:** Inferencia automática de tipos de datos
+* **Parser error:** Error al interpretar la estructura del archivo
+* **Sanity check:** Verificación básica de integridad
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

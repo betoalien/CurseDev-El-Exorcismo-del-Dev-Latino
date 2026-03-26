@@ -1,0 +1,74 @@
+---
+title: "¿Qué es una carga incremental y por qué puede ser preferible a una carga completa?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / ETL & Transformations"
+---
+
+## 🛑 El Error del Junior
+
+"Es cargar solo los datos nuevos"—correcto a medias. No explica cómo se identifican los datos nuevos, ni los desafíos de implementación, ni los trade-offs frente a una carga completa.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Incremental loads solve a real performance and cost problem, but they come with complexity that full loads don't have. Would it help if I explained both the implementation and the trade-offs?"*
+
+## 💻 La Respuesta Técnica
+
+Una **carga incremental** procesa solo los datos **nuevos o modificados** desde la última ejecución exitosa, en lugar de volver a procesar todo el histórico.
+
+**Comparación:**
+
+| | Carga completa (Full) | Carga incremental |
+|-|-----------------------|-------------------|
+| **Qué procesa** | Todo el dataset | Solo cambios desde el último run |
+| **Costo** | Alto (siempre) | Bajo (crece con el volumen de cambios) |
+| **Complejidad** | Baja | Alta |
+| **Riesgo de duplicados** | Bajo (reemplaza todo) | Alto (sin idempotencia) |
+| **Tiempo de ejecución** | Crece con el histórico | Constante o predecible |
+
+**Implementación típica:**
+
+```python
+import pandas as pd
+from datetime import datetime
+
+def get_last_run_timestamp(checkpoint_file: str) -> str:
+    """Lee el timestamp del último run exitoso."""
+    try:
+        with open(checkpoint_file) as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return "1970-01-01 00:00:00"  # Primera ejecución: cargar todo
+
+def save_checkpoint(checkpoint_file: str, timestamp: str):
+    """Guarda el timestamp del run actual para el próximo run."""
+    with open(checkpoint_file, "w") as f:
+        f.write(timestamp)
+
+# Pipeline incremental
+last_run = get_last_run_timestamp("checkpoint.txt")
+current_run = datetime.now().isoformat()
+
+df = extract_new_records(since=last_run)  # Solo registros nuevos
+df = transform(df)
+load(df)
+
+save_checkpoint("checkpoint.txt", current_run)
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"An incremental load processes only the data that has changed since the last successful run, rather than reprocessing the entire historical dataset every time. This matters enormously at scale: if you have 500 million historical records but only 50,000 change per day, a full load wastes resources processing 499,950,000 records that didn't change. Incremental loads are efficient but more complex: you need a reliable mechanism to identify what's new—typically a timestamp column like updated_at or a change tracking system—and you need to store a checkpoint so the pipeline knows where it left off. The main risk is that without proper idempotency, re-running an incremental load can create duplicates, so the load strategy must be upsert-based, not append-only."*
+
+## 🔑 Vocabulario Clave
+
+* **Incremental load:** Carga que procesa solo cambios desde el último run
+* **Checkpoint:** Punto de control que registra hasta dónde llegó el pipeline
+* **Watermark:** Marca de agua (timestamp) para identificar registros nuevos
+* **Upsert:** Estrategia de carga que inserta o actualiza según existencia
+* **Full refresh:** Carga completa que reemplaza todo el dataset
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

@@ -1,0 +1,82 @@
+---
+title: "¿Qué es un rate limit y cómo afecta un pipeline que consume una API?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / APIs & Ingestion"
+---
+
+## 🛑 El Error del Junior
+
+"Es cuando la API te bloquea"—correcto pero no explica cómo detectarlo, manejarlo o prevenirlo en el diseño del pipeline.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Rate limits are one of the most common pipeline failure points when integrating with external APIs. Would it help if I explained how to detect them and design a pipeline that respects them proactively?"*
+
+## 💻 La Respuesta Técnica
+
+Un **rate limit** es una restricción impuesta por el proveedor de la API que limita cuántas solicitudes puedes hacer en un periodo de tiempo. Si lo superas, la API rechaza tus llamadas con un error `429 Too Many Requests`.
+
+**Cómo responder a un rate limit:**
+
+```python
+import requests
+import time
+import logging
+
+logger = logging.getLogger(__name__)
+
+def fetch_with_rate_limit_handling(url: str, headers: dict) -> dict:
+    while True:
+        response = requests.get(url, headers=headers, timeout=10)
+
+        if response.status_code == 429:
+            # Leer el tiempo de espera del header (si lo provee la API)
+            retry_after = int(response.headers.get("Retry-After", 60))
+            logger.warning(f"Rate limit hit. Waiting {retry_after}s before retry...")
+            time.sleep(retry_after)
+            continue  # Reintentar
+
+        response.raise_for_status()
+        return response.json()
+
+# Prevención proactiva: controlar la frecuencia de llamadas
+import time
+
+def fetch_pages_safely(base_url: str, headers: dict, delay: float = 0.5) -> list:
+    all_records = []
+    page = 1
+    while True:
+        data = fetch_with_rate_limit_handling(f"{base_url}?page={page}", headers)
+        if not data["results"]:
+            break
+        all_records.extend(data["results"])
+        page += 1
+        time.sleep(delay)  # Pausa entre llamadas para no superar el límite
+    return all_records
+```
+
+**Información útil en los headers de respuesta:**
+
+| Header | Significado |
+|--------|-------------|
+| `X-RateLimit-Limit` | Máximo de solicitudes permitidas |
+| `X-RateLimit-Remaining` | Solicitudes restantes en el periodo |
+| `X-RateLimit-Reset` | Timestamp cuando se renueva el límite |
+| `Retry-After` | Segundos que debes esperar tras un 429 |
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A rate limit is a restriction imposed by an API provider on how many requests you can make within a time window—for example, 1,000 requests per hour. If you exceed it, the API responds with a 429 Too Many Requests status and your pipeline gets blocked until the limit resets. The right approach has two parts: reactive and proactive. Reactively, when I receive a 429, I read the Retry-After header and pause for that duration before retrying. Proactively, I design the pipeline to stay well within the limit by adding a deliberate delay between requests and monitoring the rate limit headers to know how much headroom I have. This way, rate limiting becomes a predictable constraint I manage, not a failure mode that brings the pipeline down."*
+
+## 🔑 Vocabulario Clave
+
+* **Rate limit:** Límite de solicitudes permitidas por periodo de tiempo
+* **429 Too Many Requests:** Código HTTP cuando se supera el rate limit
+* **Retry-After header:** Cabecera que indica cuánto esperar antes de reintentar
+* **Throttling:** Reducción deliberada de la velocidad de solicitudes
+* **Rate limit window:** Ventana de tiempo del límite (ej: por minuto, por hora)
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

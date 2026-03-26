@@ -1,0 +1,81 @@
+---
+title: "¿Cómo se relacionan los métodos HTTP con los endpoints de un backend?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / FastAPI & Backend Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+Usa siempre POST para todo porque "envía datos" — no aplica la semántica REST y hace que la API sea impredecible para quien la consume.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Using the right HTTP method is about communicating intent clearly—it's part of the API contract. Would it help if I explained how I map each operation in the backend to its correct method?"*
+
+## 💻 La Respuesta Técnica
+
+En el backend, cada método HTTP representa una **acción semántica** sobre un recurso. Usarlos correctamente hace que la API sea predecible, cacheable donde corresponde, y fácil de entender para cualquier consumidor.
+
+**Mapeo de operaciones a métodos HTTP:**
+
+```python
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI()
+
+# GET — Leer, sin efectos secundarios, cacheable
+@app.get("/products")           # Listar todos
+@app.get("/products/{id}")      # Leer uno específico
+
+# POST — Crear un nuevo recurso (no idempotente)
+@app.post("/products")          # Crear producto nuevo
+
+# PUT — Reemplazar completo (idempotente)
+@app.put("/products/{id}")      # Reemplazar todos los campos del producto
+
+# PATCH — Actualización parcial (idempotente)
+@app.patch("/products/{id}")    # Actualizar solo algunos campos
+
+# DELETE — Eliminar (idempotente)
+@app.delete("/products/{id}")   # Eliminar producto
+
+# Ejemplo completo:
+class ProductCreate(BaseModel):
+    name: str
+    price: float
+
+class ProductPatch(BaseModel):
+    price: float | None = None  # Solo campos opcionales
+
+@app.post("/products", status_code=201)
+async def create_product(product: ProductCreate):
+    new = save_product(product)
+    return new
+
+@app.patch("/products/{product_id}")
+async def update_price(product_id: int, data: ProductPatch):
+    product = find_product(product_id)
+    if not product:
+        raise HTTPException(404, "Product not found")
+    if data.price is not None:
+        product.price = data.price
+    return save_product(product)
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"HTTP methods define the semantic intent of each operation in a backend API. GET retrieves data and should have no side effects—it's safe to call multiple times and can be cached. POST creates a new resource and is not idempotent—calling it twice creates two records. PUT replaces an entire resource, and PATCH updates it partially—both are idempotent, so calling them multiple times with the same data has the same effect as calling them once. DELETE removes a resource. In FastAPI, each decorator corresponds directly to an HTTP method, which makes the intent obvious when reading the code. Using the correct method matters practically: caches know not to cache POST responses, retry logic knows it's safe to retry idempotent methods, and API consumers have predictable expectations about what each endpoint does."*
+
+## 🔑 Vocabulario Clave
+
+* **Semantic intent:** Intención semántica del método HTTP
+* **Idempotent operation:** Operación con el mismo resultado al ejecutarse múltiples veces
+* **Safe method:** Método HTTP que no modifica el estado del servidor (GET, HEAD)
+* **PUT vs PATCH:** PUT reemplaza completo, PATCH actualiza parcialmente
+* **Cacheable response:** Respuesta que puede ser cacheada por la infraestructura
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

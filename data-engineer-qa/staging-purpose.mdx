@@ -1,0 +1,68 @@
+---
+title: "¿Qué es una tabla de staging y para qué se usa?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / SQL & Data Modeling"
+---
+
+## 🛑 El Error del Junior
+
+"Es una tabla temporal donde se guardan datos antes de procesarlos"—correcto pero no explica por qué existe esa capa ni qué problemas resuelve en la arquitectura del pipeline.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Staging tables are a deliberate architectural pattern, not just a technical detail. Would it help if I explained the role they play in a multi-layer data architecture and why skipping them is risky?"*
+
+## 💻 La Respuesta Técnica
+
+Una **tabla de staging** es una capa intermedia donde se cargan datos crudos o semiprocesados **antes** de cualquier transformación o validación. Es el primer destino de los datos dentro del warehouse.
+
+**Arquitectura de capas:**
+
+```
+[Fuente] → RAW/STAGING → CLEAN → CURATED → Consumo
+              ↓              ↓         ↓
+         Sin cambios    Validado    Modelado
+         Copia fiel     Limpio      Listo para uso
+```
+
+**Por qué la capa de staging es esencial:**
+
+```sql
+-- Staging: carga directa desde la fuente, sin transformar
+CREATE OR REPLACE TABLE staging.raw_orders AS
+SELECT *
+FROM external_source.orders;
+
+-- Luego, transformación sobre staging (no sobre la fuente)
+CREATE OR REPLACE TABLE clean.orders AS
+SELECT
+    order_id,
+    TRIM(LOWER(status))   AS status,
+    CAST(amount AS FLOAT) AS amount
+FROM staging.raw_orders
+WHERE order_id IS NOT NULL;
+```
+
+**Beneficios clave:**
+- **Punto de recuperación**: Si la transformación falla, el raw ya está cargado
+- **Auditoría**: Puedes comparar staging vs. resultado final
+- **Velocidad**: La extracción y la transformación se desacoplan
+- **Debugging**: Si hay un bug, puedes retransformar sin re-extraer
+- **Historial**: Puedes conservar versiones históricas del raw
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A staging table is an intermediate layer where raw data lands after extraction, before any transformation or business logic is applied. It's a deliberate architectural pattern that decouples ingestion from transformation: once data is in staging, the extraction job is done and the transformation job can run independently, fail, or be retried without touching the source system again. This is critical for debugging—if a transformation has a bug, I can fix it and re-run it against the staging data without re-extracting from the source. Staging also serves as an audit point, letting me compare what arrived from the source against what ultimately ended up in the clean layer."*
+
+## 🔑 Vocabulario Clave
+
+* **Staging layer:** Capa de aterrizaje de datos crudos
+* **Decoupling:** Desacoplamiento entre etapas del pipeline
+* **Audit point:** Punto de auditoría para comparar fuente vs. destino
+* **Re-extraction:** Volver a extraer datos de la fuente
+* **Multi-layer architecture:** Arquitectura de múltiples capas de datos
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

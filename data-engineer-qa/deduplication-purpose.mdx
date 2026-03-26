@@ -1,0 +1,68 @@
+---
+title: "¿Qué significa deduplicar datos dentro de un pipeline?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / ETL & Transformations"
+---
+
+## 🛑 El Error del Junior
+
+"Es eliminar filas repetidas con DISTINCT"—técnicamente posible, pero DISTINCT no es la solución correcta en la mayoría de casos y oculta el problema en lugar de diagnosticarlo.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Deduplication is actually more nuanced than just removing duplicates—you need to understand why they appeared before deciding how to handle them. Would it help if I explained the common causes and the right approach for each?"*
+
+## 💻 La Respuesta Técnica
+
+**Deduplicar** significa identificar y resolver registros que aparecen más de una vez en el dataset cuando no deberían. Antes de eliminar, hay que entender el origen del duplicado.
+
+**Causas comunes de duplicados:**
+- Pipeline re-ejecutado sin lógica idempotente
+- API que devuelve el mismo registro en varias páginas
+- Múltiples fuentes que reportan el mismo evento
+- Falta de PK o lógica de carga incorrecta
+
+**Cómo deduplicar correctamente:**
+
+```python
+import pandas as pd
+
+# Opción 1: Deduplicar por clave de negocio (más común)
+df = df.drop_duplicates(subset=["order_id"], keep="last")
+# keep="last" → conserva el registro más reciente en caso de duplicado
+
+# Opción 2: Con window function en SQL (para datos con timestamp)
+-- Conservar solo el registro más reciente por order_id
+WITH ranked AS (
+    SELECT *,
+           ROW_NUMBER() OVER (PARTITION BY order_id ORDER BY updated_at DESC) AS rn
+    FROM staging.raw_orders
+)
+SELECT * FROM ranked WHERE rn = 1;
+
+# Opción 3: Diagnosticar antes de eliminar
+duplicates = df[df.duplicated(subset=["order_id"], keep=False)]
+logger.warning(f"Found {len(duplicates)} duplicate rows on order_id")
+```
+
+**El error de usar DISTINCT:**
+- DISTINCT elimina duplicados exactos (todas las columnas iguales)
+- No resuelve duplicados donde hay diferencias en campos secundarios
+- Oculta el problema en lugar de reportarlo
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Deduplication means identifying and resolving records that appear more than once when they shouldn't—but the right approach depends on why the duplicates exist in the first place. If a pipeline re-runs without idempotency logic, the same records get inserted twice. If an API returns overlapping pages, the same event shows up multiple times. My process is: first, diagnose by logging how many duplicates exist and on which key; second, decide the strategy—for records with a business key like order_id, I keep the most recent version using a window function or pandas drop_duplicates with keep='last'. I avoid DISTINCT as a quick fix because it only removes exact duplicates across all columns, which often isn't what you want and doesn't surface the root cause."*
+
+## 🔑 Vocabulario Clave
+
+* **Deduplication:** Proceso de identificar y eliminar registros duplicados
+* **Business key:** Clave de negocio que identifica un registro de forma única
+* **Idempotency:** Idempotencia para evitar duplicados en re-ejecuciones
+* **Window function:** Función de ventana para clasificar y filtrar duplicados
+* **Root cause:** Causa raíz del problema que originó los duplicados
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

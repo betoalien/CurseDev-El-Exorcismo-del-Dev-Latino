@@ -1,0 +1,86 @@
+---
+title: "¿Por qué la documentación automática de una API puede ser tan útil?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / FastAPI & Backend Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Para que otros sepan cómo usar la API"—correcto pero no menciona el valor de que sea automática (siempre sincronizada con el código) vs. documentación manual (que se desactualiza).
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Automatic documentation is valuable precisely because it's always in sync with the actual code. Would it help if I explained what FastAPI generates and how it accelerates frontend-backend collaboration?"*
+
+## 💻 La Respuesta Técnica
+
+La **documentación automática** de FastAPI se genera directamente desde el código — cada vez que cambias un endpoint o modelo, la documentación se actualiza sin trabajo adicional.
+
+**Qué genera FastAPI automáticamente:**
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI(
+    title="Tienda API",
+    description="API para gestión de pedidos y productos",
+    version="1.0.0"
+)
+
+class ProductCreate(BaseModel):
+    """Datos para crear un producto."""
+    name: str
+    price: float
+    category: str
+
+class ProductOut(BaseModel):
+    id: int
+    name: str
+    price: float
+    category: str
+
+@app.post(
+    "/products",
+    response_model=ProductOut,
+    status_code=201,
+    summary="Crear producto",
+    description="Crea un nuevo producto en el catálogo.",
+    tags=["Products"]
+)
+async def create_product(product: ProductCreate):
+    return save_product(product)
+
+# Acceso automático:
+# http://localhost:8000/docs   → Swagger UI interactivo
+# http://localhost:8000/redoc  → ReDoc (más legible)
+# http://localhost:8000/openapi.json → Schema OpenAPI completo
+```
+
+**En el Swagger UI puedes:**
+- Ver todos los endpoints organizados por tags
+- Expandir cada endpoint y ver request/response schemas
+- Probar el endpoint directamente con datos reales
+- Ver los posibles códigos de error y su significado
+
+**El valor para un equipo fullstack:**
+- El frontend developer puede probar endpoints sin un Postman configurado
+- El contrato es siempre la versión real del código, no una wiki desactualizada
+- Nuevos developers se incorporan más rápido
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Automatic API documentation is valuable because it's always synchronized with the actual code—unlike documentation written in a wiki or Notion, which inevitably drifts out of date as the code evolves. FastAPI generates interactive Swagger and ReDoc documentation directly from the Pydantic models and endpoint definitions, so the documentation reflects exactly what the API does right now. This accelerates collaboration significantly: a frontend developer can open the Swagger UI, see all available endpoints with their request and response schemas, and test them interactively without needing Postman or asking the backend team for examples. It also serves as a living contract—when the API changes, the documentation changes automatically, which surfaces breaking changes immediately rather than discovering them at integration time."*
+
+## 🔑 Vocabulario Clave
+
+* **Automatic documentation:** Documentación generada desde el código sin trabajo manual
+* **Swagger UI:** Interfaz interactiva para explorar y probar endpoints de la API
+* **OpenAPI:** Estándar para describir APIs REST (antes llamado Swagger)
+* **Living contract:** Contrato vivo que se actualiza automáticamente con el código
+* **Integration time:** Momento en que frontend y backend se conectan por primera vez
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

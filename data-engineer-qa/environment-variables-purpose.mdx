@@ -1,0 +1,71 @@
+---
+title: "¿Para qué sirven las variables de entorno en un proyecto de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Python for Data Engineering"
+---
+
+## 🛑 El Error del Junior
+
+Hardcodea credenciales directamente en el código: `api_key = "abc123secret"` — un error crítico de seguridad y portabilidad que se ve con frecuencia en proyectos de junior.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Environment variables solve two problems at once: security and portability. Would it help if I showed how I use them in a real pipeline project and why hardcoding is dangerous?"*
+
+## 💻 La Respuesta Técnica
+
+Las **variables de entorno** permiten separar configuración sensible o variable del código fuente, evitando que credenciales, rutas o URLs queden expuestas en el repositorio.
+
+**Ejemplo correcto con `python-dotenv`:**
+
+```python
+# .env (NO se sube al repositorio — agregar a .gitignore)
+DB_HOST=localhost
+DB_USER=admin
+DB_PASSWORD=supersecreto
+API_KEY=mi_api_key_real
+
+# config.py
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Carga variables del archivo .env
+
+DB_HOST = os.getenv("DB_HOST")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+API_KEY = os.getenv("API_KEY")
+
+if not API_KEY:
+    raise ValueError("API_KEY is required but not set")
+```
+
+**Regla de oro: nunca subir credenciales al repo.**
+
+| ❌ Mal | ✅ Bien |
+|--------|---------|
+| `password = "secreto"` en el código | `password = os.getenv("DB_PASSWORD")` |
+| `.env` en el repositorio | `.env` en `.gitignore` |
+| Misma config en dev y prod | Variables distintas por entorno |
+
+**Beneficios:**
+- **Seguridad**: Las credenciales no están en el código ni en el historial de git
+- **Portabilidad**: El mismo código funciona en dev, staging y producción
+- **Configurabilidad**: Cambiar configuración sin tocar código
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Environment variables solve two problems simultaneously: security and portability. Instead of hardcoding credentials, database URLs, or API keys directly in the source code—where they'd be visible in git history and to anyone who can read the repository—you store them externally and reference them at runtime. This means the same codebase can run in development, staging, and production simply by setting different environment variables in each context, without any code changes. In Python, I use the dotenv library to load a local .env file during development, and in production those variables are injected by the deployment platform or CI/CD system. The .env file always goes in .gitignore—that's non-negotiable."*
+
+## 🔑 Vocabulario Clave
+
+* **Environment variable:** Variable de entorno del sistema operativo
+* **Hardcoding:** Escribir valores fijos directamente en el código
+* **`.gitignore`:** Archivo que excluye archivos del repositorio git
+* **Deployment platform:** Plataforma de despliegue (Heroku, AWS, GCP)
+* **Runtime:** En tiempo de ejecución del programa
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

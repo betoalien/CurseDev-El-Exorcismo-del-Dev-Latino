@@ -1,0 +1,113 @@
+---
+title: "¿Para qué sirven las variables de entorno en una aplicación fullstack?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Integration, Testing & Production Readiness"
+---
+
+## 🛑 El Error del Junior
+
+Hardcodea credenciales, URLs de API y claves secretas directamente en el código — si sube el código a GitHub, esas credenciales quedan expuestas y el código no puede usarse en distintos entornos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Environment variables are how you separate configuration from code—and they're essential for security and for running the same codebase in development, staging, and production. Would it help if I showed how they work in both Next.js and FastAPI?"*
+
+## 💻 La Respuesta Técnica
+
+Las **variables de entorno** separan la configuración del código, permitiendo que el mismo código funcione en distintos entornos (local, staging, producción) sin modificaciones.
+
+**El problema del hardcoding:**
+
+```python
+# ❌ NUNCA hacer esto
+DATABASE_URL = "postgresql://admin:MiPassword123@prod-db.myapp.com:5432/orders"
+SECRET_KEY = "super-secret-key-12345"
+STRIPE_API_KEY = "sk_live_real_stripe_key"
+
+# Si esto llega a GitHub → credenciales expuestas → brecha de seguridad
+```
+
+**En el backend (FastAPI) — python-dotenv:**
+
+```python
+# .env (nunca commitear — agregar a .gitignore)
+DATABASE_URL=postgresql://localhost/myapp_dev
+SECRET_KEY=dev-secret-key-change-in-prod
+REDIS_URL=redis://localhost:6379
+STRIPE_KEY=sk_test_sandbox_key
+
+# config.py — cargar y validar variables de entorno
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+    database_url: str
+    secret_key: str
+    redis_url: str = "redis://localhost:6379"  # Con default
+    stripe_key: str
+    debug: bool = False
+
+    class Config:
+        env_file = ".env"
+
+settings = Settings()  # Falla si falta una variable obligatoria
+
+# Uso en la app:
+from config import settings
+engine = create_engine(settings.database_url)
+```
+
+**En el frontend (Next.js):**
+
+```bash
+# .env.local — solo para desarrollo local
+NEXT_PUBLIC_API_URL=http://localhost:8000   # Prefijo NEXT_PUBLIC_ → disponible en browser
+DATABASE_URL=postgresql://...               # Sin prefijo → solo en servidor
+NEXTAUTH_SECRET=dev-nextauth-secret
+```
+
+```typescript
+// Acceso en el código
+const apiUrl = process.env.NEXT_PUBLIC_API_URL  // Disponible en cliente y servidor
+
+// Solo en Server Components / API Routes (nunca exponer al cliente)
+const dbUrl = process.env.DATABASE_URL
+```
+
+**Por entorno — la misma app, configuración distinta:**
+
+```
+Desarrollo local:
+  DATABASE_URL=postgresql://localhost/myapp_dev
+  DEBUG=true
+
+Staging:
+  DATABASE_URL=postgresql://staging-server/myapp_staging
+  DEBUG=false
+
+Producción:
+  DATABASE_URL=postgresql://prod-server/myapp_prod
+  SECRET_KEY=[key rotada, diferente a staging]
+  STRIPE_KEY=sk_live_[key real]
+```
+
+**Reglas críticas:**
+- Nunca commitear `.env` — agregar a `.gitignore`
+- Usar `.env.example` (con valores ficticios) para documentar qué variables se necesitan
+- En producción, usar secretos del proveedor (Railway, Vercel, AWS Secrets Manager)
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Environment variables separate configuration from code, which solves two problems simultaneously: security and portability. Security, because credentials like database passwords, API keys, and secret keys should never be hardcoded in the source code—if they are, anyone with repository access has production credentials. Portability, because the same codebase needs to connect to different databases, use different API keys, and behave differently in development versus production without changing a single line of code. In FastAPI, I use pydantic-settings to define a Settings class that reads from environment variables and validates that all required variables are present at startup—if a required variable is missing, the app fails immediately with a clear error rather than crashing unpredictably later. In Next.js, variables prefixed with NEXT_PUBLIC_ are exposed to the browser; everything else stays server-side only."*
+
+## 🔑 Vocabulario Clave
+
+* **Environment variable:** Variable de configuración externa al código — cambia por entorno
+* **`.env` file:** Archivo local con variables de entorno — nunca commitear al repositorio
+* **`.gitignore`:** Archivo que le dice a Git qué archivos no trackear — debe incluir `.env`
+* **`NEXT_PUBLIC_` prefix:** Prefijo en Next.js que expone la variable al navegador
+* **Secret rotation:** Práctica de cambiar credenciales periódicamente por seguridad
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

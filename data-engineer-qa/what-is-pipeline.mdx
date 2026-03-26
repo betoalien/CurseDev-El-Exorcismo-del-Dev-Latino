@@ -1,0 +1,53 @@
+---
+title: "¿Qué es un pipeline de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Es un proceso que mueve datos de un lado a otro"—correcto pero incompleto. Omite el aspecto de automatización, validación y confiabilidad que define un pipeline real.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"A pipeline is more than just data movement—it's about reliability and orchestration. Would it help if I described the anatomy of a well-built pipeline?"*
+
+## 💻 La Respuesta Técnica
+
+Un **pipeline de datos** es un flujo automatizado y orquestado que mueve y procesa datos desde una o varias fuentes hasta un destino, aplicando controles en cada etapa.
+
+**Anatomía de un pipeline:**
+
+```
+[Fuente] → Extracción → Validación → Transformación → Carga → [Destino]
+               ↓              ↓              ↓            ↓
+            Logging       Alertas       Logging       Logging
+```
+
+**Componentes clave:**
+
+1. **Origen**: API, base de datos, archivo CSV, evento en tiempo real
+2. **Extracción**: Conexión y lectura de los datos crudos
+3. **Validación**: Verificar schema, tipos, rangos esperados
+4. **Transformación**: Limpieza, enriquecimiento, estandarización
+5. **Carga**: Escritura en el destino (DB, warehouse, archivo)
+6. **Monitoreo**: Logs, alertas en caso de fallos
+
+Un pipeline bien diseñado es **idempotente** (se puede reejecutar sin duplicar datos) y **observable** (sus errores son visibles y trazables).
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A data pipeline is an automated, orchestrated flow that moves data from one or more sources to a destination, applying validations and transformations along the way. The key word is automated—a pipeline runs on a schedule or in response to events, without manual intervention. What separates a well-built pipeline from a script is reliability: it handles errors gracefully, logs what happened, retries on transient failures, and alerts when something breaks. In production, I always think of a pipeline in three dimensions: correctness, meaning the data is accurate; timeliness, meaning it arrives when needed; and observability, meaning I can tell exactly what happened at every step when something goes wrong."*
+
+## 🔑 Vocabulario Clave
+
+* **Orchestration:** Orquestación del flujo de datos
+* **Idempotent:** Idempotente (mismo resultado en múltiples ejecuciones)
+* **Observability:** Observabilidad del sistema
+* **Transient failure:** Falla transitoria o temporal
+* **Schema validation:** Validación de estructura de datos
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

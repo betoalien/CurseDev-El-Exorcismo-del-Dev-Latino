@@ -1,0 +1,80 @@
+---
+title: "¿Por qué es importante manejar paginación al consumir una API?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / APIs & Ingestion"
+---
+
+## 🛑 El Error del Junior
+
+Hace una sola llamada a la API y asume que obtuvo todos los datos — un error clásico que produce datasets incompletos que pasan desapercibidos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Pagination is one of those things that's easy to miss in development but causes silent data loss in production. Would it help if I showed how different APIs implement it and how I handle each pattern?"*
+
+## 💻 La Respuesta Técnica
+
+Las APIs limitan cuántos registros devuelven por llamada (típicamente 100-1000 por página). Sin manejar paginación, el pipeline obtiene solo la primera página y **pierde silenciosamente el resto**.
+
+**Patrones de paginación comunes:**
+
+```python
+import requests
+
+# Patrón 1: Paginación por número de página
+def fetch_all_page_number(url: str, headers: dict) -> list:
+    all_records = []
+    page = 1
+    while True:
+        resp = requests.get(url, headers=headers, params={"page": page, "per_page": 100})
+        data = resp.json()
+        records = data.get("results", [])
+        if not records:
+            break
+        all_records.extend(records)
+        page += 1
+    return all_records
+
+# Patrón 2: Cursor-based pagination (más robusto)
+def fetch_all_cursor(url: str, headers: dict) -> list:
+    all_records = []
+    cursor = None
+    while True:
+        params = {"limit": 100}
+        if cursor:
+            params["cursor"] = cursor
+        resp = requests.get(url, headers=headers, params=params)
+        data = resp.json()
+        all_records.extend(data["data"])
+        cursor = data.get("next_cursor")
+        if not cursor:
+            break  # No más páginas
+    return all_records
+
+# Patrón 3: Link header (estilo GitHub)
+def fetch_all_link_header(url: str, headers: dict) -> list:
+    all_records = []
+    next_url = url
+    while next_url:
+        resp = requests.get(next_url, headers=headers)
+        all_records.extend(resp.json())
+        next_url = resp.links.get("next", {}).get("url")
+    return all_records
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Pagination is critical because APIs never return all records in a single response—they cap the result set at a few hundred records per page to protect their servers. If you make a single API call and load whatever comes back, you're silently missing potentially thousands or millions of records. Handling pagination means looping through all pages until the API signals there are no more results—either by returning an empty page, setting a next_cursor to null, or omitting a next link in the response headers. Different APIs implement pagination differently, so I always check the documentation first and write the loop defensively: with a maximum iteration cap to avoid infinite loops in case the API's pagination signals behave unexpectedly."*
+
+## 🔑 Vocabulario Clave
+
+* **Pagination:** Paginación que divide resultados en múltiples páginas
+* **Cursor-based pagination:** Paginación por cursor más robusta ante cambios en los datos
+* **Page number pagination:** Paginación por número de página
+* **Link header:** Encabezado HTTP con URL de la página siguiente
+* **Silent data loss:** Pérdida silenciosa de datos sin error visible
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

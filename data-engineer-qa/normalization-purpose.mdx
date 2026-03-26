@@ -1,0 +1,66 @@
+---
+title: "¿Qué es la normalización en bases de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / SQL & Data Modeling"
+---
+
+## 🛑 El Error del Junior
+
+Recita las formas normales (1FN, 2FN, 3FN) sin explicar el objetivo práctico: evitar redundancia y anomalías de actualización en datos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Normalization is one of those concepts where the theory can obscure the practical goal. Would it help if I explained what it prevents in real terms, and when it's actually the right choice?"*
+
+## 💻 La Respuesta Técnica
+
+La **normalización** es el proceso de organizar datos en tablas relacionadas para **eliminar redundancia** y **evitar anomalías** al insertar, actualizar o eliminar registros.
+
+**El problema que resuelve:**
+
+```sql
+-- ❌ Tabla sin normalizar — redundancia y riesgo de inconsistencias
+-- orders_flat
+| order_id | customer_name | customer_email       | product  | amount |
+|----------|--------------|---------------------|----------|--------|
+| 1        | Ana García   | ana@email.com       | Laptop   | 800    |
+| 2        | Ana García   | ana@gmail.com       | Mouse    | 25     |  -- Email diferente!
+| 3        | Ana García   | ana@email.com       | Teclado  | 50     |
+
+-- ✅ Tabla normalizada — una sola fuente de verdad por entidad
+-- customers
+| customer_id | name       | email          |
+|-------------|------------|----------------|
+| 1           | Ana García | ana@email.com  |
+
+-- orders
+| order_id | customer_id | product | amount |
+|----------|-------------|---------|--------|
+| 1        | 1           | Laptop  | 800    |
+| 2        | 1           | Mouse   | 25     |
+```
+
+**Beneficios de normalizar:**
+- Actualizar el email de Ana cambia **un solo registro** en `customers`
+- Eliminación de duplicados estructurales
+- Menor espacio de almacenamiento
+- Datos consistentes por diseño
+
+**Cuándo NO normalizar:** En sistemas analíticos (ver: desnormalización), donde la velocidad de consulta importa más que la consistencia de escritura.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Normalization is the process of structuring a database to reduce redundancy and prevent data anomalies—situations where the same information appears in multiple places and can become inconsistent. The practical goal is to ensure each piece of information lives in exactly one place: if a customer changes their email, you update one record in the customers table and every order that references that customer automatically reflects the change. Normalization is essential for transactional systems where data integrity during writes is critical. However, in analytical systems like data warehouses, we often intentionally denormalize—accepting some redundancy in exchange for faster query performance and simpler joins for analysts."*
+
+## 🔑 Vocabulario Clave
+
+* **Data redundancy:** Redundancia de datos (mismo dato en múltiples lugares)
+* **Update anomaly:** Anomalía al actualizar datos redundantes
+* **Single source of truth:** Fuente única de verdad para cada dato
+* **Transactional system:** Sistema transaccional (OLTP)
+* **Normal form:** Forma normal (1FN, 2FN, 3FN)
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

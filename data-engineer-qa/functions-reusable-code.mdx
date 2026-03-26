@@ -1,0 +1,77 @@
+---
+title: "¿Por qué conviene usar funciones en scripts de Data Engineering?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Python for Data Engineering"
+---
+
+## 🛑 El Error del Junior
+
+"Para no repetir código"—correcto pero incompleto. No menciona testabilidad, mantenibilidad ni el impacto que tiene en la robustez del pipeline.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Functions in data scripts aren't just about avoiding repetition—they're about making the pipeline testable and maintainable. Would it help if I showed the difference in practice?"*
+
+## 💻 La Respuesta Técnica
+
+Las funciones permiten **dividir la lógica del pipeline en bloques reutilizables, testables y de responsabilidad única**.
+
+**Comparación: sin vs. con funciones:**
+
+```python
+# ❌ Script monolítico — difícil de probar y mantener
+import pandas as pd
+df = pd.read_csv("orders.csv")
+df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
+df = df.dropna(subset=["order_id", "amount"])
+df["amount"] = df["amount"].astype(float)
+df.to_sql("clean_orders", con=engine, if_exists="replace")
+
+# ✅ Con funciones — cada paso es claro, aislado y testeable
+def load_raw(filepath: str) -> pd.DataFrame:
+    return pd.read_csv(filepath, encoding="utf-8")
+
+def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
+    df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
+    return df
+
+def validate_required_fields(df: pd.DataFrame, required: list) -> pd.DataFrame:
+    return df.dropna(subset=required)
+
+def cast_types(df: pd.DataFrame) -> pd.DataFrame:
+    df["amount"] = df["amount"].astype(float)
+    return df
+
+def load_to_db(df: pd.DataFrame, table: str) -> None:
+    df.to_sql(table, con=engine, if_exists="replace", index=False)
+
+# Pipeline claro y legible
+df = load_raw("orders.csv")
+df = normalize_columns(df)
+df = validate_required_fields(df, ["order_id", "amount"])
+df = cast_types(df)
+load_to_db(df, "clean_orders")
+```
+
+**Beneficios concretos:**
+- **Testabilidad**: Puedes escribir tests para cada función por separado
+- **Reutilización**: La misma función puede usarse en múltiples pipelines
+- **Legibilidad**: El flujo del pipeline se entiende leyendo el código principal
+- **Depuración**: Cuando algo falla, sabes exactamente en qué paso
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Using functions in data scripts is about more than avoiding duplication—it's about making each step of the pipeline testable, readable, and independently maintainable. When a pipeline is one long script, it's nearly impossible to unit test, and when something breaks, you have to trace through the entire flow to find the problem. With functions, each transformation has a clear input, output, and single responsibility, which means I can write tests for each step in isolation and pinpoint failures immediately. It also makes pipelines composable—I can reuse a validation function across multiple pipelines without copy-pasting logic that might diverge over time."*
+
+## 🔑 Vocabulario Clave
+
+* **Single responsibility:** Responsabilidad única de cada función
+* **Unit test:** Prueba unitaria de una función aislada
+* **Composable:** Componible, que se puede combinar y reutilizar
+* **Monolithic script:** Script sin estructura, todo en un bloque
+* **Maintainability:** Mantenibilidad del código a largo plazo
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

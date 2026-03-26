@@ -1,0 +1,106 @@
+---
+title: "¿Qué es rate limiting y por qué puede ser importante en una API?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Auth, Redis & Real-World Architecture"
+---
+
+## 🛑 El Error del Junior
+
+No implementa rate limiting — la API acepta cualquier volumen de requests, lo que la hace vulnerable a abuso, scraping masivo, ataques de fuerza bruta y sobrecarga accidental.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Rate limiting is the difference between an API that's resilient and one that can be taken down by a single client. Would it help if I showed you how to implement it with Redis and explained the different strategies?"*
+
+## 💻 La Respuesta Técnica
+
+El **rate limiting** limita cuántas solicitudes puede hacer un cliente en un período de tiempo determinado, protegiendo la API contra abuso y sobrecarga.
+
+**Sin rate limiting — vulnerable:**
+
+```python
+# ❌ Sin rate limiting: cualquiera puede hacer 1,000,000 requests
+@app.post("/login")
+async def login(credentials: LoginRequest):
+    # Ataque de fuerza bruta: probar millones de contraseñas sin restricción
+    user = verify_credentials(credentials)
+    return {"token": create_jwt(user)}
+```
+
+**Con rate limiting usando Redis:**
+
+```python
+import redis
+from fastapi import Request, HTTPException
+
+r = redis.Redis(host="localhost", port=6379, decode_responses=True)
+
+def rate_limit(request: Request, max_requests: int = 100, window_seconds: int = 60):
+    """Límite de 100 requests por minuto por IP."""
+    client_ip = request.client.host
+    key = f"rate_limit:{client_ip}"
+
+    # Incrementar contador (operación atómica)
+    current = r.incr(key)
+
+    # Primer request en esta ventana → establecer TTL
+    if current == 1:
+        r.expire(key, window_seconds)
+
+    if current > max_requests:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many requests. Try again in a minute.",
+            headers={"Retry-After": str(window_seconds)}
+        )
+
+# Aplicar como dependency en endpoints críticos:
+@app.post("/login")
+async def login(
+    credentials: LoginRequest,
+    _: None = Depends(lambda req: rate_limit(req, max_requests=5, window_seconds=60))
+):
+    # Máximo 5 intentos de login por minuto por IP
+    return authenticate(credentials)
+
+@app.get("/products")
+async def list_products(
+    _: None = Depends(lambda req: rate_limit(req, max_requests=200))
+):
+    return get_all_products()
+```
+
+**Estrategias comunes de rate limiting:**
+
+| Estrategia | Cómo funciona | Cuándo usarla |
+|---|---|---|
+| **Por IP** | Cuenta requests por dirección IP | API pública general |
+| **Por usuario** | Cuenta requests por user_id autenticado | API con usuarios registrados |
+| **Por endpoint** | Límites distintos por ruta | Login más restrictivo que GET |
+| **Por API key** | Cuenta por key del cliente | APIs de terceros / B2B |
+
+**Headers que debe devolver la API:**
+```
+HTTP/1.1 429 Too Many Requests
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1700000060
+Retry-After: 45
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Rate limiting controls how many requests a client can make within a time window, and it serves multiple purposes: preventing brute-force attacks on sensitive endpoints like login, protecting the API from accidental or intentional flooding that could degrade service for other users, and enabling fair usage policies when the API is consumed by multiple clients. The implementation typically uses Redis because it provides atomic increment operations that work correctly even across multiple server instances—you increment a counter per client IP or user ID, set a TTL on the first increment to define the window, and return a 429 Too Many Requests response when the counter exceeds the limit. Different endpoints should have different limits: a login endpoint might allow 5 attempts per minute per IP, while a product listing endpoint might allow 200. The response should include headers like Retry-After so clients know when to try again."*
+
+## 🔑 Vocabulario Clave
+
+* **Rate limit:** Número máximo de requests permitidos en una ventana de tiempo
+* **429 Too Many Requests:** Código HTTP estándar cuando se excede el límite
+* **Sliding window / Fixed window:** Estrategias para definir la ventana de tiempo del límite
+* **Retry-After:** Header que indica al cliente cuántos segundos esperar antes de reintentar
+* **Brute force protection:** Protección contra ataques que prueban combinaciones masivamente
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

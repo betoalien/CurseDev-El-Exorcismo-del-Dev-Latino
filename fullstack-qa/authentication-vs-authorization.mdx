@@ -1,0 +1,81 @@
+---
+title: "¿Cuál es la diferencia entre autenticación y autorización?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Auth, Redis & Real-World Architecture"
+---
+
+## 🛑 El Error del Junior
+
+Usa los términos como sinónimos — dice "autenticación" cuando habla de permisos o "autorización" cuando habla de login, lo que genera confusión en entrevistas técnicas.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Authentication and authorization are two distinct steps that often get confused. Would it help if I gave you a concrete example showing where each one happens in a real FastAPI application?"*
+
+## 💻 La Respuesta Técnica
+
+Son dos conceptos distintos que ocurren en orden:
+
+| Concepto | Pregunta que responde | Cuándo ocurre | Resultado si falla |
+|---|---|---|---|
+| **Autenticación** | ¿Quién eres tú? | Primero | 401 Unauthorized |
+| **Autorización** | ¿Qué puedes hacer? | Después | 403 Forbidden |
+
+**Ejemplo concreto en FastAPI:**
+
+```python
+from fastapi import Depends, HTTPException
+
+# PASO 1 — AUTENTICACIÓN: ¿El token es válido? ¿Quién es este usuario?
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    payload = verify_token(token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return {"id": payload["user_id"], "role": payload["role"]}
+
+# PASO 2 — AUTORIZACIÓN: ¿Este usuario tiene permiso para esto?
+async def require_admin(current_user = Depends(get_current_user)):
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return current_user
+
+# Endpoint que requiere ambos:
+@app.delete("/users/{user_id}")
+async def delete_user(
+    user_id: int,
+    admin = Depends(require_admin)  # ← Primero autentica, luego autoriza
+):
+    return delete_user_from_db(user_id)
+```
+
+**Flujo completo:**
+```
+Request → ¿Tiene token? (Autenticación)
+              ↓ No → 401 Unauthorized
+              ↓ Sí → ¿El token es válido?
+                        ↓ No → 401
+                        ↓ Sí → ¿Tiene el rol correcto? (Autorización)
+                                   ↓ No → 403 Forbidden
+                                   ↓ Sí → ✅ Accede al recurso
+```
+
+**Analogía del mundo real:**
+- **Autenticación** = mostrar tu ID en la puerta del edificio
+- **Autorización** = tener tarjeta de acceso al piso 12 específicamente
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Authentication and authorization are sequential steps that solve different problems. Authentication answers 'who are you?'—it's the process of verifying identity, typically by validating a token or checking a session. If authentication fails, the response is 401 Unauthorized, meaning we don't know who you are. Authorization answers 'what are you allowed to do?'—it checks whether the already-authenticated user has permission to access a specific resource or perform a specific action. If authorization fails, the response is 403 Forbidden, meaning we know who you are but you don't have access. In FastAPI, I implement these as separate dependency functions: one that extracts and validates the token, and another that checks the user's role or permissions against what the endpoint requires."*
+
+## 🔑 Vocabulario Clave
+
+* **Authentication (401):** Verificación de identidad — "¿Quién eres?"
+* **Authorization (403):** Verificación de permisos — "¿Qué puedes hacer?"
+* **Role-based access control (RBAC):** Sistema de permisos basado en roles (admin, user, etc.)
+* **Dependency injection:** Cadena de `Depends()` en FastAPI para autenticar y luego autorizar
+* **403 Forbidden:** Respuesta cuando el usuario es válido pero no tiene acceso al recurso
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

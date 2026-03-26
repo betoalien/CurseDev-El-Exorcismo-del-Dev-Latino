@@ -1,0 +1,61 @@
+---
+title: "¿Por qué SQL es una habilidad fundamental para un Data Engineer?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / SQL & Data Modeling"
+---
+
+## 🛑 El Error del Junior
+
+"Porque se usa en bases de datos"—no explica el rol específico de SQL dentro del trabajo de un Data Engineer ni por qué no se puede reemplazar fácilmente con Python.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"SQL in Data Engineering goes well beyond basic queries—it's the language of transformation at scale. Would it help if I explained where SQL fits in a modern data stack?"*
+
+## 💻 La Respuesta Técnica
+
+SQL es fundamental en DE porque es el **lenguaje nativo de los sistemas donde viven los datos**. Casi todo data warehouse, base de datos relacional y herramienta de transformación usa SQL como interfaz principal.
+
+**Dónde SQL es clave en DE:**
+
+| Tarea | Cómo SQL la resuelve |
+|-------|---------------------|
+| **Transformar datos** | CREATE TABLE AS SELECT, INSERT INTO |
+| **Validar calidad** | Queries de conteo, nulos, duplicados |
+| **Construir capas** | Staging → Clean → Curated con SQL |
+| **Modelar** | Diseño de tablas de hechos y dimensiones |
+| **Debugging** | Consultas ad-hoc para inspeccionar datos |
+| **dbt** | Todas las transformaciones son SQL |
+
+**Ejemplo: construcción de una capa limpia con SQL:**
+
+```sql
+-- Crear tabla limpia a partir de staging
+CREATE OR REPLACE TABLE clean.orders AS
+SELECT
+    order_id,
+    customer_id,
+    LOWER(TRIM(status))                    AS status,
+    CAST(amount AS DECIMAL(10,2))          AS amount,
+    DATE(created_at)                       AS order_date
+FROM staging.raw_orders
+WHERE order_id IS NOT NULL
+  AND amount > 0;
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"SQL is fundamental to Data Engineering because it's the native language of virtually every system where data lives at scale—relational databases, data warehouses, and modern transformation tools like dbt all operate through SQL. While Python handles orchestration, API calls, and file processing, SQL handles the actual data transformation and modeling inside the storage layer, which is where the majority of data work happens. Being fluent in SQL means I can build transformation layers, validate data quality, debug issues in the warehouse, and design dimensional models efficiently. I think of Python and SQL as complementary: Python moves data to the right place, SQL shapes it into something useful once it arrives."*
+
+## 🔑 Vocabulario Clave
+
+* **Transformation layer:** Capa de transformación de datos
+* **Data modeling:** Modelado de datos para análisis
+* **Ad-hoc query:** Consulta puntual para inspección o debugging
+* **Native language:** Lenguaje nativo del sistema
+* **Complementary tools:** Herramientas complementarias (SQL + Python)
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

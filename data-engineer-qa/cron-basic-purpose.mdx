@@ -1,0 +1,76 @@
+---
+title: "¿Qué es cron y para qué puede servir en un proyecto de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / APIs & Ingestion"
+---
+
+## 🛑 El Error del Junior
+
+"Es algo de Linux para programar tareas"—correcto pero no contextualiza su rol en pipelines de datos ni demuestra saber leer o escribir una expresión cron.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Cron is often the first scheduler a Data Engineer uses. Would it help if I explained how cron expressions work and when cron is sufficient versus when you need a full orchestrator?"*
+
+## 💻 La Respuesta Técnica
+
+**Cron** es el sistema de programación de tareas en sistemas Unix/Linux que permite ejecutar scripts o procesos de forma automática según un horario definido con una expresión de 5 campos.
+
+**Anatomía de una expresión cron:**
+
+```
+┌─────────── Minuto (0-59)
+│ ┌───────── Hora (0-23)
+│ │ ┌─────── Día del mes (1-31)
+│ │ │ ┌───── Mes (1-12)
+│ │ │ │ ┌─── Día de la semana (0-6, domingo=0)
+│ │ │ │ │
+* * * * *  comando_a_ejecutar
+
+# Ejemplos prácticos:
+0 6 * * *    → Todos los días a las 6:00 AM
+0 */2 * * *  → Cada 2 horas
+30 5 * * 1   → Los lunes a las 5:30 AM
+0 0 1 * *    → El primer día de cada mes a medianoche
+```
+
+**Uso en un proyecto de datos:**
+
+```bash
+# Editar el crontab del usuario
+crontab -e
+
+# Pipeline de ingesta diaria a las 5:00 AM
+0 5 * * * /usr/bin/python3 /opt/pipelines/ingest_orders.py \
+  >> /var/log/ingest_orders.log 2>&1
+
+# Generación de reporte semanal los lunes a las 7:00 AM
+0 7 * * 1 /usr/bin/python3 /opt/reports/weekly_report.py \
+  >> /var/log/weekly_report.log 2>&1
+```
+
+**Cuándo usar cron vs. orquestador:**
+
+| Caso | Cron | Airflow/Prefect |
+|------|------|-----------------|
+| Script simple, sin dependencias | ✅ Suficiente | Overkill |
+| Múltiples pasos con dependencias | ❌ Limitado | ✅ Necesario |
+| Reintentos automáticos | ❌ No nativo | ✅ Integrado |
+| Interfaz visual y alertas | ❌ No disponible | ✅ Incluido |
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Cron is a Unix-based task scheduler that runs scripts or commands automatically according to a schedule defined by a five-field expression specifying minute, hour, day of month, month, and day of week. In a data project, cron is often the simplest way to automate a pipeline: you schedule your Python script to run at 5 AM daily, redirect output to a log file, and you have a basic automated pipeline. Cron works well for simple, single-step processes with no dependencies between jobs. However, it has significant limitations for complex pipelines: it has no built-in retry logic, no dependency management between tasks, no visual monitoring, and failures are only visible if you actively check the log files. For pipelines with multiple interdependent steps, I'd reach for a proper orchestrator like Airflow or Prefect instead."*
+
+## 🔑 Vocabulario Clave
+
+* **Cron expression:** Expresión de 5 campos que define el horario de ejecución
+* **Crontab:** Archivo de configuración de tareas programadas del usuario
+* **Task scheduler:** Sistema de programación automática de tareas
+* **Orchestrator:** Herramienta avanzada de orquestación con dependencias y UI
+* **Log redirection:** Redireccionamiento de salida al archivo de log (`>> file.log 2>&1`)
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

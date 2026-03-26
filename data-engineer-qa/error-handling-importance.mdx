@@ -1,0 +1,70 @@
+---
+title: "¿Por qué es importante manejar errores en un script de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Python for Data Engineering"
+---
+
+## 🛑 El Error del Junior
+
+"Para que el programa no se caiga"—no explica las consecuencias específicas de fallar silenciosamente ni cómo el manejo de errores protege la integridad del pipeline.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Error handling in data pipelines is actually about two different things: visibility and recovery. Would it help if I explained the difference and how I approach both?"*
+
+## 💻 La Respuesta Técnica
+
+Manejar errores en scripts de datos sirve para tres propósitos clave: **visibilidad**, **recuperación** e **integridad**.
+
+**El peligro del fallo silencioso:**
+
+```python
+# ❌ Sin manejo de errores — falla silenciosamente
+def process_file(path):
+    df = pd.read_csv(path)          # Si el archivo no existe, crash
+    df["total"] = df["price"] * df["qty"]  # Si falta columna, crash sin contexto
+    df.to_sql("orders", con=engine)  # Si la conexión falla, datos incompletos
+
+# ✅ Con manejo de errores — falla con contexto y control
+def process_file(path: str) -> bool:
+    try:
+        df = pd.read_csv(path, encoding="utf-8")
+    except FileNotFoundError:
+        logger.error(f"File not found: {path}")
+        return False
+    except Exception as e:
+        logger.error(f"Unexpected error reading {path}: {e}")
+        raise
+
+    required_cols = {"price", "qty"}
+    if not required_cols.issubset(df.columns):
+        logger.error(f"Missing columns: {required_cols - set(df.columns)}")
+        return False
+
+    df["total"] = df["price"] * df["qty"]
+    logger.info(f"Processed {len(df)} rows successfully")
+    return True
+```
+
+**Lo que el buen manejo de errores logra:**
+- Detectar **qué falló** y **dónde** (no solo que algo falló)
+- Permitir reintentos o procesos de recuperación
+- Evitar cargar datos parciales o corruptos al destino
+- Generar alertas accionables para el equipo
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Error handling in data scripts is critical because pipelines fail in ways that are often invisible without it—a file that doesn't exist, a missing column, a network timeout, or a database connection drop. Without explicit error handling, the script either crashes without context or, worse, silently produces incomplete or incorrect output that reaches the destination undetected. Good error handling serves three purposes: visibility, so you know exactly what failed and why; recovery, so the pipeline can retry or skip problematic records; and integrity, so partial failures don't corrupt your destination tables. I always separate errors that should stop the pipeline from errors that can be isolated and logged for later review."*
+
+## 🔑 Vocabulario Clave
+
+* **Silent failure:** Fallo silencioso sin alerta ni contexto
+* **Exception handling:** Manejo de excepciones en el código
+* **Data integrity:** Integridad de los datos procesados
+* **Retry logic:** Lógica de reintento ante fallos temporales
+* **Actionable alert:** Alerta con información para tomar acción
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

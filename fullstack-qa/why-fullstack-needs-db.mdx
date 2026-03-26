@@ -1,0 +1,60 @@
+---
+title: "¿Por qué una aplicación fullstack normalmente necesita una base de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Web Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Para guardar los datos"—correcto pero no explica el concepto de persistencia ni las alternativas que existen para distintos tipos de datos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"The need for a database comes down to persistence and sharing state across requests and users. Would it help if I explained what happens without one and the different types of storage a fullstack app typically uses?"*
+
+## 💻 La Respuesta Técnica
+
+Una aplicación fullstack necesita una base de datos porque **la memoria del servidor se reinicia** cada vez que el proceso se detiene, y los datos deben **sobrevivir entre solicitudes y entre usuarios**.
+
+**¿Qué pasa sin base de datos?**
+
+```python
+# ❌ Sin base de datos: los datos se pierden al reiniciar
+orders = []  # Variable en memoria
+
+@app.post("/orders")
+def create_order(order: OrderIn):
+    orders.append(order.dict())
+    return {"id": len(orders)}
+# → Si el servidor se reinicia, todos los pedidos desaparecen
+# → Si hay 2 instancias del servidor, cada una tiene su lista
+```
+
+**Tipos de almacenamiento en una app fullstack:**
+
+| Tipo | Herramienta | Para qué |
+|------|-------------|----------|
+| **Base de datos relacional** | PostgreSQL, MySQL | Usuarios, pedidos, productos |
+| **Base de datos NoSQL** | MongoDB | Documentos flexibles, logs |
+| **Caché en memoria** | Redis | Sesiones, resultados frecuentes |
+| **Almacenamiento de archivos** | S3, Cloudinary | Imágenes, PDFs |
+| **Estado del cliente** | localStorage, cookies | Preferencias del usuario |
+
+**La base de datos relacional (PostgreSQL) es el corazón** de la mayoría de aplicaciones fullstack porque garantiza consistencia, integridad y permite queries complejas.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A fullstack application needs a database because server memory is ephemeral—any data stored in variables is lost when the server restarts, and in modern deployments with multiple server instances, each instance has its own isolated memory. Persistence means data survives server restarts, deployments, and scales correctly across instances. Beyond the primary relational database—typically PostgreSQL—a production fullstack app usually combines multiple storage layers: a relational database for core entities like users and orders, Redis for caching frequently accessed data and managing sessions, and object storage like S3 for user-uploaded files. Choosing the right storage type for each kind of data is part of the architecture decisions I make early in a project."*
+
+## 🔑 Vocabulario Clave
+
+* **Persistence:** Persistencia — datos que sobreviven entre reinicios
+* **Ephemeral memory:** Memoria efímera que se pierde al reiniciar el proceso
+* **Relational database:** Base de datos relacional con tablas y relaciones
+* **In-memory cache:** Caché en memoria para acceso ultrarrápido
+* **Object storage:** Almacenamiento de objetos para archivos binarios
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

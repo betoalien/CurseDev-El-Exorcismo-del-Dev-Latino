@@ -1,0 +1,65 @@
+---
+title: "¿Por qué es importante elegir bien el tipo de dato de una columna?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / SQL & Data Modeling"
+---
+
+## 🛑 El Error del Junior
+
+"Para que los datos quepan bien"—reduce el tema a espacio de almacenamiento, ignorando validación, rendimiento y calidad de datos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Data types are actually a form of built-in data validation. Would it help if I walked through how a wrong type choice can silently corrupt data in a pipeline?"*
+
+## 💻 La Respuesta Técnica
+
+El tipo de dato de una columna actúa como la **primera línea de validación** de un pipeline. Un tipo incorrecto permite datos inválidos, provoca errores silenciosos y degrada el rendimiento.
+
+**Consecuencias de tipos mal elegidos:**
+
+```sql
+-- ❌ amount guardado como VARCHAR — permite datos inválidos
+CREATE TABLE orders (
+    order_id VARCHAR(50),   -- Bien si es alfanumérico
+    amount   VARCHAR(20)    -- MAL: "N/A", "pending", "-100" se cargan sin error
+);
+
+-- Luego, al intentar sumar:
+SELECT SUM(CAST(amount AS FLOAT)) FROM orders;
+-- ERROR: invalid input syntax for type float: "N/A"
+
+-- ✅ Tipos correctos — la base de datos valida al insertar
+CREATE TABLE orders (
+    order_id  INT           PRIMARY KEY,
+    amount    DECIMAL(10,2) NOT NULL CHECK (amount >= 0),
+    status    VARCHAR(20)   CHECK (status IN ('pending','paid','cancelled')),
+    order_date DATE         NOT NULL
+);
+```
+
+**Impactos de un mal tipo de dato:**
+
+| Problema | Consecuencia |
+|----------|-------------|
+| Fecha como VARCHAR | No puedes filtrar por rango de fechas |
+| Precio como INTEGER | Pierdes decimales silenciosamente |
+| ID como FLOAT | Pierde precisión en números grandes |
+| Texto en columna numérica | Errores en cálculos o transformaciones |
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Choosing the right data type is effectively the first layer of data validation in a pipeline—the database enforces it automatically on every insert. If you store a price as VARCHAR instead of DECIMAL, invalid values like 'N/A' or empty strings can enter the table silently, and you won't discover the problem until you try to aggregate and the query fails. Beyond validation, types matter for performance: querying a date column stored as a string requires casting on every row, which kills query performance on large tables. And precision matters too—storing a financial amount as FLOAT instead of DECIMAL introduces rounding errors that can add up to real discrepancies in reports. I treat column type selection as a design decision, not a detail."*
+
+## 🔑 Vocabulario Clave
+
+* **Data type enforcement:** Aplicación automática del tipo de dato por la base de datos
+* **Silent corruption:** Corrupción de datos sin error visible
+* **DECIMAL vs FLOAT:** Decimal exacto vs. punto flotante con imprecisión
+* **Type casting:** Conversión explícita de tipo en una consulta
+* **Constraint:** Restricción de validación sobre los valores de una columna
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

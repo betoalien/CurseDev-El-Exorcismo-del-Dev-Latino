@@ -1,0 +1,105 @@
+---
+title: "¿Cuál es la diferencia entre un entorno de desarrollo y uno de producción?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Integration, Testing & Production Readiness"
+---
+
+## 🛑 El Error del Junior
+
+No distingue los entornos — prueba cambios directamente en producción, usa la base de datos de producción para desarrollo, o configura producción igual que local ignorando las diferencias de seguridad y rendimiento.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Development and production environments serve completely different purposes and need different configurations. Would it help if I explained what changes between them and why those differences matter for security and reliability?"*
+
+## 💻 La Respuesta Técnica
+
+Los entornos tienen configuraciones distintas porque tienen objetivos distintos:
+
+| Aspecto | Desarrollo (local) | Producción |
+|---|---|---|
+| **Objetivo** | Construir y probar rápido | Servir usuarios reales con estabilidad |
+| **Debug** | Activado — stack traces visibles | Desactivado — mensajes genéricos |
+| **Base de datos** | Local / datos ficticios | Real / datos reales de usuarios |
+| **Credenciales** | Claves de prueba (sandbox) | Claves reales (live) |
+| **Logging** | Verbose — todos los detalles | Solo errores críticos + métricas |
+| **Optimización** | Sin optimizar — recarga rápida | Build optimizado — rendimiento |
+| **HTTPS** | HTTP local (no cifrado) | HTTPS obligatorio (TLS) |
+
+**Diferencias de configuración en FastAPI:**
+
+```python
+# config.py — comportamiento distinto por entorno
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+    environment: str = "development"
+    debug: bool = True
+
+    @property
+    def is_production(self):
+        return self.environment == "production"
+
+settings = Settings()
+
+# Mostrar errores detallados solo en desarrollo
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    if settings.debug:
+        # Desarrollo: stack trace completo para debugging
+        raise exc
+    else:
+        # Producción: mensaje genérico — no exponer internos
+        logger.error(f"Unhandled error: {exc}", exc_info=True)
+        return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+```
+
+**Diferencias en Next.js:**
+
+```typescript
+// next.config.js
+const config = {
+  // Desarrollo: sin compresión, con hot reload
+  // Producción: código minificado, assets optimizados, sin source maps
+}
+
+// Comportamiento por entorno
+if (process.env.NODE_ENV === "production") {
+  // Deshabilitar logging verbose
+  // Activar error boundaries con mensajes genéricos
+  // Usar URLs de producción
+}
+```
+
+**El flujo correcto — sin saltarse pasos:**
+
+```
+Local (dev) → Staging (pre-prod) → Producción
+    ↓               ↓                   ↓
+Desarrollar     Probar con        Usuarios reales
+y testear       datos reales
+                simulados
+```
+
+**Errores comunes que ocurren por ignorar la diferencia:**
+- Código funciona local pero falla en prod por diferencias en variables de entorno
+- Error detallado expuesto a usuarios (stack trace con rutas del servidor)
+- API key de sandbox en producción → pagos no reales
+- Base de datos local sin índices → rendimiento ok en dev, lento en prod con millones de filas
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Development and production environments differ in configuration, data, and intent. Development is optimized for iteration speed: verbose logging, detailed error messages, hot reload, and test data you can safely modify or delete. Production is optimized for reliability and security: minified and compressed assets, generic error messages that don't expose internals, real user data with access controls, TLS encryption, and credentials that actually charge real money or affect real accounts. The most important discipline is keeping these environments separate—never testing features against production data, never using production credentials locally, and always deploying through a staging environment that mirrors production before going live. Most production bugs I've seen happen because a developer discovered they were implicitly relying on something specific to their local environment—a library version, an environment variable, or a database index—that didn't exist in production."*
+
+## 🔑 Vocabulario Clave
+
+* **Development environment:** Entorno local para construir y probar — datos ficticios, debug activo
+* **Production environment:** Entorno real donde viven los usuarios y sus datos
+* **Staging environment:** Entorno intermedio que replica producción para pruebas finales
+* **Hot reload:** Actualización automática del servidor al guardar código — solo en desarrollo
+* **TLS / HTTPS:** Cifrado de tráfico — obligatorio en producción, opcional en local
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

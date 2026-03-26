@@ -1,0 +1,72 @@
+---
+title: "¿Por qué es común usar APIs como fuente de datos en Data Engineering?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / APIs & Ingestion"
+---
+
+## 🛑 El Error del Junior
+
+"Porque son fáciles de usar"—no explica el contexto de integración empresarial ni los desafíos reales de usar APIs como fuente en producción.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"APIs are the primary integration mechanism for modern SaaS ecosystems. Would it help if I explained why they're preferred over direct database access and what that means for pipeline design?"*
+
+## 💻 La Respuesta Técnica
+
+Las APIs son la fuente de datos más común en proyectos modernos porque la mayoría de plataformas SaaS **no ofrecen acceso directo a su base de datos** — solo exponen datos a través de una API.
+
+**Por qué se usan APIs como fuente:**
+
+| Razón | Explicación |
+|-------|-------------|
+| **Acceso controlado** | El proveedor decide qué datos expone y con qué límites |
+| **Integración sin base de datos compartida** | Salesforce, Stripe, HubSpot no dan acceso SQL |
+| **Formato estándar** | JSON/REST es universal entre sistemas |
+| **Automatización** | Se puede llamar periódicamente sin intervención humana |
+| **Seguridad** | Autenticación con tokens, sin exponer infraestructura interna |
+
+**Flujo típico de ingesta desde API:**
+
+```python
+import requests
+
+def ingest_from_api(endpoint: str, api_key: str) -> list:
+    all_records = []
+    page = 1
+
+    while True:
+        response = requests.get(
+            endpoint,
+            headers={"Authorization": f"Bearer {api_key}"},
+            params={"page": page, "per_page": 100},
+            timeout=15
+        )
+        response.raise_for_status()
+        data = response.json()
+
+        if not data["records"]:
+            break  # No más páginas
+
+        all_records.extend(data["records"])
+        page += 1
+
+    return all_records
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"APIs are the dominant data source in modern Data Engineering because the majority of business data now lives in SaaS platforms—CRMs like Salesforce, payment systems like Stripe, marketing tools like HubSpot—and these platforms don't grant direct database access. They expose data exclusively through REST APIs. This means that to integrate that data into a pipeline, you must consume the API: authenticate with a token, handle pagination to retrieve all records, respect rate limits, and store the raw response before transforming it. The design challenge with APIs as a source is that you don't control the schema or availability—providers can change their API without notice, which is why I always save the raw response and validate the schema before any transformation runs."*
+
+## 🔑 Vocabulario Clave
+
+* **REST API:** Interfaz de programación basada en HTTP y JSON
+* **SaaS platform:** Plataforma de software como servicio (Stripe, Salesforce)
+* **API token:** Token de autenticación para acceder a la API
+* **Pagination:** Paginación para recuperar datos en múltiples páginas
+* **Schema contract:** Acuerdo implícito sobre la estructura de la respuesta
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

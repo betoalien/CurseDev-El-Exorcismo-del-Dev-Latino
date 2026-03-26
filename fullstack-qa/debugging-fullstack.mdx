@@ -1,0 +1,116 @@
+---
+title: "¿Cómo abordarías un bug cuando no sabes si el problema está en frontend, backend o base de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Integration, Testing & Production Readiness"
+---
+
+## 🛑 El Error del Junior
+
+Empieza a cambiar código al azar esperando que algo funcione — sin aislar el problema, puede pasar horas modificando el frontend cuando el bug está en un query SQL.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Debugging a fullstack issue is about isolating the layer where the failure originates before changing any code. Would it help if I walked through the systematic approach I use to locate bugs efficiently?"*
+
+## 💻 La Respuesta Técnica
+
+El proceso es **aislar la capa** donde ocurre el error antes de escribir una sola línea de código de fix.
+
+**El proceso de aislamiento — de afuera hacia adentro:**
+
+```
+Paso 1: ¿Qué ve el usuario?
+└── "El botón de comprar no hace nada" / "La pantalla muestra error"
+
+Paso 2: ¿Qué hace el frontend?
+└── Abrir DevTools → Network tab
+└── ¿Se envió el request? ¿Con qué datos? ¿Qué respuesta llegó?
+
+Paso 3: ¿Qué recibió el backend?
+└── Revisar logs del servidor
+└── ¿Llegó el request? ¿Qué error lanzó? ¿En qué línea?
+
+Paso 4: ¿Qué pasó en la base de datos?
+└── ¿Se ejecutó la query? ¿Devolvió los datos esperados?
+└── Verificar con psql / pgAdmin directamente
+```
+
+**Herramientas por capa:**
+
+```typescript
+// FRONTEND — DevTools Network Tab
+// Verificar:
+// ✓ ¿Se envió el request? (si no → bug en el event handler)
+// ✓ ¿El método es correcto? (GET vs POST)
+// ✓ ¿Los headers incluyen Authorization?
+// ✓ ¿El body tiene la estructura correcta?
+// ✓ ¿Qué status code llegó? (401, 422, 500?)
+// ✓ ¿Qué dice el body de la respuesta?
+
+// Console.log estratégico para trazar datos:
+async function handleSubmit(data) {
+  console.log("Sending:", data)  // ← ¿Los datos son correctos?
+  const res = await fetch("/api/orders", { method: "POST", body: JSON.stringify(data) })
+  console.log("Status:", res.status)
+  const result = await res.json()
+  console.log("Response:", result)
+}
+```
+
+```python
+# BACKEND — Logging para trazar el flujo
+import logging
+logger = logging.getLogger(__name__)
+
+@app.post("/api/orders")
+async def create_order(order: OrderCreate, current_user = Depends(get_current_user)):
+    logger.info(f"Creating order for user {current_user['id']}: {order.dict()}")
+
+    try:
+        result = order_service.create(order, current_user["id"])
+        logger.info(f"Order created successfully: {result.id}")
+        return result
+    except Exception as e:
+        logger.error(f"Failed to create order: {e}", exc_info=True)
+        raise
+
+# ¿El error es 422? → Pydantic rechazó los datos → revisar el body
+# ¿El error es 401? → Token inválido o ausente → revisar headers
+# ¿El error es 500? → Excepción no manejada → revisar logs del servidor
+```
+
+```sql
+-- BASE DE DATOS — Verificar directamente
+-- Si la lógica parece correcta pero los datos no están bien:
+SELECT * FROM orders WHERE user_id = 123 ORDER BY created_at DESC LIMIT 5;
+
+-- ¿El INSERT no ocurrió? → Transacción no comiteada / rollback
+-- ¿Los datos son distintos a los esperados? → La transformación en la capa de servicio tiene el bug
+```
+
+**El diagnóstico según el error:**
+
+| Error observado | Capa probable | Qué revisar |
+|---|---|---|
+| El request no se envía | Frontend | Event handler, estado del form |
+| 401 Unauthorized | Backend / Frontend | Token ausente o expirado |
+| 422 Unprocessable Entity | Backend | Estructura del body vs. modelo Pydantic |
+| 500 Internal Server Error | Backend | Logs del servidor, excepción no manejada |
+| 200 pero datos incorrectos | Lógica / DB | Query SQL, transformación en servicio |
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"When a bug spans multiple layers, the first rule is: don't change any code before you know where the failure is. I start from the outside and work inward. In the browser DevTools Network tab, I check whether the request was actually sent, what method and headers it used, what the response status code was, and what the response body contained. That alone eliminates two thirds of the search space. If the request looks correct but the backend is failing, I check the server logs for the exact exception and stack trace. If the backend reports success but the data is wrong, I query the database directly to verify what was actually persisted. The HTTP status code is often the most useful diagnostic signal: 401 means authentication failed, 422 means the request body doesn't match the Pydantic model, 500 means an unhandled exception on the server. Once I've isolated the layer, I write the fix with confidence instead of guessing."*
+
+## 🔑 Vocabulario Clave
+
+* **Layer isolation:** Proceso de determinar en qué capa exacta ocurre el bug antes de corregirlo
+* **Network tab (DevTools):** Herramienta del navegador para inspeccionar requests y responses HTTP
+* **Stack trace:** Registro de la secuencia de funciones que llevó al error — en los logs del servidor
+* **422 Unprocessable Entity:** El request llegó pero el body no pasó la validación de Pydantic
+* **Rollback:** Cancelación de una transacción de DB — los cambios no se persisten
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

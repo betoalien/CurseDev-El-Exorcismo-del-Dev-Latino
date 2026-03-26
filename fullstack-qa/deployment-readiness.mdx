@@ -1,0 +1,108 @@
+---
+title: "¿Qué significa que una aplicación esté lista para deploy?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Integration, Testing & Production Readiness"
+---
+
+## 🛑 El Error del Junior
+
+Cree que "funciona en mi máquina" equivale a estar listo para deploy — no ha configurado variables de entorno, el manejo de errores es mínimo, no hay logs, y la primera vez que alguien más intenta usarlo falla.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Deploy readiness is a checklist that goes beyond the app working locally. Would it help if I went through what each layer of a fullstack app needs to be production-ready?"*
+
+## 💻 La Respuesta Técnica
+
+Una aplicación lista para deploy cumple un checklist en cada capa: configuración, seguridad, manejo de errores, observabilidad e integración entre capas.
+
+**Checklist de deploy readiness:**
+
+```
+CONFIGURACIÓN
+✅ Variables de entorno definidas (sin hardcoding de credenciales)
+✅ .env.example documenta todas las variables necesarias
+✅ Configuración distinta para dev/staging/prod
+
+BACKEND (FastAPI)
+✅ Pydantic valida todos los inputs del usuario
+✅ Autenticación en todos los endpoints protegidos
+✅ Response models filtran datos sensibles
+✅ Manejo de errores — 4xx para errores del cliente, 5xx genérico para el servidor
+✅ Logging configurado con niveles apropiados
+✅ CORS configurado con orígenes específicos (no wildcard)
+✅ Rate limiting en endpoints sensibles (login, registro)
+
+FRONTEND (Next.js)
+✅ Estados de loading y error en todos los fetch calls
+✅ Validación de formularios con mensajes claros
+✅ Variables de entorno usando NEXT_PUBLIC_ donde corresponde
+✅ Build de producción sin errores (npm run build)
+✅ Rutas protegidas redirigen al login sin token
+
+BASE DE DATOS
+✅ Migraciones aplicadas correctamente
+✅ Índices en columnas de búsqueda frecuente
+✅ Conexión con pool configurado (no una conexión por request)
+✅ Backups configurados
+
+INTEGRACIÓN
+✅ CORS permite el dominio de producción del frontend
+✅ URLs de la API apuntan al backend correcto por entorno
+✅ El flujo end-to-end funciona completo (no solo partes aisladas)
+```
+
+**Verificación pre-deploy — script de smoke test:**
+
+```python
+# tests/test_deployment.py — pruebas mínimas antes de deploy
+def test_health_check(client):
+    """La app responde y está conectada a la DB."""
+    res = client.get("/health")
+    assert res.status_code == 200
+    assert res.json()["database"] == "connected"
+
+def test_auth_required(client):
+    """Los endpoints protegidos rechazan requests sin token."""
+    res = client.get("/api/users/me")
+    assert res.status_code == 401
+
+def test_invalid_input_rejected(client):
+    """La validación funciona — datos incorrectos devuelven 422."""
+    res = client.post("/api/products", json={"price": "not-a-number"})
+    assert res.status_code == 422
+
+def test_cors_headers(client):
+    """El backend incluye headers CORS correctos."""
+    res = client.options("/api/products", headers={"Origin": "https://miapp.com"})
+    assert "access-control-allow-origin" in res.headers
+```
+
+**El health check endpoint — imprescindible en producción:**
+
+```python
+@app.get("/health")
+async def health_check(db: Session = Depends(get_db)):
+    try:
+        db.execute("SELECT 1")  # Verifica conexión a la DB
+        return {"status": "ok", "database": "connected"}
+    except Exception:
+        raise HTTPException(503, "Service unavailable")
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"An application being ready to deploy means it satisfies a checklist across every layer, not just that the happy path works locally. On the backend: all user inputs are validated, all protected endpoints enforce authentication, error responses are appropriate without exposing internal details, logging is configured to capture failures, and CORS is restricted to specific allowed origins. On the frontend: every async operation handles loading and error states, environment variables point to the correct API URL for the environment, and the production build compiles without errors. At the integration level: the end-to-end flow works completely, not just the individual pieces in isolation. I also consider operational readiness: there's a health check endpoint for the load balancer, database migrations are applied, and there's at minimum a smoke test suite that verifies the critical paths work before the deploy is considered complete."*
+
+## 🔑 Vocabulario Clave
+
+* **Deploy readiness:** Conjunto de condiciones que debe cumplir una app antes de ir a producción
+* **Smoke test:** Prueba mínima que verifica que las funciones críticas responden correctamente
+* **Health check endpoint:** Endpoint `/health` que verifica el estado de la app y sus dependencias
+* **Production build:** Versión optimizada y minificada del frontend generada con `npm run build`
+* **Zero-downtime deploy:** Despliegue sin interrumpir el servicio a usuarios activos
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

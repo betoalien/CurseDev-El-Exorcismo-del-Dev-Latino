@@ -1,0 +1,77 @@
+---
+title: "¿Para qué sirve la validación con Pydantic en FastAPI?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / FastAPI & Backend Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Pydantic valida los tipos"—correcto pero no explica qué pasa sin él, qué tan automática es la validación ni cómo afecta la seguridad y calidad del backend.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Pydantic in FastAPI does more than type checking—it's the primary defense against invalid input reaching your business logic. Would it help if I showed what it catches and what happens without it?"*
+
+## 💻 La Respuesta Técnica
+
+**Pydantic** permite definir modelos de datos con tipos y reglas de validación que FastAPI aplica automáticamente en cada request. Es la primera línea de defensa contra datos inválidos en el backend.
+
+**Sin Pydantic — validación manual y propensa a errores:**
+
+```python
+# ❌ Sin Pydantic: tienes que validar todo a mano
+@app.post("/orders")
+async def create_order(data: dict):
+    # Validaciones manuales que alguien olvidará actualizar
+    if "customer_id" not in data:
+        raise HTTPException(400, "customer_id is required")
+    if not isinstance(data["customer_id"], int):
+        raise HTTPException(400, "customer_id must be integer")
+    if "amount" not in data or data["amount"] <= 0:
+        raise HTTPException(400, "amount must be positive number")
+    # ... 10 validaciones más
+```
+
+**Con Pydantic — validación automática y expresiva:**
+
+```python
+from pydantic import BaseModel, Field, validator
+
+class OrderCreate(BaseModel):
+    customer_id: int
+    amount: float = Field(gt=0, description="Must be positive")
+    status: str = Field(default="pending", pattern="^(pending|paid|cancelled)$")
+    items: list[str] = Field(min_length=1)
+
+    @validator("amount")
+    def round_amount(cls, v):
+        return round(v, 2)  # Redondear a 2 decimales
+
+@app.post("/orders", status_code=201)
+async def create_order(order: OrderCreate):
+    # Si llega aquí, todos los datos son válidos y tienen los tipos correctos
+    # FastAPI ya respondió 422 si algo no cumple el modelo
+    return save_order(order)
+
+# Errores automáticos que devuelve FastAPI:
+# customer_id: "abc" → 422: value is not a valid integer
+# amount: -50 → 422: ensure this value is greater than 0
+# status: "unknown" → 422: string does not match regex pattern
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Pydantic in FastAPI is the validation layer that sits between the HTTP request and your business logic, ensuring that only valid, correctly typed data ever reaches your code. You define a Pydantic model with type annotations and optional field constraints—minimum values, regex patterns, required fields—and FastAPI automatically validates every incoming request against that model. If the data doesn't match, FastAPI returns a 422 Unprocessable Entity with a detailed error message before your function even runs. This eliminates an entire class of bugs: type errors, missing fields, and invalid values that would otherwise cause unexpected behavior deep inside your business logic. It also generates accurate documentation automatically, because the model definition becomes the API's contract."*
+
+## 🔑 Vocabulario Clave
+
+* **Pydantic model:** Modelo de validación de datos definido con type hints
+* **Field constraint:** Restricción de validación en un campo (gt, min_length, pattern)
+* **422 Unprocessable Entity:** Error automático cuando el body no pasa la validación
+* **Type coercion:** Conversión automática de tipos compatibles (ej: "123" → 123)
+* **Validation layer:** Capa de validación entre el request y la lógica de negocio
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

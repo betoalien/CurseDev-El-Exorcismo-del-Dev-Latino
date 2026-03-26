@@ -1,0 +1,73 @@
+---
+title: "¿Por qué suele ser necesario estandarizar nombres de columnas y formatos durante una transformación?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / ETL & Transformations"
+---
+
+## 🛑 El Error del Junior
+
+"Para que todo se vea igual"—no explica los problemas concretos que causa la inconsistencia ni el impacto en joins, carga o consumo downstream.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Inconsistent column names are one of the most common causes of silent errors in pipelines that integrate multiple sources. Would it help if I showed what that looks like in practice?"*
+
+## 💻 La Respuesta Técnica
+
+La estandarización es esencial cuando los datos vienen de **múltiples fuentes** que usan convenciones distintas. Sin ella, los JOINs fallan, las cargas rompen el schema y los analistas reciben datos confusos.
+
+**Problemas típicos sin estandarización:**
+
+```python
+# Datos de la fuente A
+df_a.columns  # → ['CustomerID', 'Order Amount', 'DATE']
+
+# Datos de la fuente B
+df_b.columns  # → ['customer_id', 'order_amount', 'date']
+
+# Intentar unir ambas fuentes: el JOIN falla porque los nombres no coinciden
+df_merged = df_a.merge(df_b, on="customer_id")
+# KeyError: 'customer_id' (df_a tiene 'CustomerID')
+```
+
+**Función de estandarización:**
+
+```python
+def standardize_columns(df):
+    """Convierte columnas a snake_case limpio."""
+    df.columns = (
+        df.columns
+        .str.strip()           # Quita espacios al inicio/fin
+        .str.lower()           # Todo minúsculas
+        .str.replace(" ", "_") # Espacios → guiones bajos
+        .str.replace(r"[^a-z0-9_]", "", regex=True)  # Quita caracteres especiales
+    )
+    return df
+
+# Resultado consistente de ambas fuentes
+df_a = standardize_columns(df_a)
+df_b = standardize_columns(df_b)
+# Ahora ambas tienen: customer_id, order_amount, date → merge exitoso
+```
+
+**Otros formatos a estandarizar:**
+- Fechas: `"01/15/2024"` y `"2024-01-15"` → ISO 8601 `"2024-01-15"`
+- Texto: `"PERU"`, `"peru"`, `" Perú "` → `"peru"`
+- Booleanos: `"Y"`, `"yes"`, `"1"` → `True`
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Column standardization is essential when integrating data from multiple sources, which is the norm in Data Engineering. Different systems use different naming conventions—one might use camelCase, another uses spaces, another uses all caps—and without normalizing to a single convention, joins fail, schema loads break, and analysts receive inconsistently named fields that make their queries brittle. My standard approach is to apply a column normalization function at the beginning of every transformation: strip whitespace, lowercase everything, replace spaces with underscores, and remove special characters. Beyond names, I also standardize formats: dates to ISO 8601, text fields to lowercase with consistent encoding, and boolean representations to true/false. This makes the rest of the pipeline deterministic and predictable."*
+
+## 🔑 Vocabulario Clave
+
+* **snake_case:** Convención de nombres con minúsculas y guiones bajos
+* **Column normalization:** Normalización de nombres de columna
+* **ISO 8601:** Estándar internacional para formato de fechas
+* **Schema consistency:** Consistencia de estructura entre fuentes
+* **Downstream brittle:** Código downstream frágil ante variaciones de formato
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

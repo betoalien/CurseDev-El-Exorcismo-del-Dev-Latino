@@ -1,0 +1,80 @@
+---
+title: "¿Qué es un endpoint en una API?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / FastAPI & Backend Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Es una URL de la API"—correcto pero incompleto. Un endpoint no es solo una URL — es la combinación de URL + método HTTP + lo que hace.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"An endpoint is more than a URL—it's a contract between the API and its consumers. Would it help if I explained how I think about designing good endpoints?"*
+
+## 💻 La Respuesta Técnica
+
+Un **endpoint** es una combinación de **URL** + **método HTTP** que expone una funcionalidad específica del backend. Dos endpoints pueden compartir la misma URL pero ser completamente distintos si usan métodos diferentes.
+
+**Anatomía de un endpoint:**
+
+```python
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI()
+
+# Endpoint: GET /orders → Listar todos los pedidos
+@app.get("/orders")
+async def list_orders(status: str | None = None, limit: int = 20):
+    return {"orders": get_orders(status=status, limit=limit)}
+
+# Endpoint: POST /orders → Crear un pedido nuevo
+# (misma URL, distinto método → distinto endpoint)
+class OrderCreate(BaseModel):
+    customer_id: int
+    amount: float
+
+@app.post("/orders", status_code=201)
+async def create_order(order: OrderCreate):
+    new_id = save_order(order)
+    return {"order_id": new_id, "status": "pending"}
+
+# Endpoint: GET /orders/{order_id} → Obtener un pedido específico
+@app.get("/orders/{order_id}")
+async def get_order(order_id: int):
+    order = find_order(order_id)
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return order
+
+# Endpoint: DELETE /orders/{order_id} → Eliminar un pedido
+@app.delete("/orders/{order_id}", status_code=204)
+async def delete_order(order_id: int):
+    if not find_order(order_id):
+        raise HTTPException(status_code=404, detail="Order not found")
+    remove_order(order_id)
+```
+
+**Un endpoint bien diseñado:**
+- Nombre del recurso en plural y en inglés: `/orders`, `/products`
+- Usa el método HTTP correcto semánticamente
+- Devuelve el status code correcto
+- Responde con JSON consistente
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"An endpoint is the combination of a URL path and an HTTP method that exposes a specific backend operation. Two routes with the same URL but different methods—GET /orders versus POST /orders—are completely different endpoints that do different things. In REST API design, a well-designed endpoint is named after the resource it operates on, uses the appropriate HTTP method to communicate intent, and returns consistent response structures with the correct status codes. I think of each endpoint as a contract: the frontend developer depends on it being predictable, so any change to the response structure or behavior needs to be coordinated carefully—usually through API versioning if it's a breaking change."*
+
+## 🔑 Vocabulario Clave
+
+* **Endpoint:** Combinación de URL + método HTTP que expone una funcionalidad
+* **Path parameter:** Parámetro en la URL como `/orders/{order_id}`
+* **Query parameter:** Parámetro opcional como `?status=paid`
+* **Resource naming:** Convención de nombres de recursos en APIs REST
+* **Breaking change:** Cambio en el endpoint que rompe clientes existentes
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

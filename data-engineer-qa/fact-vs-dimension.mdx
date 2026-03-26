@@ -1,0 +1,67 @@
+---
+title: "¿Cuál es la diferencia entre una tabla de hechos y una tabla de dimensiones?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / SQL & Data Modeling"
+---
+
+## 🛑 El Error del Junior
+
+"La de hechos tiene números y la de dimensiones tiene texto"—simplifica mal. La distinción real es entre eventos/métricas medibles y contexto descriptivo que los enriquece.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"This is the foundation of dimensional modeling. Would it help if I explained it with a real example and showed how the two tables connect in a star schema?"*
+
+## 💻 La Respuesta Técnica
+
+Este es el núcleo del **modelado dimensional (Kimball)**, el patrón más usado en data warehouses analíticos:
+
+**Tabla de hechos (`fact_`):**
+- Almacena **eventos o transacciones** medibles (ventas, clics, pagos)
+- Tiene métricas numéricas (amount, quantity, revenue)
+- Tiene claves foráneas que apuntan a dimensiones
+- Crece rápido — puede tener millones de filas
+
+**Tabla de dimensiones (`dim_`):**
+- Almacena **contexto descriptivo** de los hechos
+- Ejemplo: quién hizo la compra, qué producto, en qué fecha
+- Cambia poco — tiene pocos miles de filas
+
+**Ejemplo: Star Schema de ventas:**
+
+```sql
+-- Tabla de hechos
+CREATE TABLE fact_sales (
+    sale_id      INT PRIMARY KEY,
+    customer_id  INT REFERENCES dim_customers(customer_id),
+    product_id   INT REFERENCES dim_products(product_id),
+    date_id      INT REFERENCES dim_date(date_id),
+    quantity     INT,
+    amount       DECIMAL(10,2)
+);
+
+-- Tabla de dimensión: clientes
+CREATE TABLE dim_customers (
+    customer_id  INT PRIMARY KEY,
+    name         VARCHAR(100),
+    country      VARCHAR(50),
+    segment      VARCHAR(30)
+);
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"In dimensional modeling, fact tables store measurable events or transactions—things that happen, like a sale, a click, or a payment—along with the numeric metrics associated with that event, like amount or quantity. Dimension tables store the descriptive context that makes those facts meaningful: who made the purchase, what product was bought, when it happened, and where. The relationship between them forms a star schema, where the fact table sits at the center and the dimensions radiate outward. In practice, fact tables grow rapidly and can contain hundreds of millions of rows, while dimension tables are relatively small and stable. This separation enables analysts to slice and filter metrics across any combination of dimensions efficiently."*
+
+## 🔑 Vocabulario Clave
+
+* **Dimensional modeling:** Modelado dimensional para análisis
+* **Star schema:** Esquema estrella con tabla de hechos central
+* **Foreign key:** Clave foránea que conecta hechos con dimensiones
+* **Grain:** Granularidad, qué representa cada fila en la tabla de hechos
+* **Slice and filter:** Analizar métricas filtrando por dimensiones
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

@@ -1,0 +1,101 @@
+---
+title: "¿Qué es CORS y por qué puede ser necesario configurarlo?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Integration, Testing & Production Readiness"
+---
+
+## 🛑 El Error del Junior
+
+Ve el error "CORS policy" en el navegador y lo resuelve poniendo `allow_origins=["*"]` sin entender por qué existe ni qué riesgos crea exponer todos los orígenes.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"CORS is a browser security mechanism that protects users, not servers. Would it help if I explained what it prevents, why it triggers in a fullstack app, and how to configure it correctly without disabling security entirely?"*
+
+## 💻 La Respuesta Técnica
+
+**CORS (Cross-Origin Resource Sharing)** es un mecanismo del navegador que bloquea requests HTTP entre orígenes distintos a menos que el servidor los permita explícitamente.
+
+**Cuándo ocurre:**
+
+```
+Frontend: http://localhost:3000   ← Origen A
+Backend:  http://localhost:8000   ← Origen B (distinto puerto = distinto origen)
+
+El navegador bloquea el request automáticamente:
+"Access to fetch at 'http://localhost:8000/api' from origin
+'http://localhost:3000' has been blocked by CORS policy"
+```
+
+**Por qué existe — el problema que resuelve:**
+
+```
+Sin CORS: Una web maliciosa podría hacer requests a tu banco
+usando las cookies de sesión del usuario que tiene abiertas
+sin que el usuario lo sepa (CSRF attack)
+
+Con CORS: El banco dice "solo acepto requests de app.mibank.com"
+→ La web maliciosa recibe 403 del navegador antes de llegar al servidor
+```
+
+**Configuración correcta en FastAPI:**
+
+```python
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+# ✅ Configuración específica para producción
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://miapp.com",          # Dominio de producción
+        "https://www.miapp.com",
+        "http://localhost:3000",       # Solo en desarrollo
+    ],
+    allow_credentials=True,           # Permite enviar cookies
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["Authorization", "Content-Type"],
+)
+
+# ❌ Nunca en producción — deshabilita toda la protección CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],              # Cualquier origen — inseguro
+    allow_credentials=True,           # No funciona con allow_origins=["*"]
+)
+```
+
+**Preflight request — cómo funciona:**
+
+```
+1. Browser → OPTIONS /api/products (preflight)
+             Origin: http://localhost:3000
+             Access-Control-Request-Method: POST
+
+2. FastAPI → 200 OK
+             Access-Control-Allow-Origin: http://localhost:3000
+             Access-Control-Allow-Methods: GET, POST
+
+3. Browser → POST /api/products (request real)
+```
+
+**Importante:** CORS lo aplica el **navegador**, no el servidor. Las herramientas como curl o Postman no tienen CORS porque no son navegadores.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"CORS is a browser security mechanism that restricts which origins can make requests to a given server. An 'origin' is the combination of protocol, domain, and port—so localhost:3000 and localhost:8000 are different origins even on the same machine. The reason CORS exists is to prevent malicious websites from making authenticated requests to other services using the user's stored cookies or tokens. When the frontend and backend are on different origins, the browser sends a preflight OPTIONS request to ask the server what it allows, and only proceeds with the actual request if the server's response includes the correct Access-Control-Allow-Origin header. In FastAPI, I configure CORS middleware with a specific list of allowed origins—never wildcard in production with credentials enabled, because it defeats the security model. The key thing to understand is that CORS is enforced by the browser, not the server—direct API calls via curl or Postman are unaffected."*
+
+## 🔑 Vocabulario Clave
+
+* **Origin:** Combinación de protocolo + dominio + puerto que identifica la fuente de un request
+* **Preflight request:** Request OPTIONS que el navegador envía antes del request real para verificar CORS
+* **Access-Control-Allow-Origin:** Header de respuesta que indica qué orígenes tienen permiso
+* **Wildcard (`*`):** Permite todos los orígenes — nunca usar con `allow_credentials=True`
+* **CSRF:** Ataque que CORS ayuda a prevenir — requests no autorizados en nombre del usuario
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

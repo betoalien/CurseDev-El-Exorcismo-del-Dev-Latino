@@ -1,0 +1,50 @@
+---
+title: "¿Qué es un destino de datos y cuáles son algunos ejemplos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Es donde se guardan los datos al final"—correcto pero no distingue entre tipos de destino ni explica qué afecta la elección de uno sobre otro.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"The choice of destination actually drives a lot of architectural decisions upstream. Would it help if I explained the main types and what criteria I use to choose between them?"*
+
+## 💻 La Respuesta Técnica
+
+Un **destino de datos** es el sistema donde se almacenan o entregan los datos una vez procesados. La elección del destino impacta el diseño completo del pipeline.
+
+**Tipos principales de destinos:**
+
+| Destino | Propósito | Ejemplos |
+|---------|-----------|----------|
+| **Data Warehouse** | Análisis estructurado a gran escala | BigQuery, Snowflake, Redshift |
+| **Base de datos relacional** | Aplicaciones operacionales o transaccionales | PostgreSQL, MySQL |
+| **Data Lake** | Almacenamiento masivo de datos crudos | S3, GCS, Azure Data Lake |
+| **Dashboard / BI Tool** | Visualización directa para stakeholders | Looker, Tableau, Power BI |
+| **API o servicio** | Consumo por otras aplicaciones | REST API, microservicio |
+| **Archivo final** | Exportación o entrega | CSV, Parquet, JSON |
+
+**¿Qué determina el destino correcto?**
+- ¿Quién va a consumir los datos? (analistas, sistemas, usuarios finales)
+- ¿Qué tipo de consultas se harán? (ad-hoc, operacionales, tiempo real)
+- ¿Cuánto volumen maneja?
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A data destination is where processed data lands after moving through the pipeline, and the choice of destination fundamentally shapes the pipeline architecture. The main types are data warehouses like BigQuery or Snowflake for large-scale analytical workloads, relational databases for operational use cases, data lakes for storing raw or semi-processed data at scale, and BI tools for direct visualization. The right destination depends on who consumes the data and how: if analysts need to run complex queries, a warehouse makes sense; if an application needs low-latency reads, a relational database is better. I always clarify the consumption pattern first, because designing a pipeline without knowing the destination is like building a road without knowing where it leads."*
+
+## 🔑 Vocabulario Clave
+
+* **Data warehouse:** Almacén de datos analítico
+* **Data lake:** Lago de datos para almacenamiento masivo
+* **Consumption pattern:** Patrón de consumo de datos
+* **Operational database:** Base de datos operacional
+* **Low-latency reads:** Lecturas con baja latencia
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

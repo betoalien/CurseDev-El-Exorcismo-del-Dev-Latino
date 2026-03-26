@@ -1,0 +1,49 @@
+---
+title: "¿Cuál es la diferencia entre procesamiento batch y streaming?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Batch es lento y streaming es tiempo real"—simplifica en exceso y no explica cuándo usar cada uno ni cuáles son las implicaciones de arquitectura.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Both have their place depending on the latency requirements of the use case. Could I explain the trade-offs so we can talk about when each makes sense?"*
+
+## 💻 La Respuesta Técnica
+
+La diferencia fundamental está en **cuándo se procesan los datos**:
+
+| | Batch | Streaming |
+|-|-------|-----------|
+| **Cuándo procesa** | En intervalos definidos (hora, día) | A medida que llegan los eventos |
+| **Latencia** | Minutos a horas | Milisegundos a segundos |
+| **Volumen típico** | Grandes bloques acumulados | Eventos individuales o micro-batches |
+| **Complejidad** | Menor | Mayor |
+| **Casos de uso** | Reportes diarios, facturación | Detección de fraude, alertas en vivo |
+| **Herramientas** | Cron, Airflow, Spark batch | Kafka, Spark Streaming, Flink |
+
+**Ejemplo de cuándo usar cada uno:**
+- **Batch**: Generar el resumen de ventas del día anterior a las 6 AM
+- **Streaming**: Detectar una transacción sospechosa en el momento en que ocurre
+
+No siempre streaming es mejor — introduce complejidad, costo y desafíos de estado que batch no tiene.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Batch processing accumulates data over a defined period—an hour, a day—and processes it all at once, which is efficient for high-volume workloads where latency isn't critical. Streaming processes events as they arrive, enabling near-real-time responses, which is essential for use cases like fraud detection, live dashboards, or recommendation engines. The trade-off is complexity: streaming systems need to handle out-of-order events, stateful computation, and exactly-once processing guarantees, which makes them significantly harder to build and maintain. My approach is to start with batch unless there's a clear business requirement for low latency—it's cheaper, simpler, and easier to debug."*
+
+## 🔑 Vocabulario Clave
+
+* **Latency:** Latencia (tiempo entre el evento y su procesamiento)
+* **Event-driven:** Basado en eventos
+* **Stateful computation:** Procesamiento con memoria de estado
+* **Micro-batch:** Lote muy pequeño procesado con alta frecuencia
+* **Exactly-once processing:** Garantía de procesar cada evento una sola vez
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

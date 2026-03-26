@@ -1,0 +1,97 @@
+---
+title: "¿Para qué sirve usar Redis como caché?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Auth, Redis & Real-World Architecture"
+---
+
+## 🛑 El Error del Junior
+
+"Para guardar datos temporalmente"—no explica qué problema resuelve en términos de rendimiento, cómo se decide qué cachear ni qué pasa cuando el caché queda desactualizado (stale data).
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Caching with Redis is about eliminating redundant expensive operations. Would it help if I walked through a real pattern showing what to cache, for how long, and how to handle invalidation?"*
+
+## 💻 La Respuesta Técnica
+
+El **caché con Redis** reduce la carga en la base de datos evitando consultas repetidas para datos que no cambian frecuentemente.
+
+**Sin caché — cada request golpea la DB:**
+
+```python
+# ❌ Sin caché: 1000 usuarios pidiendo lo mismo = 1000 queries a PostgreSQL
+@app.get("/products/featured")
+async def get_featured_products(db: Session = Depends(get_db)):
+    return db.query(Product).filter(Product.featured == True).all()
+    # Query lenta cada vez → DB bajo presión → respuestas lentas
+```
+
+**Con caché Redis — patrón Cache-Aside:**
+
+```python
+import redis
+import json
+
+r = redis.Redis(host="localhost", port=6379, decode_responses=True)
+
+CACHE_KEY = "products:featured"
+CACHE_TTL = 300  # 5 minutos
+
+@app.get("/products/featured")
+async def get_featured_products(db: Session = Depends(get_db)):
+    # 1. Intentar obtener del caché primero
+    cached = r.get(CACHE_KEY)
+    if cached:
+        return json.loads(cached)  # ← Respuesta en <1ms, sin tocar DB
+
+    # 2. Cache miss → consultar DB
+    products = db.query(Product).filter(Product.featured == True).all()
+    products_data = [p.__dict__ for p in products]
+
+    # 3. Guardar en caché con TTL
+    r.setex(CACHE_KEY, CACHE_TTL, json.dumps(products_data))
+
+    return products_data
+
+# Invalidar caché cuando los datos cambian:
+@app.put("/products/{product_id}/feature")
+async def toggle_featured(product_id: int, db: Session = Depends(get_db)):
+    update_product_featured(product_id, db)
+    r.delete(CACHE_KEY)  # ← Invalida el caché para forzar recarga
+    return {"message": "Updated"}
+```
+
+**¿Qué tiene sentido cachear?**
+
+```
+✅ Cachear                    ❌ No cachear
+──────────────────────        ──────────────────────
+Listas de productos           Datos del usuario específico
+Configuración global          Saldos de cuenta
+Resultados de búsqueda        Datos que cambian en tiempo real
+Rankings / estadísticas       Información sensible
+Respuestas de API externa     Por request personalizado
+```
+
+**El impacto real:**
+```
+Sin caché: 500 usuarios → 500 queries SQL → 50ms c/u → DB saturada
+Con caché: 500 usuarios → 1 query SQL + 499 hits de Redis → DB libre
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Using Redis as a cache means storing the result of expensive operations—database queries, external API calls, complex aggregations—in memory so subsequent requests get the result instantly without repeating the work. The pattern is straightforward: before hitting the database, check Redis for a cached result; if it's there, return it immediately; if not, query the database, return the result, and store it in Redis with a TTL. The TTL is the key design decision—short TTL keeps data fresh but misses more often; long TTL improves hit rate but risks serving stale data. The other critical consideration is cache invalidation: when the underlying data changes, you need to either delete the cached key so the next request repopulates it, or use a write-through strategy that updates both the cache and the database simultaneously. I focus caching on data that's read frequently, changes infrequently, and isn't user-specific."*
+
+## 🔑 Vocabulario Clave
+
+* **Cache-Aside pattern:** Patrón donde la app consulta caché primero, DB como fallback
+* **Cache hit:** El dato se encontró en Redis — respuesta inmediata sin tocar la DB
+* **Cache miss:** El dato no está en Redis — se consulta la DB y se guarda el resultado
+* **Cache invalidation:** Borrar el caché cuando los datos subyacentes cambian
+* **Stale data:** Datos en caché que ya no reflejan el estado real de la DB
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

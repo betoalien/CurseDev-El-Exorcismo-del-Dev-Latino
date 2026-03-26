@@ -1,0 +1,75 @@
+---
+title: "¿Qué significa routing en una aplicación con Next.js?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Next.js & Frontend Basics"
+---
+
+## 🛑 El Error del Junior
+
+"Es cómo se navega entre páginas"—correcto pero no explica el sistema de archivos de Next.js ni la diferencia entre rutas estáticas, dinámicas y rutas de API.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Next.js routing is file-system based, which is a paradigm shift from traditional SPAs. Would it help if I walked through how the App Router works and what it enables?"*
+
+## 💻 La Respuesta Técnica
+
+El **routing** en Next.js es el sistema que mapea una URL a un componente de página. Next.js usa el **sistema de archivos** como router: la estructura de carpetas dentro de `app/` define las rutas disponibles.
+
+**Cómo funciona el App Router:**
+
+```
+app/
+├── page.tsx                    → /
+├── about/
+│   └── page.tsx                → /about
+├── products/
+│   ├── page.tsx                → /products
+│   └── [id]/
+│       └── page.tsx            → /products/123, /products/456
+├── dashboard/
+│   ├── layout.tsx              → Layout compartido para /dashboard/*
+│   ├── page.tsx                → /dashboard
+│   └── settings/
+│       └── page.tsx            → /dashboard/settings
+└── api/
+    └── orders/
+        └── route.ts            → API endpoint /api/orders (GET, POST...)
+```
+
+**Tipos de rutas:**
+
+```tsx
+// Ruta estática: /about
+// app/about/page.tsx
+export default function AboutPage() {
+  return <h1>About Us</h1>;
+}
+
+// Ruta dinámica: /products/[id]
+// app/products/[id]/page.tsx
+export default function ProductPage({ params }: { params: { id: string } }) {
+  return <h1>Product: {params.id}</h1>;
+}
+
+// Navegación entre rutas
+import Link from "next/link";
+<Link href="/products/123">Ver producto</Link>
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Routing in Next.js is file-system based: the folder structure inside the app directory directly maps to the URL structure of the application. A file at app/products/page.tsx corresponds to the /products route, and a file at app/products/[id]/page.tsx creates a dynamic route where the id segment is available as a parameter. This convention-over-configuration approach eliminates the need to manually define routes and makes the application structure immediately readable—you can understand the URL map just by looking at the folder tree. Next.js also integrates API routes within the same project, so you can define backend endpoints at app/api/orders/route.ts and they'll be available at /api/orders, which simplifies fullstack development significantly."*
+
+## 🔑 Vocabulario Clave
+
+* **File-system routing:** Routing basado en la estructura de carpetas del proyecto
+* **Dynamic route:** Ruta con segmentos variables como `[id]`
+* **App Router:** Sistema de routing de Next.js 13+ basado en el directorio `app/`
+* **Layout:** Componente compartido que envuelve múltiples rutas
+* **API route:** Endpoint de backend definido dentro del proyecto Next.js
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

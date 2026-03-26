@@ -1,0 +1,72 @@
+---
+title: "¿Por qué puede ser buena práctica guardar una copia raw de la respuesta de una API?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / APIs & Ingestion"
+---
+
+## 🛑 El Error del Junior
+
+Transforma y carga la respuesta de la API directamente sin guardar el raw — un error que hace imposible el reprocesamiento o la auditoría cuando algo falla.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Storing raw API responses is one of those practices that feels unnecessary until the day you desperately need it. Would it help if I explained the scenarios where it becomes critical?"*
+
+## 💻 La Respuesta Técnica
+
+Guardar la respuesta raw de la API antes de transformarla crea un **punto de recuperación inmutable** que permite auditoría, debugging y reprocesamiento sin volver a llamar a la API.
+
+**Patrón de almacenamiento raw:**
+
+```python
+import json
+import requests
+from datetime import datetime
+from pathlib import Path
+
+def fetch_and_store_raw(url: str, headers: dict, storage_path: str) -> dict:
+    """Fetch de la API y almacenamiento del raw antes de cualquier transformación."""
+    response = requests.get(url, headers=headers, timeout=15)
+    response.raise_for_status()
+
+    raw_data = response.json()
+
+    # Guardar el raw con timestamp para trazabilidad
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    raw_file = Path(storage_path) / f"orders_raw_{timestamp}.json"
+
+    with open(raw_file, "w", encoding="utf-8") as f:
+        json.dump(raw_data, f, ensure_ascii=False, indent=2)
+
+    logger.info(f"Raw response saved to: {raw_file}")
+
+    # Ahora transformar el raw
+    return raw_data
+```
+
+**¿Por qué vale la pena?**
+
+| Escenario | Sin raw guardado | Con raw guardado |
+|-----------|-----------------|-----------------|
+| Bug en transformación | Volver a llamar a la API | Reprocesar desde el raw |
+| API ya no disponible | Datos perdidos | Datos recuperables |
+| Auditoría: ¿qué envió la fuente? | Imposible saber | Comparar raw vs. resultado |
+| Schema cambia inesperadamente | Pérdida de datos históricos | Histórico intacto |
+| Proveedores que limpian histórico | Sin respaldo | Raw como backup |
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Storing raw API responses before any transformation is a defensive practice that creates an immutable record of exactly what the source sent you. This becomes invaluable in several scenarios: if there's a bug in your transformation logic, you can fix it and reprocess from the raw without making additional API calls; if the API provider later deletes or modifies historical data, you still have your own copy; and if there's ever a discrepancy between what the source claims to have sent and what ended up in your tables, you can audit the raw file to resolve it. In production, I store raw responses in a timestamped file or object storage path, and I treat them as append-only—never modified, never deleted without a clear retention policy."*
+
+## 🔑 Vocabulario Clave
+
+* **Raw storage:** Almacenamiento de la respuesta original sin transformar
+* **Immutable record:** Registro inmutable que preserva el estado original
+* **Reprocessing:** Reprocesamiento desde el raw sin re-llamar a la API
+* **Audit trail:** Registro de auditoría para comparar fuente vs. destino
+* **Retention policy:** Política de retención de datos históricos
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

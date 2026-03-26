@@ -1,0 +1,70 @@
+---
+title: "¿Qué son los códigos de estado HTTP y para qué sirven?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Web Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"200 es éxito y 404 es no encontrado"—conoce los más comunes pero no entiende los rangos ni sabe cuándo usar 400 vs 401 vs 403, que son distintos en producción real.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Status codes are a communication protocol between backend and frontend. Would it help if I explained the key ranges and the common ones that get confused—like 401 versus 403?"*
+
+## 💻 La Respuesta Técnica
+
+Los **códigos de estado HTTP** son números de 3 dígitos que indican el resultado de una solicitud. Son el principal mecanismo de comunicación de errores entre backend y frontend.
+
+**Los 5 rangos y sus significados:**
+
+| Rango | Significado | Ejemplos clave |
+|-------|-------------|----------------|
+| **2xx** | Éxito | 200 OK, 201 Created, 204 No Content |
+| **3xx** | Redirección | 301 Moved Permanently, 302 Found |
+| **4xx** | Error del cliente | 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found |
+| **5xx** | Error del servidor | 500 Internal Server Error, 503 Service Unavailable |
+
+**Confusiones comunes que importan:**
+
+```python
+# En FastAPI: usar el código correcto para cada caso
+
+from fastapi import HTTPException
+
+# 400: El cliente envió datos inválidos
+if not order.amount or order.amount <= 0:
+    raise HTTPException(status_code=400, detail="Amount must be positive")
+
+# 401: No autenticado (no hay token o el token es inválido)
+if not token:
+    raise HTTPException(status_code=401, detail="Authentication required")
+
+# 403: Autenticado, pero sin permisos para este recurso
+if user.role != "admin":
+    raise HTTPException(status_code=403, detail="Admin access required")
+
+# 404: El recurso no existe
+if not order:
+    raise HTTPException(status_code=404, detail="Order not found")
+
+# 201: Creación exitosa (no 200)
+return JSONResponse(status_code=201, content={"order_id": new_order.id})
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"HTTP status codes are a standardized communication protocol between server and client that indicate the outcome of a request. They're organized in five ranges: 2xx for success, 3xx for redirects, 4xx for client errors, and 5xx for server errors. In fullstack development, using the right code matters because the frontend uses it to decide how to handle the response—a 401 means redirect to login, a 403 means show a permissions error, a 500 means show a generic error and alert the team. Two common confusions worth noting: 401 Unauthorized means the user is not authenticated at all, while 403 Forbidden means they're authenticated but don't have permission for this specific action. Using the wrong code forces the frontend to implement workarounds and makes debugging much harder."*
+
+## 🔑 Vocabulario Clave
+
+* **Status code:** Código de estado que indica el resultado de la solicitud
+* **401 Unauthorized:** No autenticado — falta el token o es inválido
+* **403 Forbidden:** Autenticado pero sin permisos para el recurso
+* **422 Unprocessable Entity:** Datos con formato correcto pero valores inválidos
+* **5xx error:** Error del servidor, no del cliente
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

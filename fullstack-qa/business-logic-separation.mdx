@@ -1,0 +1,89 @@
+---
+title: "¿Por qué conviene separar la lógica de negocio de los endpoints?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / FastAPI & Backend Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+Mete toda la lógica directamente en el endpoint — el handler hace la validación, la consulta a la DB, el cálculo, el envío de emails y la respuesta, todo mezclado en 80 líneas.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Separating business logic from endpoints is the difference between code that works and code that scales. Would it help if I showed the pattern and explained what it enables?"*
+
+## 💻 La Respuesta Técnica
+
+Los **endpoints** deben ser responsables solo de la capa HTTP: recibir el request, llamar al servicio correcto y devolver la respuesta. La **lógica de negocio** vive en una capa de servicios separada.
+
+**Sin separación — el anti-patrón:**
+
+```python
+# ❌ Endpoint de 60 líneas con todo mezclado
+@app.post("/orders")
+async def create_order(order_data: OrderCreate, db: Session = Depends(get_db)):
+    # Validación de negocio
+    customer = db.query(Customer).filter(Customer.id == order_data.customer_id).first()
+    if not customer:
+        raise HTTPException(404, "Customer not found")
+    if customer.credit_limit < order_data.amount:
+        raise HTTPException(400, "Insufficient credit")
+
+    # Creación del pedido
+    new_order = Order(**order_data.dict(), status="pending")
+    db.add(new_order)
+    db.commit()
+
+    # Envío de email de confirmación
+    send_email(customer.email, f"Order {new_order.id} confirmed")
+
+    # Actualización del inventario
+    for item in order_data.items:
+        reduce_stock(item.product_id, item.qty)
+
+    return new_order
+```
+
+**Con separación — mantenible y testeable:**
+
+```python
+# ✅ services/order_service.py — lógica de negocio
+class OrderService:
+    def create_order(self, order_data: OrderCreate, db: Session) -> Order:
+        customer = self._get_customer_or_404(order_data.customer_id, db)
+        self._check_credit_limit(customer, order_data.amount)
+        order = self._save_order(order_data, db)
+        self._send_confirmation(customer.email, order.id)
+        self._update_inventory(order_data.items)
+        return order
+
+# routers/orders.py — solo HTTP layer
+@app.post("/orders", response_model=OrderOut, status_code=201)
+async def create_order(
+    order_data: OrderCreate,
+    service: OrderService = Depends(get_order_service)
+):
+    return service.create_order(order_data, db)
+```
+
+**Lo que habilita la separación:**
+- **Tests unitarios**: Puedes testear `OrderService` sin levantar el servidor HTTP
+- **Reutilización**: La misma lógica puede llamarse desde otra ruta o un worker
+- **Legibilidad**: El endpoint es 5 líneas, el servicio es donde está la complejidad
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Separating business logic from endpoints follows the single responsibility principle: the endpoint handles the HTTP layer—deserializing the request, calling the right service, and returning the response with the correct status code. The service layer handles the actual business rules—validation, database operations, side effects like sending emails or updating inventory. This separation has concrete benefits: the service can be unit tested without spinning up an HTTP server; the same logic can be reused from multiple endpoints or background tasks; and when requirements change, you know exactly where to look. When all logic lives inside endpoint handlers, the code becomes hard to test, hard to reuse, and hard to reason about as the application grows."*
+
+## 🔑 Vocabulario Clave
+
+* **Service layer:** Capa de servicios que contiene la lógica de negocio
+* **Single responsibility:** Responsabilidad única — cada clase/función hace una cosa
+* **Handler:** Función de endpoint que maneja la capa HTTP
+* **Unit test:** Prueba unitaria que puede ejecutarse sin el servidor HTTP
+* **Dependency injection:** Inyección de dependencias (FastAPI `Depends`)
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

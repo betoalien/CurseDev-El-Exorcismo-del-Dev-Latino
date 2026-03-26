@@ -1,0 +1,65 @@
+---
+title: "¿Qué es HTTP y por qué es importante en desarrollo web?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Web Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Es el protocolo de internet"—vago y sin contexto. No explica qué define HTTP ni por qué su comprensión es esencial para un desarrollador fullstack.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"HTTP is the language that frontend and backend speak to each other. Would it help if I explained its key characteristics and how they affect the way I design APIs?"*
+
+## 💻 La Respuesta Técnica
+
+**HTTP (HyperText Transfer Protocol)** es el protocolo de comunicación que define cómo los clientes y servidores intercambian información en la web. Todo lo que ocurre entre un navegador y un servidor web pasa por HTTP.
+
+**Anatomía de una solicitud HTTP:**
+
+```
+REQUEST:
+GET /api/products?category=electronics HTTP/1.1
+Host: api.mitienda.com
+Authorization: Bearer eyJhbGci...
+Content-Type: application/json
+
+RESPONSE:
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: max-age=300
+
+{
+  "products": [...]
+}
+```
+
+**Características clave de HTTP:**
+
+| Característica | Descripción |
+|----------------|-------------|
+| **Stateless** | Cada request es independiente; el servidor no recuerda el anterior |
+| **Text-based** | Las solicitudes y respuestas son legibles por humanos |
+| **Request-Response** | Siempre es el cliente quien inicia |
+| **Headers** | Metadatos de la solicitud (auth, tipo de contenido, caché) |
+| **Status codes** | Códigos numéricos que indican el resultado (200, 404, 500) |
+
+**HTTPS = HTTP + TLS (cifrado):** En producción, siempre HTTPS para proteger los datos en tránsito.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"HTTP, or HyperText Transfer Protocol, is the foundation of data communication on the web—it defines the rules for how clients send requests to servers and how servers send responses back. Every time a frontend calls a backend API, that call is an HTTP request with a method, headers, and optionally a body; the server responds with a status code, headers, and a body containing the data. HTTP is stateless, meaning each request is independent and the server doesn't retain memory of previous interactions, which is why authentication tokens are sent with every request. Understanding HTTP deeply matters for fullstack development because it determines how I design endpoints, handle errors, manage caching, and secure communication—which is why production applications always use HTTPS, the TLS-encrypted version."*
+
+## 🔑 Vocabulario Clave
+
+* **Protocol:** Protocolo que define reglas de comunicación
+* **HTTP headers:** Metadatos de la solicitud o respuesta
+* **Status code:** Código numérico que indica el resultado de la solicitud
+* **HTTPS:** HTTP con cifrado TLS para comunicación segura
+* **Stateless protocol:** Protocolo sin estado entre solicitudes
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

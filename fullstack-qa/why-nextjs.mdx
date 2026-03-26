@@ -1,0 +1,61 @@
+---
+title: "¿Por qué usar Next.js en lugar de React puro para una aplicación fullstack?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Next.js & Frontend Basics"
+---
+
+## 🛑 El Error del Junior
+
+"Porque Next.js tiene más features"—no explica cuáles ni por qué esas features importan para construir una aplicación lista para producción.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Next.js is opinionated in exactly the right ways for production applications. Would it help if I explained what React alone leaves open and how Next.js fills those gaps?"*
+
+## 💻 La Respuesta Técnica
+
+**React** es una librería de UI — hace componentes, no aplicaciones completas. **Next.js** es un framework completo que añade lo que React no tiene out of the box.
+
+**Lo que Next.js agrega sobre React:**
+
+| Característica | React puro | Next.js |
+|----------------|-----------|---------|
+| **Routing** | Necesitas React Router | Basado en archivos/carpetas (App Router) |
+| **SSR / SSG** | Requiere configuración compleja | Integrado por defecto |
+| **Optimización de imágenes** | Manual | Componente `<Image>` automático |
+| **SEO** | Difícil con CSR | Soporte nativo con metadatos |
+| **API Routes** | No disponible | Endpoints backend en el mismo proyecto |
+| **Bundling / Build** | Necesitas Webpack/Vite | Turbopack incluido |
+| **TypeScript** | Configuración manual | Soporte listo para usar |
+
+**Ejemplo de routing en Next.js (App Router):**
+
+```
+app/
+├── page.tsx            → /
+├── about/page.tsx      → /about
+├── products/
+│   ├── page.tsx        → /products
+│   └── [id]/page.tsx   → /products/123
+└── api/
+    └── orders/route.ts → API endpoint /api/orders
+```
+
+Sin Next.js, toda esta estructura necesitaría configuración manual con React Router y un servidor separado para las APIs.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"React is a UI library—it gives you the tools to build components, but it doesn't tell you how to structure your application, handle routing, manage server-side rendering, or optimize assets for production. Next.js is a framework built on top of React that makes all of those decisions for you in a way that's battle-tested and optimized. It provides file-based routing, built-in support for server-side and static rendering which matters for SEO and performance, image optimization out of the box, and the ability to write backend API routes in the same codebase. For a fullstack project, Next.js means I can move faster because I'm not spending time on infrastructure decisions—I can focus on the product."*
+
+## 🔑 Vocabulario Clave
+
+* **Framework vs library:** Framework da estructura, librería da herramientas
+* **File-based routing:** Routing definido por la estructura de carpetas
+* **Server-Side Rendering (SSR):** Renderizado en el servidor antes de enviar al cliente
+* **App Router:** Sistema de routing moderno de Next.js basado en el directorio `app/`
+* **API routes:** Endpoints de backend definidos dentro del proyecto Next.js
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

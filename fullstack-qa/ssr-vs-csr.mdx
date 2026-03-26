@@ -1,0 +1,66 @@
+---
+title: "¿Cuál es la diferencia entre SSR y CSR?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Next.js & Frontend Basics"
+---
+
+## 🛑 El Error del Junior
+
+"SSR es más lento porque el servidor hace más trabajo"—malinterpreta el trade-off. SSR puede ser más rápido en tiempo al primer contenido visible, que es lo que el usuario percibe.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"SSR and CSR solve different problems—it's not about which is faster, but about what metric you're optimizing for. Would it help if I explained the trade-offs and when I choose each?"*
+
+## 💻 La Respuesta Técnica
+
+**SSR (Server-Side Rendering)** y **CSR (Client-Side Rendering)** son dos estrategias de renderizado con implicaciones muy diferentes en performance, SEO y experiencia de usuario.
+
+| | CSR | SSR |
+|-|-----|-----|
+| **Dónde se renderiza** | En el navegador (JavaScript) | En el servidor |
+| **Primer contenido visible** | Lento (espera JS) | Rápido (HTML pre-renderizado) |
+| **SEO** | Difícil (bots ven HTML vacío) | Excelente (HTML completo) |
+| **Interactividad** | Inmediata después de cargar | Requiere hidratación |
+| **Carga del servidor** | Baja | Alta |
+| **Cuándo usarlo** | Dashboards privados, apps con auth | Páginas públicas, e-commerce, blogs |
+
+**En Next.js:**
+
+```tsx
+// Server Component (SSR por defecto en App Router)
+// Se ejecuta en el servidor — puede hacer fetch directamente
+async function ProductPage({ params }: { params: { id: string } }) {
+  const product = await fetch(`/api/products/${params.id}`).then(r => r.json());
+  return <ProductDetail product={product} />;
+}
+
+// Client Component (CSR)
+"use client";
+import { useState, useEffect } from "react";
+
+function LiveDashboard() {
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    fetch("/api/metrics").then(r => r.json()).then(setData);
+  }, []);
+  return <div>{data ? <Chart data={data} /> : "Loading..."}</div>;
+}
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"SSR and CSR are rendering strategies that optimize for different outcomes. With Client-Side Rendering, the server sends a nearly empty HTML file and the browser downloads, parses, and executes JavaScript to build the UI—this is great for highly interactive apps but hurts SEO and perceived initial load time. With Server-Side Rendering, the server generates the complete HTML before sending it to the browser, so the user sees content immediately without waiting for JavaScript—which is critical for SEO and public-facing pages. In Next.js with the App Router, Server Components are the default and they render on the server, which is the right choice for most content-display scenarios. I reach for Client Components only when I need interactivity: click handlers, form state, or real-time data updates."*
+
+## 🔑 Vocabulario Clave
+
+* **Server-Side Rendering (SSR):** Renderizado en el servidor antes de enviar al cliente
+* **Client-Side Rendering (CSR):** Renderizado en el navegador mediante JavaScript
+* **Time to First Contentful Paint:** Tiempo hasta que el usuario ve el primer contenido
+* **Hydration:** Proceso de activar interactividad en HTML pre-renderizado por el servidor
+* **SEO:** Optimización para motores de búsqueda — mejor con SSR
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

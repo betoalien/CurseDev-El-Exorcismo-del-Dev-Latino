@@ -1,0 +1,65 @@
+---
+title: "¿Qué es una API REST de forma simple?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / APIs & Ingestion"
+---
+
+## 🛑 El Error del Junior
+
+"Es una API que usa HTTP"—técnicamente correcto pero incompleto. No menciona los principios REST ni cómo se estructura la comunicación desde la perspectiva de un Data Engineer.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"REST is the dominant API style in data integration, so understanding its conventions helps me write more reliable pipelines. Would it help if I explained the key concepts from a data consumer's perspective?"*
+
+## 💻 La Respuesta Técnica
+
+Una **API REST** es una interfaz que permite intercambiar información entre sistemas usando el protocolo HTTP y siguiendo convenciones para representar recursos con URLs y acciones con métodos HTTP.
+
+**Anatomía de una llamada REST:**
+
+```
+GET https://api.tienda.com/v1/orders?status=paid&page=1
+    ↑      ↑                  ↑       ↑              ↑
+  Método  Base URL         Recurso  Filtro       Paginación
+
+Headers:
+  Authorization: Bearer eyJhbGciOi...
+  Accept: application/json
+
+Response (JSON):
+{
+  "orders": [...],
+  "total": 1500,
+  "page": 1,
+  "per_page": 100
+}
+```
+
+**Métodos HTTP y su significado:**
+
+| Método | Acción | En DE |
+|--------|--------|-------|
+| `GET` | Obtener datos | Extracción de registros |
+| `POST` | Crear recursos | Enviar datos a un sistema externo |
+| `PUT/PATCH` | Actualizar | Menos común en ingesta |
+| `DELETE` | Eliminar | Raramente usado en DE |
+
+**En Data Engineering, el 90% del trabajo con APIs usa GET** para extraer datos.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A REST API is an interface that allows two systems to exchange information over HTTP using a set of conventions: resources are represented as URLs—like /orders or /customers—and actions are expressed through HTTP methods—GET to retrieve data, POST to create, PUT to update, DELETE to remove. From a Data Engineering perspective, REST APIs are primarily consumed using GET requests to extract data, with authentication via tokens in headers, filtering via query parameters, and pagination to retrieve large datasets in chunks. The response is almost always JSON, which we then validate and transform. What distinguishes a professional API integration from a quick script is handling all the edge cases: empty responses, rate limit errors, unexpected schema changes, and network timeouts."*
+
+## 🔑 Vocabulario Clave
+
+* **Endpoint:** URL específica de un recurso en la API
+* **HTTP method:** Método HTTP que define la acción (GET, POST, etc.)
+* **Query parameter:** Parámetro en la URL para filtrar o paginar
+* **Authorization header:** Cabecera que contiene el token de autenticación
+* **JSON response:** Respuesta en formato JSON de la API
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

@@ -1,0 +1,61 @@
+---
+title: "¿Para qué sirve consumir una API desde Python en un flujo de Data Engineering?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Python for Data Engineering"
+---
+
+## 🛑 El Error del Junior
+
+"Para obtener datos de internet"—respuesta vaga que no explica el contexto de automatización, integración ni los desafíos técnicos del proceso en producción.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"API consumption is one of the most common ingestion patterns in modern pipelines. Would it help if I described how I structure an API integration to make it reliable and repeatable?"*
+
+## 💻 La Respuesta Técnica
+
+Consumir una API desde Python permite **extraer datos de sistemas externos de forma automática, programática y repetible**, sin depender de exportaciones manuales.
+
+**Ejemplo de integración básica con `requests`:**
+
+```python
+import requests
+import logging
+
+logger = logging.getLogger(__name__)
+
+def fetch_orders(api_url: str, api_key: str, page: int = 1) -> list:
+    headers = {"Authorization": f"Bearer {api_key}"}
+    params = {"page": page, "limit": 100}
+
+    response = requests.get(api_url, headers=headers, params=params, timeout=10)
+    response.raise_for_status()  # Lanza excepción si el status es 4xx/5xx
+
+    data = response.json()
+    logger.info(f"Fetched page {page}: {len(data['orders'])} orders")
+    return data["orders"]
+```
+
+**Por qué importa en DE:**
+
+- **Automatización**: Reemplaza exportaciones manuales de reportes
+- **Frecuencia**: Puedes extraer datos diariamente, cada hora o en tiempo real
+- **Integración**: Conecta sistemas que no comparten base de datos (CRM, ERP, pagos)
+- **Control**: Manejas errores, reintentos y validaciones de forma explícita
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Consuming an API from Python in a Data Engineering context means building a reliable, automated integration that extracts data from an external system on a schedule—replacing manual exports and enabling up-to-date data in your pipeline. In practice, this involves handling authentication with tokens or API keys, managing pagination to retrieve all records across multiple requests, respecting rate limits to avoid getting blocked, and storing the raw response before any transformation happens. I always use libraries like requests with explicit timeouts and raise_for_status to catch HTTP errors early. The goal is a pipeline that runs unattended and alerts you only when something actually goes wrong."*
+
+## 🔑 Vocabulario Clave
+
+* **API consumption:** Consumo o integración con una API
+* **Pagination:** Paginación para recuperar todos los registros
+* **Rate limiting:** Limitación de solicitudes por periodo
+* **Authentication token:** Token de autenticación
+* **raise_for_status:** Método que lanza excepción en errores HTTP
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

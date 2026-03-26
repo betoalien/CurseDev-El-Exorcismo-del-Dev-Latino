@@ -1,0 +1,72 @@
+---
+title: "¿Por qué muchas APIs requieren autenticación?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / APIs & Ingestion"
+---
+
+## 🛑 El Error del Junior
+
+"Para saber quién hace las llamadas"—correcto pero incompleto. No menciona control de acceso, auditoría, límites por cliente ni las implicaciones de seguridad para pipelines de datos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Authentication in APIs serves multiple purposes beyond just identification. Would it help if I explained what each method achieves and how I handle credentials securely in a pipeline?"*
+
+## 💻 La Respuesta Técnica
+
+La autenticación protege la API y controla el acceso a los datos. Sin ella, cualquiera podría consumir o modificar información sensible.
+
+**Métodos de autenticación comunes:**
+
+| Método | Cómo funciona | Ejemplo |
+|--------|---------------|---------|
+| **API Key** | Llave fija en el header o URL | `Authorization: ApiKey abc123` |
+| **Bearer Token / JWT** | Token firmado con expiración | `Authorization: Bearer eyJ...` |
+| **OAuth 2.0** | Flujo de autorización delegada | Google, Salesforce, HubSpot |
+| **Basic Auth** | Usuario:contraseña en Base64 | APIs legacy |
+
+**Manejo seguro de credenciales en un pipeline:**
+
+```python
+import os
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()
+
+API_KEY = os.getenv("STRIPE_API_KEY")  # Nunca hardcodeada
+if not API_KEY:
+    raise ValueError("STRIPE_API_KEY environment variable not set")
+
+def fetch_payments(endpoint: str) -> dict:
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+    response = requests.get(endpoint, headers=headers, timeout=15)
+    response.raise_for_status()
+    return response.json()
+```
+
+**Reglas de seguridad para pipelines:**
+- Credenciales siempre en variables de entorno, nunca en el código
+- Usar credenciales con permisos mínimos necesarios (principio de menor privilegio)
+- Rotar API keys periódicamente
+- Nunca loggear el valor de una credencial
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"API authentication serves several purposes: it verifies the identity of the caller, controls which data and operations each client can access, enables usage tracking and rate limiting per client, and creates an audit trail of who accessed what and when. For a Data Engineering pipeline, this means I need to obtain and securely manage credentials—API keys, OAuth tokens, or service account credentials depending on the provider. My non-negotiable rule is that credentials are never hardcoded in source code; they live in environment variables or a secrets manager. I also follow the principle of least privilege: the credentials used by a pipeline should have read-only access to exactly the data it needs, and nothing more."*
+
+## 🔑 Vocabulario Clave
+
+* **API key:** Clave de API para autenticar solicitudes
+* **Bearer token:** Token portador que autoriza el acceso
+* **OAuth 2.0:** Protocolo de autorización delegada
+* **Least privilege:** Principio de mínimos permisos necesarios
+* **Secrets manager:** Gestor seguro de credenciales (AWS Secrets Manager, Vault)
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

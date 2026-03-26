@@ -1,0 +1,84 @@
+---
+title: "¿Por qué es importante manejar estados de carga en el frontend?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Next.js & Frontend Basics"
+---
+
+## 🛑 El Error del Junior
+
+No implementa ningún estado de carga — el usuario ve la pantalla vacía o congelada mientras espera los datos, lo que parece un bug.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Loading states are a UX contract with the user—they communicate that something is happening and prevent confusion. Would it help if I explained the different patterns and when to use each?"*
+
+## 💻 La Respuesta Técnica
+
+Los **estados de carga** comunican al usuario que la aplicación está trabajando, evitando pantallas vacías que se perciben como errores o lentitud del sistema.
+
+**Patrones de loading en Next.js / React:**
+
+```tsx
+"use client";
+import { useState, useEffect } from "react";
+
+// Patrón 1: Loading simple con booleano
+function OrdersList() {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/orders")
+      .then(r => r.json())
+      .then(data => {
+        setOrders(data.orders);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <LoadingSkeleton />;      // Skeleton UI
+  if (error) return <ErrorMessage error={error} />;
+  return <OrderTable orders={orders} />;
+}
+
+// Patrón 2: loading.tsx en Next.js App Router (automático)
+// app/orders/loading.tsx — se muestra automáticamente mientras carga la página
+export default function Loading() {
+  return (
+    <div className="animate-pulse">
+      <div className="h-4 bg-gray-200 rounded mb-4" />
+      <div className="h-4 bg-gray-200 rounded mb-4 w-3/4" />
+    </div>
+  );
+}
+```
+
+**Por qué importa:**
+
+| Sin loading state | Con loading state |
+|-------------------|-------------------|
+| Pantalla vacía — parece bug | Skeleton/spinner — el usuario sabe que carga |
+| Usuario hace click múltiples veces | Botón deshabilitado durante carga |
+| Frustración y abandono | Experiencia predecible y profesional |
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Loading states are essential for user experience because they communicate that the application is working—without them, a blank screen or frozen UI looks like a bug. When data is being fetched from an API, there's always a network delay, and how you handle that delay determines whether the user trusts the application. My standard approach is to manage three states for any async operation: loading, success, and error. During loading, I show a skeleton UI that mimics the shape of the content that's coming—this is more professional than a simple spinner and reduces the perceived wait time. In Next.js App Router, I can also use a loading.tsx file that automatically shows while a Server Component is fetching data, which is the most seamless pattern."*
+
+## 🔑 Vocabulario Clave
+
+* **Loading state:** Estado que indica que se está esperando datos del servidor
+* **Skeleton UI:** Placeholder animado que imita la forma del contenido final
+* **Perceived performance:** Velocidad percibida por el usuario (no la real)
+* **loading.tsx:** Archivo especial de Next.js para mostrar UI de carga automáticamente
+* **Async operation:** Operación asíncrona que toma tiempo en completarse
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

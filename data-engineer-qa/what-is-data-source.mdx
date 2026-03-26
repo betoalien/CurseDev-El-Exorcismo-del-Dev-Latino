@@ -1,0 +1,46 @@
+---
+title: "¿Qué puede considerarse una fuente de datos en un proyecto de Data Engineering?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"Una base de datos o un archivo CSV"—limita la respuesta a los casos más obvios e ignora la diversidad de fuentes en proyectos reales.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Data sources in real projects can be surprisingly varied. Would it help if I walked through the main categories and the challenges each one introduces?"*
+
+## 💻 La Respuesta Técnica
+
+Una **fuente de datos** es cualquier origen desde donde se extrae información útil para un pipeline. En proyectos reales, las fuentes son muy diversas:
+
+| Tipo de fuente | Ejemplos | Desafío típico |
+|----------------|----------|----------------|
+| **Bases de datos** | PostgreSQL, MySQL, MongoDB | Extraer sin afectar producción |
+| **Archivos** | CSV, Excel, JSON, Parquet | Formatos inconsistentes, encoding |
+| **APIs externas** | REST, GraphQL, webhooks | Rate limits, paginación, auth |
+| **Sistemas transaccionales** | ERP, CRM, e-commerce | Schemas complejos, volumen alto |
+| **Logs y eventos** | App logs, clickstream, IoT | Volumen masivo, tiempo real |
+| **Servicios SaaS** | Salesforce, HubSpot, Stripe | APIs propietarias, cambios de schema |
+| **Archivos en la nube** | S3, GCS, Azure Blob | Acceso, versionado, particionado |
+
+Cada tipo de fuente requiere un conector, estrategia de extracción y manejo de errores diferente.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"In real Data Engineering projects, a data source can be virtually any system that produces or stores information the business needs. The most common ones are relational databases, flat files like CSVs or JSON, and external APIs—but in practice, you also deal with event streams, SaaS platforms like Salesforce or Stripe, application logs, and cloud storage buckets. Each source type comes with its own challenges: databases need careful extraction to avoid locking production, APIs have rate limits and pagination, and files can have inconsistent formats or encodings. Understanding your sources deeply—how they change, how reliable they are, and what guarantees they offer—is one of the first things I do when designing a pipeline."*
+
+## 🔑 Vocabulario Clave
+
+* **Data source:** Fuente de datos
+* **Connector:** Conector de integración
+* **Rate limit:** Límite de solicitudes por periodo
+* **Extraction strategy:** Estrategia de extracción
+* **SaaS platform:** Plataforma de software como servicio
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

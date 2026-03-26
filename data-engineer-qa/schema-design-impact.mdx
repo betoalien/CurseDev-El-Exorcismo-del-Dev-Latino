@@ -1,0 +1,63 @@
+---
+title: "¿Cómo impacta un mal diseño de schema en un pipeline de datos?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / SQL & Data Modeling"
+---
+
+## 🛑 El Error del Junior
+
+"Hace el código más difícil de mantener"—verdad, pero no alcanza a describir los impactos concretos sobre calidad de datos, rendimiento y escalabilidad del pipeline.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"A bad schema is often the root cause of problems that appear much later in the pipeline—and they're hard to fix once data is in production. Would it help if I walked through the most common failure patterns?"*
+
+## 💻 La Respuesta Técnica
+
+Un mal diseño de schema produce efectos que se propagan a lo largo del pipeline y son costosos de corregir en producción.
+
+**Problemas comunes y sus consecuencias:**
+
+| Problema de schema | Consecuencia en el pipeline |
+|--------------------|-----------------------------|
+| Sin Primary Key | Duplicados acumulándose en cada carga |
+| Tipos de dato incorrectos | Errores en transformaciones o agregaciones |
+| Columnas con nombres inconsistentes | JOINs rotos o resultados incorrectos |
+| Todo en una sola tabla (sin normalizar) | Redundancia, inconsistencias, difícil de consultar |
+| Sin particionado en tablas grandes | Consultas lentas en producción |
+| Nombres ambiguos (`data`, `value`, `flag`) | Código ilegible y propenso a errores |
+
+**Ejemplo: el costo de mal schema:**
+
+```sql
+-- Schema problemático descubierto en producción
+-- Columna "date" guardada como VARCHAR — difícil de cambiar con datos existentes
+ALTER TABLE orders ALTER COLUMN date TYPE DATE
+  USING date::DATE;
+-- ERROR: invalid input syntax for type date: "13/25/2023" (fecha imposible ya cargada)
+```
+
+Cambiar un schema en producción con datos reales ya cargados puede requerir migraciones largas, correcciones manuales y downtime.
+
+**Principios de un buen schema:**
+- PKs en todas las tablas
+- Tipos de dato correctos desde el inicio
+- Nombres de columna descriptivos y consistentes
+- Particionado en tablas de alto volumen
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A poorly designed schema creates problems that compound over time and become increasingly expensive to fix as more data accumulates and more systems depend on it. The most common failure patterns are missing primary keys that allow duplicates to silently accumulate, incorrect data types that cause transformation failures or precision loss, and inconsistent column naming that breaks joins and confuses consumers. What makes schema debt particularly dangerous is that fixing it in production—once millions of rows are loaded and dashboards are built on top—requires migrations that can take hours and may introduce new bugs. The schema design decision made on day one sets the foundation for everything downstream, so I treat it as one of the highest-leverage decisions in a data project."*
+
+## 🔑 Vocabulario Clave
+
+* **Schema debt:** Deuda técnica acumulada por mal diseño de schema
+* **Data migration:** Migración de datos para corregir el schema
+* **Downstream impact:** Impacto en sistemas que dependen de los datos
+* **Partitioning:** Particionado de tablas para mejorar rendimiento
+* **Compounding problem:** Problema que crece exponencialmente con el tiempo
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

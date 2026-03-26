@@ -1,0 +1,68 @@
+---
+title: "¿Cuál es la diferencia entre una request y una response?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Web Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"La request es lo que se envía y la response es lo que se recibe"—correcto pero no describe los componentes de cada una ni cómo un fullstack los usa en la práctica.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Understanding the anatomy of requests and responses is foundational for debugging any fullstack issue. Would it help if I walked through the key components of each?"*
+
+## 💻 La Respuesta Técnica
+
+**Request** y **Response** son las dos mitades del ciclo HTTP. Cada una tiene componentes específicos que el desarrollador fullstack debe conocer para diseñar, debuggear y consumir APIs correctamente.
+
+**Anatomía de una Request:**
+
+```
+Method + URL:  POST https://api.app.com/api/orders
+Headers:       Authorization: Bearer token123
+               Content-Type: application/json
+Body:          {
+                 "customer_id": 42,
+                 "items": [{"product_id": 1, "qty": 2}]
+               }
+```
+
+**Anatomía de una Response:**
+
+```
+Status:        HTTP/1.1 201 Created
+Headers:       Content-Type: application/json
+               Location: /api/orders/987
+Body:          {
+                 "order_id": 987,
+                 "status": "pending",
+                 "total": 149.98
+               }
+```
+
+**Componentes clave:**
+
+| Componente | En Request | En Response |
+|------------|------------|-------------|
+| **Status** | No aplica | 200, 201, 400, 404, 500 |
+| **Headers** | Auth, Content-Type | Content-Type, Cache-Control |
+| **Body** | Datos enviados (POST/PUT) | Datos devueltos |
+| **URL/Path** | Recurso y parámetros | No aplica |
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"An HTTP request is the message the client sends to the server, and it has four main components: the method and URL that specify what action to perform on which resource, headers that provide metadata like the authorization token and content type, query parameters for filtering or pagination, and optionally a body containing data for POST or PUT operations. The response is the server's reply, and it has three main components: the status code that indicates the outcome—200 for success, 400 for a bad request, 500 for a server error—headers with metadata like content type and caching instructions, and the body containing the data or error message. As a fullstack developer, I work with both sides daily: designing the response format in the backend and consuming it correctly in the frontend, and debugging issues by inspecting the full request-response cycle in the browser's network tab."*
+
+## 🔑 Vocabulario Clave
+
+* **Request body:** Cuerpo de la solicitud con datos enviados al servidor
+* **Response status code:** Código numérico que indica el resultado
+* **Content-Type header:** Cabecera que indica el formato del cuerpo (JSON, HTML)
+* **Authorization header:** Cabecera con el token de autenticación
+* **Network tab:** Pestaña de red en las devtools del navegador
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

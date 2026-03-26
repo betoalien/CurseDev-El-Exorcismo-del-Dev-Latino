@@ -1,0 +1,98 @@
+---
+title: "¿Qué es Redis y por qué puede ser útil en una aplicación fullstack?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Auth, Redis & Real-World Architecture"
+---
+
+## 🛑 El Error del Junior
+
+"Es como una base de datos pero más rápida"—correcto pero vago. No explica por qué es rápida (in-memory), qué casos de uso resuelve ni cómo complementa a una base de datos relacional.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Redis is an in-memory data store that's often misunderstood as just a cache. Would it help if I explained its core use cases in a fullstack app and why it lives alongside—not instead of—your main database?"*
+
+## 💻 La Respuesta Técnica
+
+**Redis** es una base de datos en memoria (key-value) extremadamente rápida. Mientras que PostgreSQL persiste datos en disco, Redis los mantiene en RAM, con latencias de sub-milisegundo.
+
+**¿Por qué existe junto a la base de datos principal?**
+
+```
+PostgreSQL          Redis
+──────────          ──────────
+Datos permanentes   Datos temporales
+Consultas complejas Acceso ultrarrápido
+Relaciones (JOIN)   Caché / sesiones / colas
+Escribe en disco    Escribe en RAM
+~10ms latencia      ~0.1ms latencia
+```
+
+**Casos de uso en una app fullstack:**
+
+```python
+import redis
+
+r = redis.Redis(host="localhost", port=6379, decode_responses=True)
+
+# 1. CACHÉ — guardar resultado costoso temporalmente
+def get_product_list():
+    cached = r.get("products:all")
+    if cached:
+        return json.loads(cached)  # ← Retorna en <1ms
+
+    products = db.query(Product).all()  # ← Consulta lenta a DB
+    r.setex("products:all", 300, json.dumps(products))  # TTL 5 minutos
+    return products
+
+# 2. SESIONES — guardar estado de usuario
+def create_session(user_id: int) -> str:
+    session_id = str(uuid4())
+    r.setex(f"session:{session_id}", 86400, user_id)  # TTL 24h
+    return session_id
+
+def get_session_user(session_id: str) -> str | None:
+    return r.get(f"session:{session_id}")
+
+# 3. RATE LIMITING — contar requests por cliente
+def check_rate_limit(client_ip: str) -> bool:
+    key = f"rate:{client_ip}"
+    requests = r.incr(key)
+    if requests == 1:
+        r.expire(key, 60)  # Resetea cada minuto
+    return requests <= 100  # Máximo 100 requests/min
+```
+
+**Instalación y uso con FastAPI:**
+
+```python
+# En producción se usa redis.asyncio para no bloquear
+import redis.asyncio as aioredis
+
+async def get_redis():
+    return await aioredis.from_url("redis://localhost")
+
+@app.get("/products")
+async def list_products(redis = Depends(get_redis)):
+    cached = await redis.get("products")
+    if cached:
+        return json.loads(cached)
+    # Fetches from DB and caches...
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Redis is an in-memory data store that lives alongside the main database rather than replacing it. The key distinction is that it stores data in RAM instead of on disk, which gives it sub-millisecond latency compared to the tens of milliseconds typical of a relational database query. In a fullstack application, Redis is useful for several specific problems: caching the results of expensive database queries so they don't re-run on every request; storing sessions so the server doesn't need to decode a JWT or query users on each request; implementing rate limiting by counting requests per client within a time window using atomic increment operations; and serving as a lightweight message queue for background tasks. Redis is temporary by nature—data can be given a TTL and will expire automatically, which makes it ideal for data that's valuable now but not worth permanent storage."*
+
+## 🔑 Vocabulario Clave
+
+* **In-memory store:** Base de datos que guarda datos en RAM — extremadamente rápida pero volátil
+* **TTL (Time To Live):** Tiempo de vida de una clave en Redis — se borra automáticamente al expirar
+* **Cache hit/miss:** Hit = dato encontrado en caché; Miss = hay que ir a la DB principal
+* **Atomic operation:** Operación que Redis ejecuta sin interrupciones — clave para rate limiting
+* **Key-value store:** Modelo de datos de Redis — cada valor se guarda y recupera por una clave
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

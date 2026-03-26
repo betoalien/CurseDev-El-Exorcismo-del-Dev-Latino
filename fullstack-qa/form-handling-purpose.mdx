@@ -1,0 +1,101 @@
+---
+title: "¿Qué debes considerar al trabajar con formularios en el frontend?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Next.js & Frontend Basics"
+---
+
+## 🛑 El Error del Junior
+
+Solo controla el input y hace el fetch — no valida, no maneja el estado de envío, no desactiva el botón durante la carga ni muestra feedback claro al usuario.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Forms are one of the most complex UI interactions when done right. Would it help if I walked through the full lifecycle of a production-grade form?"*
+
+## 💻 La Respuesta Técnica
+
+Un formulario de producción tiene varios estados que deben manejarse explícitamente para dar una experiencia profesional:
+
+**Ciclo completo de un formulario:**
+
+```tsx
+"use client";
+import { useState } from "react";
+
+interface FormData {
+  email: string;
+  amount: string;
+}
+
+export function OrderForm() {
+  const [formData, setFormData] = useState<FormData>({ email: "", amount: "" });
+  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  // Validación en el cliente
+  const validate = (): boolean => {
+    const newErrors: Partial<FormData> = {};
+    if (!formData.email.includes("@")) newErrors.email = "Email inválido";
+    if (Number(formData.amount) <= 0) newErrors.amount = "El monto debe ser positivo";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error("Error al crear el pedido");
+      setSuccess(true);
+    } catch (err) {
+      setErrors({ email: "Error al enviar. Intenta de nuevo." });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (success) return <p>¡Pedido creado exitosamente!</p>;
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+      {errors.email && <span className="error">{errors.email}</span>}
+      <button type="submit" disabled={submitting}>
+        {submitting ? "Enviando..." : "Crear pedido"}
+      </button>
+    </form>
+  );
+}
+```
+
+**Consideraciones clave:**
+1. **Validación client-side** (feedback inmediato)
+2. **Estado de envío** (deshabilitar botón, mostrar loading)
+3. **Manejo de error de API** (feedback claro)
+4. **Estado de éxito** (confirmación visible)
+5. **Validación server-side** también (nunca confiar solo en el frontend)
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Working with forms in production requires managing several states explicitly: the input values themselves, client-side validation errors, the submitting state while the request is in flight, and the success or error response from the API. The most common mistake is submitting without disabling the button—which allows double submissions—and not showing inline validation errors before the user tries to submit. My approach is to validate on the client for immediate feedback, disable the submit button while submitting, handle both API success and error cases explicitly, and always validate again on the server because client-side validation can be bypassed. I also use libraries like React Hook Form for complex forms to avoid reinventing state management patterns."*
+
+## 🔑 Vocabulario Clave
+
+* **Form state:** Estado del formulario (inputs, errores, cargando, éxito)
+* **Client-side validation:** Validación en el frontend antes de enviar al servidor
+* **Controlled input:** Input cuyo valor está controlado por el state de React
+* **Double submission:** Envío doble del formulario por no deshabilitar el botón
+* **React Hook Form:** Librería para gestión de formularios en React
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

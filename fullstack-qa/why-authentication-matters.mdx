@@ -1,0 +1,88 @@
+---
+title: "¿Por qué la autenticación es importante en una aplicación fullstack?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Auth, Redis & Real-World Architecture"
+---
+
+## 🛑 El Error del Junior
+
+"Para que solo entren usuarios registrados"—correcto pero superficial. No explica qué amenazas previene, cómo se implementa en cada capa ni qué pasa si la omites.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Authentication is the foundation of any secure application. Would it help if I explained how it works across the frontend and backend layers and what attacks it prevents?"*
+
+## 💻 La Respuesta Técnica
+
+La **autenticación** verifica la identidad del usuario antes de darle acceso a recursos protegidos. En una aplicación fullstack, opera en múltiples capas.
+
+**Sin autenticación — cualquiera accede a todo:**
+
+```python
+# ❌ Endpoint sin autenticación
+@app.get("/users/{user_id}/orders")
+async def get_orders(user_id: int):
+    return db.query(Order).filter(Order.user_id == user_id).all()
+    # Cualquier persona puede acceder a pedidos de cualquier usuario
+```
+
+**Con autenticación — acceso controlado:**
+
+```python
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPBearer
+
+security = HTTPBearer()
+
+async def get_current_user(token: str = Depends(security)):
+    payload = verify_jwt_token(token.credentials)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    return payload
+
+@app.get("/users/me/orders")
+async def get_my_orders(current_user = Depends(get_current_user)):
+    # Solo accede el usuario autenticado, solo ve sus propios datos
+    return db.query(Order).filter(Order.user_id == current_user["id"]).all()
+```
+
+**En el frontend (Next.js) — proteger rutas:**
+
+```typescript
+// middleware.ts — bloquear rutas sin sesión
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
+
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get("auth_token")
+
+  if (!token && request.nextUrl.pathname.startsWith("/dashboard")) {
+    return NextResponse.redirect(new URL("/login", request.url))
+  }
+
+  return NextResponse.next()
+}
+```
+
+**Por qué es importante:**
+- Sin autenticación, cualquier persona puede leer, modificar o eliminar datos de otros usuarios
+- Los endpoints de admin quedan expuestos al público
+- No puedes asociar acciones a un usuario específico (auditoría, personalización)
+- La app es vulnerable a ataques de enumeración y scraping masivo
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Authentication is critical in a fullstack application because it's the mechanism that establishes identity before granting access to protected resources. Without it, any request to any endpoint would succeed regardless of who's making it—users could read each other's data, modify records they don't own, or access admin functionality. In a fullstack context, authentication operates at two layers: the backend validates the token or session on every protected request, and the frontend enforces access by redirecting unauthenticated users away from protected routes. The backend enforcement is the real security boundary—frontend checks are UX improvements, not security guarantees, because anyone can bypass client-side logic by making direct HTTP requests to the API."*
+
+## 🔑 Vocabulario Clave
+
+* **Authentication:** Verificación de identidad del usuario antes de conceder acceso
+* **Protected endpoint:** Endpoint que requiere autenticación para responder
+* **Token validation:** Proceso de verificar que un token sea válido y no haya expirado
+* **Middleware:** Función que intercepta requests antes de llegar al handler del endpoint
+* **Unauthenticated request:** Solicitud sin credenciales válidas — debe recibir 401
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

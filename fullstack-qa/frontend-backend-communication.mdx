@@ -1,0 +1,130 @@
+---
+title: "¿Cómo se comunican el frontend y el backend en una aplicación fullstack?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Integration, Testing & Production Readiness"
+---
+
+## 🛑 El Error del Junior
+
+"El frontend llama al backend"—describe el qué pero no el cómo: no menciona HTTP, el formato de datos, el manejo de estados (loading, error) ni cómo el frontend sabe qué esperar de cada endpoint.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Frontend-backend communication is the contract layer of a fullstack app. Would it help if I walked through the complete request-response cycle and showed how to handle loading, error, and success states in Next.js?"*
+
+## 💻 La Respuesta Técnica
+
+El frontend y el backend se comunican mediante **solicitudes HTTP** a endpoints de la API REST, intercambiando datos en **JSON**.
+
+**Ciclo completo de comunicación:**
+
+```
+Frontend (Next.js)                    Backend (FastAPI)
+─────────────────                     ─────────────────
+1. Usuario hace acción
+2. fetch() con método + headers   →   3. Recibe request
+                                       4. Valida con Pydantic
+                                       5. Ejecuta lógica
+                                       6. Retorna JSON
+7. Recibe response JSON           ←
+8. Actualiza UI (success/error)
+```
+
+**Backend — definir el endpoint:**
+
+```python
+# FastAPI
+from pydantic import BaseModel
+
+class ProductCreate(BaseModel):
+    name: str
+    price: float
+
+class ProductOut(BaseModel):
+    id: int
+    name: str
+    price: float
+
+@app.post("/api/products", response_model=ProductOut, status_code=201)
+async def create_product(
+    product: ProductCreate,
+    current_user = Depends(get_current_user)
+):
+    return save_product(product, current_user["id"])
+```
+
+**Frontend — llamar al endpoint con manejo completo de estados:**
+
+```typescript
+// Next.js — Server Component (fetch directo, sin estado)
+async function ProductList() {
+  const res = await fetch("http://localhost:8000/api/products", {
+    cache: "no-store"  // Sin caché para datos dinámicos
+  })
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch products")
+  }
+
+  const products = await res.json()
+  return <ul>{products.map(p => <li key={p.id}>{p.name}</li>)}</ul>
+}
+
+// Client Component — con estado de loading/error
+"use client"
+import { useState } from "react"
+
+export function CreateProductForm() {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handleSubmit(formData: FormData) {
+    setLoading(true)
+    setError(null)
+
+    try {
+      const res = await fetch("/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${getToken()}`
+        },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          price: parseFloat(formData.get("price") as string)
+        })
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.detail || "Error creating product")
+      }
+
+      const newProduct = await res.json()
+      console.log("Created:", newProduct)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error")
+    } finally {
+      setLoading(false)
+    }
+  }
+  // ...
+}
+```
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Frontend and backend communicate through HTTP requests to REST API endpoints, exchanging data in JSON format. The frontend initiates a request with a method—GET, POST, PUT, DELETE—along with any required headers like Authorization and Content-Type, and a JSON body for write operations. The backend receives the request, validates the data, executes the business logic, and returns a JSON response with an appropriate HTTP status code. On the frontend side, good communication handling means managing three states for every async operation: loading, to give user feedback while waiting; error, to display a message when something goes wrong; and success, to update the UI with the returned data. In Next.js, Server Components can fetch data directly during rendering, while Client Components use state and useEffect or libraries like SWR to handle interactive data fetching."*
+
+## 🔑 Vocabulario Clave
+
+* **HTTP request/response cycle:** Ciclo completo de solicitud del frontend y respuesta del backend
+* **Authorization header:** Header que transporta el token JWT en cada request protegido
+* **Loading state:** Estado que indica que una operación async está en progreso
+* **JSON serialization:** Conversión de objetos Python/JS a texto JSON para transmisión
+* **CORS:** Política del navegador que controla qué orígenes pueden llamar a la API
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

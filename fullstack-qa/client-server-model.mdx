@@ -1,0 +1,65 @@
+---
+title: "¿Qué es el modelo cliente-servidor?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Web Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+"El cliente pide y el servidor responde"—correcto pero demasiado abstracto. No explica el protocolo, el ciclo de vida de una solicitud ni las implicaciones para el desarrollo fullstack.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"The client-server model is the foundation of how every web application works. Would it help if I walked through a complete request-response cycle to make it concrete?"*
+
+## 💻 La Respuesta Técnica
+
+El **modelo cliente-servidor** describe la arquitectura en la que un cliente solicita recursos o servicios a un servidor, y el servidor los provee. Es la base de toda comunicación web.
+
+**Ciclo de vida de una solicitud:**
+
+```
+1. Usuario hace clic en "Ver mis pedidos"
+   ↓
+2. CLIENTE (navegador/Next.js) envía:
+   GET https://api.mitienda.com/orders
+   Headers: { Authorization: "Bearer token123" }
+   ↓
+3. SERVIDOR (FastAPI/backend) recibe la solicitud:
+   - Verifica el token (autenticación)
+   - Consulta la base de datos
+   - Construye la respuesta
+   ↓
+4. SERVIDOR responde:
+   HTTP 200 OK
+   Content-Type: application/json
+   Body: { "orders": [...] }
+   ↓
+5. CLIENTE recibe y renderiza los pedidos en la interfaz
+```
+
+**Características clave del modelo:**
+
+| Característica | Descripción |
+|----------------|-------------|
+| **Stateless** | Cada solicitud es independiente; el servidor no recuerda solicitudes anteriores |
+| **Asimétrico** | El cliente inicia, el servidor responde (no al revés) |
+| **Escalable** | Un servidor puede atender miles de clientes simultáneos |
+| **Separación de roles** | Cada parte tiene responsabilidades claras |
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"The client-server model is the architectural pattern that underpins all web applications. The client—typically a browser or a mobile app—initiates requests for data or services. The server processes those requests, applies business logic, interacts with the database, and returns a response. What makes this model powerful is the clear separation of responsibilities: the client handles presentation and user interaction, the server handles logic and data. It's also stateless by design—each HTTP request carries all the information the server needs to respond, which makes it horizontally scalable. In a fullstack context, understanding this model deeply helps me design APIs that are efficient for the client to consume and predictable in their behavior."*
+
+## 🔑 Vocabulario Clave
+
+* **Client:** Cliente que inicia la solicitud (navegador, app móvil)
+* **Server:** Servidor que procesa y responde las solicitudes
+* **Stateless:** Sin estado — cada solicitud es independiente
+* **Request-response cycle:** Ciclo completo de solicitud y respuesta
+* **Horizontal scaling:** Escalar agregando más servidores en paralelo
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

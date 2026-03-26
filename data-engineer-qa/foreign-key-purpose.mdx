@@ -1,0 +1,64 @@
+---
+title: "¿Para qué sirve una Foreign Key?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / SQL & Data Modeling"
+---
+
+## 🛑 El Error del Junior
+
+"Es para relacionar tablas"—respuesta genérica que no explica la integridad referencial ni por qué en algunos sistemas de analytics se omite intencionalmente.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Foreign keys serve a specific integrity purpose, but they're handled differently in OLTP versus analytical systems. Would it be useful if I explained both contexts?"*
+
+## 💻 La Respuesta Técnica
+
+Una **Foreign Key (FK)** es una columna que referencia la Primary Key de otra tabla, asegurando que la relación entre las dos tablas sea válida y consistente.
+
+**Ejemplo:**
+
+```sql
+-- FK conecta orders con customers
+CREATE TABLE orders (
+    order_id    INT PRIMARY KEY,
+    customer_id INT REFERENCES customers(customer_id),  -- FK
+    amount      DECIMAL(10,2),
+    order_date  DATE
+);
+
+-- Si intentas insertar un customer_id que no existe en customers:
+-- ERROR: insert or update on table "orders" violates foreign key constraint
+```
+
+**Lo que garantiza la FK:**
+- No puedes tener una venta sin un cliente válido
+- No puedes borrar un cliente que tiene ventas activas (o sí, con CASCADE)
+- Los JOINs entre tablas producen resultados correctos
+
+**Diferencia entre OLTP y Analytics:**
+
+| | OLTP (Transaccional) | Data Warehouse (Analytics) |
+|-|---------------------|--------------------------|
+| **FK enforced** | Sí, en la base de datos | A veces no (por rendimiento) |
+| **Integridad** | Garantizada a nivel DB | Responsabilidad del pipeline |
+| **Motivo** | Prevenir datos huérfanos | Los warehouses priorizan velocidad de lectura |
+
+En BigQuery o Snowflake, las FKs son **declarativas** (documentan la relación) pero no siempre se enforcan automáticamente.
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A foreign key is a column that references the primary key of another table, and its purpose is to enforce referential integrity—ensuring that every related record actually exists. For example, an orders table with a customer_id foreign key guarantees that you can't insert an order for a customer that doesn't exist in the customers table. In transactional databases, foreign keys are strictly enforced at the database level, which prevents orphaned records. In analytical systems like BigQuery or Snowflake, foreign keys are often declared but not enforced because warehouses are optimized for read performance, not write integrity—so the pipeline itself is responsible for ensuring the relationships are clean before data is loaded."*
+
+## 🔑 Vocabulario Clave
+
+* **Foreign key:** Clave foránea que conecta dos tablas
+* **Referential integrity:** Integridad referencial entre tablas relacionadas
+* **Orphaned record:** Registro huérfano sin referencia válida
+* **Enforced constraint:** Restricción aplicada automáticamente por la base de datos
+* **Declarative FK:** Clave foránea declarativa (documentación sin enforcement)
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

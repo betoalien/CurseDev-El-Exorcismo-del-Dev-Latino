@@ -1,0 +1,64 @@
+---
+title: "¿Por qué es importante una Primary Key en una tabla?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Data Engineer / SQL & Data Modeling"
+---
+
+## 🛑 El Error del Junior
+
+"Para identificar cada fila"—correcto pero incompleto. No explica qué problemas concretos evita ni qué impacto tiene su ausencia en un pipeline de datos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Primary keys are more than a naming convention—they're the foundation of data integrity in a pipeline. Would it help if I explained what breaks when you don't have them?"*
+
+## 💻 La Respuesta Técnica
+
+La **Primary Key (PK)** identifica de forma única cada registro en una tabla. Su ausencia o mal diseño es una de las causas más comunes de duplicados y datos corruptos en pipelines.
+
+**Lo que garantiza una PK:**
+
+| Garantía | Descripción |
+|----------|-------------|
+| **Unicidad** | No pueden existir dos filas con el mismo PK |
+| **No nulidad** | El PK nunca puede ser NULL |
+| **Integridad referencial** | Otras tablas pueden referenciarla con FK |
+| **Eficiencia** | La base de datos crea un índice automático sobre el PK |
+
+**Consecuencias de no tener PK bien definida:**
+
+```sql
+-- Sin PK: inserciones repetidas crean duplicados silenciosamente
+INSERT INTO orders VALUES (123, 'cliente_1', 100.00);
+INSERT INTO orders VALUES (123, 'cliente_1', 100.00);  -- Duplicado!
+
+-- Con PK: el segundo INSERT falla con error claro
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,  -- Impone unicidad
+    customer_id INT NOT NULL,
+    amount DECIMAL(10,2)
+);
+-- Error: duplicate key value violates unique constraint "orders_pkey"
+```
+
+**En Data Engineering:**
+- Las cargas incrementales dependen del PK para detectar registros nuevos vs. existentes
+- Los JOINs entre tablas necesitan PKs confiables para no multiplicar filas
+- La deduplicación se hace identificando registros con el mismo PK
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"A primary key enforces two fundamental guarantees: uniqueness, meaning no two rows can have the same identifier, and non-nullability, meaning every row must have one. In Data Engineering, these guarantees matter enormously because pipelines often run multiple times—incremental loads need a reliable key to determine what's new versus what already exists, and JOINs between tables require trustworthy identifiers to avoid row multiplication. When a table lacks a well-defined primary key, you typically see silent duplicates accumulating over time, which corrupts aggregations downstream. I always verify that every table in a pipeline has a meaningful natural key or a surrogate key, and I validate its uniqueness as part of data quality checks."*
+
+## 🔑 Vocabulario Clave
+
+* **Primary key:** Clave primaria que identifica filas únicamente
+* **Uniqueness constraint:** Restricción de unicidad en la base de datos
+* **Surrogate key:** Clave sustituta generada artificialmente (ej: autoincrement)
+* **Natural key:** Clave natural del negocio (ej: order_id, email)
+* **Incremental load:** Carga que procesa solo registros nuevos o modificados
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

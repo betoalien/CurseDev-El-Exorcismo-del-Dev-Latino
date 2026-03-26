@@ -1,0 +1,84 @@
+---
+title: "¿Por qué es importante manejar errores en el backend?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / FastAPI & Backend Fundamentals"
+---
+
+## 🛑 El Error del Junior
+
+No maneja errores — cuando algo falla, el backend devuelve un `500 Internal Server Error` con un stack trace completo que expone detalles internos de la arquitectura al cliente.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Error handling in the backend is about three things: clarity for the client, security for the system, and observability for the team. Would it help if I walked through each?"*
+
+## 💻 La Respuesta Técnica
+
+El manejo de errores en el backend cumple tres funciones críticas: dar **feedback claro al cliente**, **proteger información interna** y **facilitar el debugging** para el equipo.
+
+**Sin manejo de errores — peligroso:**
+
+```python
+# ❌ Sin manejo: expone información interna
+@app.get("/orders/{order_id}")
+async def get_order(order_id: int):
+    order = db.execute(f"SELECT * FROM orders WHERE id={order_id}")
+    # Si no existe → None → AttributeError no manejado
+    # → 500 con stack trace que muestra el SQL y la estructura interna
+    return {"amount": order.amount}
+```
+
+**Con manejo correcto:**
+
+```python
+from fastapi import FastAPI, HTTPException
+import logging
+
+logger = logging.getLogger(__name__)
+app = FastAPI()
+
+@app.get("/orders/{order_id}")
+async def get_order(order_id: int):
+    try:
+        order = find_order(order_id)
+
+        # Error esperado: el recurso no existe
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+
+        # Error esperado: sin permisos
+        if not current_user_can_view(order):
+            raise HTTPException(status_code=403, detail="Access denied")
+
+        return order
+
+    except HTTPException:
+        raise  # Re-raise los errores controlados
+
+    except Exception as e:
+        # Error inesperado: loggear con contexto pero NO exponer al cliente
+        logger.error(f"Unexpected error fetching order {order_id}: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Internal server error")
+```
+
+**Principios:**
+- Errores del cliente (4xx) → mensaje claro y accionable
+- Errores del servidor (5xx) → mensaje genérico + log detallado interno
+- Nunca exponer stack traces, queries SQL o rutas del sistema
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"Error handling in the backend serves three distinct purposes. First, clarity for the client: when something goes wrong, the response should tell the consumer what happened and what they can do about it—a 404 with 'Order not found' is actionable; a raw 500 with a stack trace is not. Second, security: stack traces and internal error messages can expose your database schema, file paths, library versions, and business logic to anyone who reads them. Third, observability: unexpected errors should be logged with full context internally so the team can debug them, even though the external response is generic. In FastAPI, I use HTTPException for expected business errors—not found, unauthorized, conflict—and a catch-all for unexpected exceptions that logs the full error but returns a clean 500 to the client."*
+
+## 🔑 Vocabulario Clave
+
+* **HTTPException:** Excepción de FastAPI que genera respuestas de error HTTP
+* **Stack trace:** Traza de error con detalles de implementación — nunca al cliente
+* **4xx error:** Error causado por el cliente (bad request, not found, unauthorized)
+* **5xx error:** Error del servidor — mensaje genérico al cliente, log completo interno
+* **Observability:** Capacidad del equipo de ver qué ocurrió internamente
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]

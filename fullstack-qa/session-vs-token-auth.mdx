@@ -1,0 +1,88 @@
+---
+title: "¿Cuál es la diferencia entre autenticación basada en sesiones y autenticación basada en tokens?"
+description: "Aprende a responder esta clásica pregunta de entrevista técnica en español y en inglés."
+categoría: "Fullstack / Auth, Redis & Real-World Architecture"
+---
+
+## 🛑 El Error del Junior
+
+No sabe distinguirlas — o piensa que "session" y "token" son lo mismo, o no puede explicar qué ventajas y desventajas tiene cada enfoque en contextos distintos.
+
+## 🧠 El Enfoque Curse Dev (Contra-pregunta)
+
+* **Tú:** *"Sessions and tokens are both valid authentication strategies, but they make different tradeoffs around where state lives. Would it help if I explained each approach and when you'd choose one over the other?"*
+
+## 💻 La Respuesta Técnica
+
+La diferencia clave está en **dónde vive el estado de la sesión**:
+
+| Aspecto | Sesiones (Server-side) | Tokens JWT (Client-side) |
+|---|---|---|
+| Estado | En el servidor (DB/Redis) | En el cliente (token) |
+| Escalabilidad | Requiere sticky sessions o Redis compartido | Stateless — escala horizontalmente |
+| Invalidación | Inmediata (borra la sesión) | Difícil (espera expiración) |
+| Tamaño request | Solo session ID (pequeño) | Token completo en cada request |
+| Seguridad | Cookie httpOnly — resistente a XSS | Depende de cómo se almacene |
+
+**Autenticación basada en sesiones:**
+
+```python
+# Servidor guarda el estado
+from uuid import uuid4
+
+sessions_db = {}  # En producción: Redis
+
+@app.post("/login")
+async def login(credentials: LoginRequest):
+    user = authenticate_user(credentials)
+    session_id = str(uuid4())
+    sessions_db[session_id] = {"user_id": user.id, "role": user.role}
+
+    response = JSONResponse({"message": "Logged in"})
+    response.set_cookie("session_id", session_id, httponly=True)
+    return response
+
+@app.get("/protected")
+async def protected(session_id: str = Cookie(None)):
+    session = sessions_db.get(session_id)  # ← Consulta al servidor cada vez
+    if not session:
+        raise HTTPException(401, "Not authenticated")
+    return session
+```
+
+**Autenticación basada en tokens (JWT):**
+
+```python
+# Cliente lleva el estado en el token
+@app.post("/login")
+async def login(credentials: LoginRequest):
+    user = authenticate_user(credentials)
+    token = create_jwt({"user_id": user.id, "role": user.role})
+    return {"access_token": token}  # Cliente lo guarda
+
+@app.get("/protected")
+async def protected(token: str = Depends(oauth2_scheme)):
+    payload = verify_jwt(token)  # ← Solo verifica firma, no consulta DB
+    return payload
+```
+
+**Cuándo elegir cada uno:**
+- **Sesiones**: Apps monolíticas, cuando necesitas logout inmediato, mayor control
+- **Tokens**: APIs REST, microservicios, apps móviles, necesidad de escalar horizontalmente
+
+## 🇺🇸 El Script en Inglés (Para la entrevista)
+
+> *"The core difference between session-based and token-based authentication is where the state lives. With sessions, the server stores the session data—usually in a database or Redis—and the client only holds a session ID in a cookie. Every request triggers a lookup to validate that session ID. This makes invalidation trivial: you just delete the session record. With JWT tokens, the state lives in the token itself on the client side. The server only stores the secret key used to verify the signature, which makes JWTs stateless and horizontally scalable—any server instance can validate any token without shared state. The tradeoff is invalidation: you can't revoke a JWT before it expires without additional infrastructure like a token blacklist. I'd choose sessions when immediate revocation is critical or for traditional web apps, and tokens for REST APIs or systems that need to scale across multiple server instances."*
+
+## 🔑 Vocabulario Clave
+
+* **Server-side session:** Estado guardado en el servidor — solo el session ID viaja al cliente
+* **Stateless token:** Token que lleva su propio estado — el servidor no guarda nada
+* **httpOnly cookie:** Cookie que JavaScript no puede leer — protege contra XSS
+* **Horizontal scaling:** Capacidad de agregar más servidores sin compartir estado
+* **Token revocation:** Invalidar un token antes de que expire — difícil con JWT puro
+
+---
+
+💡 **¿Quieres simular esta y 50 entrevistas más con audio y proyectos reales?**
+[👉 Desbloquea el Playbook Completo de Curse Dev aquí]
