@@ -6,19 +6,8 @@ Contenido en español con scripts de respuesta en inglés para perfiles de Data 
 
 ---
 
-## 🔍 Buscador de Preguntas
+## 📋 Preguntas Disponibles
 
-<input
-  type="text"
-  id="searchInput"
-  placeholder="Buscar pregunta (ej: WHERE, KPI, JOIN, null...)"
-  style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 20px;"
-  onkeyup="filterQuestions()"
-/>
-
-<div id="questionList" style="display: grid; gap: 10px;">
-
-[//]: # "Data Analyst Questions"
 <div class="question-item" data-track="data-analyst" data-search="where having sql filtro agrupacion">
   <a href="./data-analyst-qa/where-vs-having.mdx">📊 <strong>Data Analyst:</strong> ¿Cuál es la diferencia entre WHERE y HAVING en SQL?</a>
 </div>
@@ -219,8 +208,6 @@ Contenido en español con scripts de respuesta en inglés para perfiles de Data 
   <a href="./data-analyst-qa/communicate-to-non-technical-audience.mdx">📉 <strong>Data Analyst:</strong> ¿Cómo explicar hallazgos técnicos a no técnicos?</a>
 </div>
 
-</div>
-
 ---
 
 ## 🎯 Tracks Disponibles
@@ -269,47 +256,3 @@ Contenido en español con scripts de respuesta en inglés para perfiles de Data 
 </div>
 
 </div>
-
----
-
-<script>
-function filterQuestions() {
-  const input = document.getElementById('searchInput');
-  const filter = input.value.toLowerCase();
-  const items = document.querySelectorAll('.question-item');
-
-  items.forEach(item => {
-    const searchText = item.getAttribute('data-search');
-    const track = item.getAttribute('data-track');
-
-    if (searchText.includes(filter)) {
-      item.style.display = '';
-    } else {
-      item.style.display = 'none';
-    }
-  });
-}
-</script>
-
-<style>
-.question-item {
-  padding: 12px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.question-item:hover {
-  transform: translateX(5px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.question-item a {
-  text-decoration: none;
-  color: #2c3e50;
-}
-
-.question-item a:hover {
-  color: #3498db;
-}
-</style>
